@@ -63,3 +63,20 @@ body {
 .hidden:hover {
   opacity: 1;
 }
+
+.obtable-ask td:nth-child(2) {
+    color: red;
+}
+
+.obtable-bid td:nth-child(2) {
+    color: greenyellow;
+}
+
+.obtable-ask td, .obtable-ask th, .obtable-bid td, .obtable-bid th {
+    width: 100px;
+}
+
+.table-wrap {
+    height: 300px;
+    overflow-y: auto;
+}
