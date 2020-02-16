@@ -26,5 +26,11 @@ func idx(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
+
+	// favicon.ico file
+	http.Handle("/favicon.ico", http.NotFoundHandler())
+
+	// public assets files
+	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
