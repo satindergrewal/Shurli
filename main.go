@@ -14,8 +14,24 @@ func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/", idx)
+	r.HandleFunc("/orderbook", orderbook)
+
+	// favicon.ico file
+	r.HandleFunc("/favicon.ico", faviconHandler)
+
+	// public assets files
+	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
+	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "favicon.ico")
+}
+
 func idx(w http.ResponseWriter, r *http.Request) {
-	// w.Write([]byte("Sub-Atomic Swaps Rock!\n"))
 	err := tpl.ExecuteTemplate(w, "index.gohtml", nil)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -23,14 +39,10 @@ func idx(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/", idx)
-
-	// favicon.ico file
-	http.Handle("/favicon.ico", http.NotFoundHandler())
-
-	// public assets files
-	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
-	log.Fatal(http.ListenAndServe(":8080", r))
+func orderbook(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", nil)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		log.Fatalln(err)
+	}
 }
