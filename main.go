@@ -20,12 +20,7 @@ type WalletInfo struct {
 	Status  string
 	Balance float64
 	Blocks  int
-	Synched bool
-}
-
-// Wallets store array of WalletInfo data type
-type Wallets struct {
-	Wallet []WalletInfo
+	Synced  bool
 }
 
 func init() {
@@ -51,9 +46,9 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 
 func idx(w http.ResponseWriter, r *http.Request) {
 
-	var wallets Wallets
+	var wallets []WalletInfo
 
-	for i, v := range chains {
+	for _, v := range chains {
 		// fmt.Println(i)
 		// fmt.Println(v)
 		appName := kmdgo.NewAppType(v)
@@ -61,27 +56,35 @@ func idx(w http.ResponseWriter, r *http.Request) {
 		var info kmdgo.GetInfo
 
 		info, err := appName.GetInfo()
+		fmt.Println(info)
 		if err != nil {
-			fmt.Printf("Code: %v\n", info.Error.Code)
-			fmt.Printf("Message: %v\n\n", info.Error.Message)
-			log.Fatalln("Err happened", err)
-			wallets.Wallet[i].Status = "Offline"
+			// fmt.Printf("Code: %v\n", info.Error.Code)
+			// fmt.Printf("Message: %v\n\n", info.Error.Message)
+			fmt.Println(v, "- Err happened:", err)
+			wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
 		} else {
-			wallets.Wallet[i].Ticker = info.Result.Name
-			wallets.Wallet[i].Status = "Online"
-			wallets.Wallet[i].Balance = info.Result.Balance
-			wallets.Wallet[i].Blocks = info.Result.Longestchain
+
+			// Check status of the blockchain sync
+			var tempSyncStatus bool
 			if info.Result.Longestchain != info.Result.Blocks {
-				wallets.Wallet[i].Synched = false
+				tempSyncStatus = false
 			} else {
-				wallets.Wallet[i].Synched = true
+				tempSyncStatus = true
 			}
+
+			wallets = append(wallets, WalletInfo{
+				Ticker:  info.Result.Name,
+				Status:  "Online",
+				Balance: info.Result.Balance,
+				Blocks:  info.Result.Longestchain,
+				Synced:  tempSyncStatus,
+			})
 		}
 	}
 
-	fmt.Println(wallets)
+	// fmt.Println(wallets)
 
-	err := tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	err := tpl.ExecuteTemplate(w, "index.gohtml", wallets)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)

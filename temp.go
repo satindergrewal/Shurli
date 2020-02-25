@@ -35,7 +35,7 @@ func main() {
 		if err != nil {
 			// fmt.Printf("Code: %v\n", info.Error.Code)
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
-			fmt.Println("Err happened", err)
+			fmt.Println(v, "- Err happened:", err)
 			fmt.Println("wallets.Wallet[", i, "].Status")
 			wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
 		} else {

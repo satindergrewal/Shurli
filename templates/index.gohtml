@@ -24,7 +24,17 @@
                     </tr>
                   </thead>
                   <tbody>
+                  {{range .}}
                     <tr>
+                      <td scope="col">{{.Ticker}}</td>
+                      <td scope="col">{{.Status}}</td>
+                      <td scope="col">{{.Balance}}</td>
+                      <td scope="col">{{.Blocks}}</td>
+                      <td scope="col">{{if .Synced}} Fully Synced {{else}} Not Synced {{end}}</td>
+                      {{/* <td scope="col">{{if .Synced}} IT IS SYNCED {{else}} NOT SYNCED {{end}}</td> */}}
+                    </tr>
+                  {{end}}
+                    {{/* <tr>
                       <td scope="col">KMD</td>
                       <td scope="col">Online</td>
                       <td scope="col">234.00000000</td>
@@ -37,7 +47,7 @@
                       <td scope="col">234.00000000</td>
                       <td scope="col">123456</td>
                       <td scope="col">1234567</td>
-                    </tr>
+                    </tr> */}}
                   </tbody>
                 </table>
               </div> <!-- GetPeerInfo body end -->
