@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
-	"kmdgo"
 	"log"
 	"net/http"
 	"text/template"
+
+	// "github.com/satindergrewal/kmdgo"
+	"kmdgo"
 
 	"github.com/gorilla/mux"
 )
@@ -56,29 +58,38 @@ func idx(w http.ResponseWriter, r *http.Request) {
 		var info kmdgo.GetInfo
 
 		info, err := appName.GetInfo()
-		fmt.Println(info)
+		// fmt.Println(info.Error.Message)
 		if err != nil {
 			// fmt.Printf("Code: %v\n", info.Error.Code)
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
-			fmt.Println(v, "- Err happened:", err)
-			wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
-		} else {
-
-			// Check status of the blockchain sync
-			var tempSyncStatus bool
-			if info.Result.Longestchain != info.Result.Blocks {
-				tempSyncStatus = false
+			if info.Error.Message == "Loading block index..." {
+				fmt.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WalletInfo{string(v), "Loading...", 0.0, 0, false})
 			} else {
-				tempSyncStatus = true
+				fmt.Println(v, "- Err happened:", err)
+				wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
 			}
+		} else {
+			if info.Error.Message == "connection refused" {
+				fmt.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
+			} else {
+				// Check status of the blockchain sync
+				var tempSyncStatus bool
+				if info.Result.Longestchain != info.Result.Blocks {
+					tempSyncStatus = false
+				} else {
+					tempSyncStatus = true
+				}
 
-			wallets = append(wallets, WalletInfo{
-				Ticker:  info.Result.Name,
-				Status:  "Online",
-				Balance: info.Result.Balance,
-				Blocks:  info.Result.Longestchain,
-				Synced:  tempSyncStatus,
-			})
+				wallets = append(wallets, WalletInfo{
+					Ticker:  info.Result.Name,
+					Status:  "Online",
+					Balance: info.Result.Balance,
+					Blocks:  info.Result.Longestchain,
+					Synced:  tempSyncStatus,
+				})
+			}
 		}
 	}
 
@@ -86,6 +97,7 @@ func idx(w http.ResponseWriter, r *http.Request) {
 
 	err := tpl.ExecuteTemplate(w, "index.gohtml", wallets)
 	if err != nil {
+		// log.Fatalf("some error")
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)
 	}
