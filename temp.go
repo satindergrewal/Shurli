@@ -25,28 +25,14 @@ func main() {
 
 	var list kmdgo.DEXList
 
-	args := make(kmdgo.APIParams, 10)
+	args := make(kmdgo.APIParams, 3)
 	// stopat
 	args[0] = "0"
 	// minpriority
 	args[1] = "0"
 	// tagA
 	args[2] = "handles"
-	// tagB
-	args[3] = ""
-	// pubkey33
-	args[4] = ""
-	// minA
-	args[5] = ""
-	// maxA
-	args[6] = ""
-	// minB
-	args[7] = ""
-	// maxB
-	args[8] = ""
-	// stophash
-	args[9] = ""
-	fmt.Println(args)
+	// fmt.Println(args)
 
 	list, err := appName.DEXList(args)
 	if err != nil {
@@ -58,88 +44,39 @@ func main() {
 	var tmpPubkey string
 	tmpPubkey = ""
 
-	for i, v := range list.Result.Matches {
-		fmt.Printf("\n-------\n")
-		fmt.Println(i)
-		// fmt.Println("Timestamp", v.Timestamp)
-		// fmt.Println("ID", v.ID)
-		// fmt.Println("Hash", v.Hash)
-		// fmt.Println("TagA", v.TagA)
-		// fmt.Println("TagB", v.TagB)
-		// fmt.Println("Pubkey", v.Pubkey)
-		// fmt.Println("Payload", v.Payload)
-		// fmt.Println("Hex", v.Hex)
-		// fmt.Println("Decrypted", v.Decrypted)
-		// fmt.Println("Decryptedhex", v.Decryptedhex)
-		// fmt.Println("Senderpub", v.Senderpub)
-		// fmt.Println("Error", v.Error)
-		// fmt.Println("AmountA", v.AmountA)
-		// fmt.Println("AmountB", v.AmountB)
-		// fmt.Println("Priority", v.Priority)
-		// fmt.Println("Recvtime", v.Recvtime)
-		// fmt.Println("Cancelled", v.Cancelled)
+	for _, v := range list.Result.Matches {
+		// fmt.Printf("\n-------\n")
+		// fmt.Println(i)
 
 		if tmpPubkey == v.Decrypted {
-			fmt.Println("Temp Pubkey matched")
+			// fmt.Println("Temp Pubkey matched")
 		} else {
-			fmt.Println("Temp Pubkey did not match")
+			// fmt.Println("Temp Pubkey did not match\nUpdated it's value")
+			tmpPubkey = v.Decrypted
+			handles = append(handles, DEXHandles{
+				Pubkey:    v.Decrypted,
+				Handle:    v.TagB,
+				DEXPubkey: v.Pubkey,
+			})
 		}
 
-		handles = append(handles, DEXHandles{
-			Pubkey:    v.Decrypted,
-			Handle:    v.TagB,
-			DEXPubkey: v.Pubkey,
-		})
 	}
 
-	// for i, v := range chains {
-	// 	// fmt.Println(i)
-	// 	// fmt.Println(v)
-	// 	appName := kmdgo.NewAppType(v)
+	fmt.Println(len(handles))
+	fmt.Println(handles)
+	// fmt.Println(handles[0])
+	// fmt.Println(handles[1])
 
-	// 	var info kmdgo.GetInfo
+	dexpubkey := "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"
+	var handle string
+	// var authorised bool
 
-	// 	info, err := appName.GetInfo()
-	// 	fmt.Println(info)
-	// 	if err != nil {
-	// 		// fmt.Printf("Code: %v\n", info.Error.Code)
-	// 		// fmt.Printf("Message: %v\n\n", info.Error.Message)
-	// 		fmt.Println(v, "- Err happened:", err)
-	// 		fmt.Println("wallets.Wallet[", i, "].Status")
-	// 		wallets = append(wallets, WalletInfo{string(v), "Offline", 0.0, 0, false})
-	// 	} else {
+	for _, value := range handles {
+		// fmt.Println(value.DEXPubkey)
+		if value.DEXPubkey == dexpubkey {
+			handle = value.Handle
+		}
+	}
 
-	// 		// Check status of the blockchain sync
-	// 		var tempSyncStatus bool
-	// 		if info.Result.Longestchain != info.Result.Blocks {
-	// 			tempSyncStatus = false
-	// 		} else {
-	// 			tempSyncStatus = true
-	// 		}
-
-	// 		wallets = append(wallets, WalletInfo{
-	// 			Ticker:  info.Result.Name,
-	// 			Status:  "Online",
-	// 			Balance: info.Result.Balance,
-	// 			Blocks:  info.Result.Longestchain,
-	// 			Synched: tempSyncStatus,
-	// 		})
-	// 	}
-	// }
-
-	// appName := kmdgo.NewAppType(`komodo`)
-
-	// var info kmdgo.GetInfo
-
-	// info, err := appName.GetInfo()
-	// fmt.Println(info)
-
-	// if err != nil {
-	// 	fmt.Println("Err happened", err)
-	// }
-
-	// fmt.Println(len(handles))
-	// fmt.Println(handles)
-	fmt.Println(handles[0])
-	fmt.Println(handles[1])
+	fmt.Println(handle)
 }
