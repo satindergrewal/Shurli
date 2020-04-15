@@ -1,21 +1,15 @@
 package main
 
+import (
+	"fmt"
+	"subatomicgo/sagoutil"
+)
+
 func main() {
-	// var chains = []kmdgo.AppType{"komodo", "PIRATE"}
 
-	// var wallets []sagoutil.WInfo
-	// wallets = sagoutil.WalletInfo(chains)
+	var handles []sagoutil.DEXHandle
+	handles = sagoutil.DEXHandles()
 
-	// fmt.Println(wallets)
-
-	// var handles []sagoutil.DEXHandle
-	// handles = sagoutil.DEXHandles()
-
-	// fmt.Println(handles)
-
-	// err := sagoutil.DLSubJSONData()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	fmt.Println(handles.)
 
 }
