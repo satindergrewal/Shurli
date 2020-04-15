@@ -6,8 +6,8 @@ import (
 	"log"
 )
 
-// DEXHandles stores data to get authorised/unauthorised hanldes from all broadcasting traders
-type DEXHandles struct {
+// DEXHandle stores data to get authorised/unauthorised hanldes from all broadcasting traders
+type DEXHandle struct {
 	Pubkey    string
 	Handle    string
 	DEXPubkey string
@@ -15,10 +15,10 @@ type DEXHandles struct {
 
 func main() {
 
-	var handles []DEXHandles
+	var handles []DEXHandle
 
-	// handles = append(handles, DEXHandles{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
-	// handles = append(handles, DEXHandles{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
+	// handles = append(handles, DEXHandle{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
+	// handles = append(handles, DEXHandle{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
 
 	var appName kmdgo.AppType
 	appName = `DEX`
@@ -53,7 +53,7 @@ func main() {
 		} else {
 			// fmt.Println("Temp Pubkey did not match\nUpdated it's value")
 			tmpPubkey = v.Decrypted
-			handles = append(handles, DEXHandles{
+			handles = append(handles, DEXHandle{
 				Pubkey:    v.Decrypted,
 				Handle:    v.TagB,
 				DEXPubkey: v.Pubkey,
