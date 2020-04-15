@@ -1,12 +1,15 @@
 package sagoutil
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"kmdgo"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 // WInfo type stores data to display on Wallet info screen
@@ -74,7 +77,7 @@ type DEXHandle struct {
 	Pubkey     string
 	Handle     string
 	DEXPubkey  string
-	authorised bool
+	Authorised bool
 }
 
 // DEXHandles returns public address's public Key, DEX CC specific public key, and handle data set picked from:
@@ -120,10 +123,19 @@ func DEXHandles() []DEXHandle {
 		} else {
 			// fmt.Println("Temp Pubkey did not match\nUpdated it's value")
 			tmpPubkey = v.Decrypted
+
+			// Checking if the found pubkey is authorized in subatomic.json pubkey list
+			authorized, err := MatchedAuthorized(v.Decrypted)
+			if err != nil {
+				log.Fatal(err)
+			}
+			// fmt.Println(authorized)
+
 			handles = append(handles, DEXHandle{
-				Pubkey:    v.Decrypted,
-				Handle:    v.TagB,
-				DEXPubkey: v.Pubkey,
+				Pubkey:     v.Decrypted,
+				Handle:     v.TagB,
+				DEXPubkey:  v.Pubkey,
+				Authorised: authorized,
 			})
 		}
 
@@ -134,18 +146,6 @@ func DEXHandles() []DEXHandle {
 	// fmt.Println(handles[0])
 	// fmt.Println(handles[1])
 
-	dexpubkey := "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"
-	var handle string
-	// var authorised bool
-
-	for _, value := range handles {
-		// fmt.Println(value.DEXPubkey)
-		if value.DEXPubkey == dexpubkey {
-			handle = value.Handle
-		}
-	}
-
-	fmt.Println(handle)
 	return handles
 }
 
@@ -167,4 +167,41 @@ func DLSubJSONData() error {
 		// fmt.Println(res.Status)
 		return errors.New(res.Status)
 	}
+}
+
+// MatchedAuthorized checks the pubkey against the subatomic.json file's authorized pubkey list.
+// If the searched pubkey is present in that list, it returns true, otherwise false.
+func MatchedAuthorized(pubkey string) (bool, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// fmt.Println(dir)
+	data, err := ioutil.ReadFile(filepath.Join(dir, "/assets/subatomic.json"))
+	if err != nil {
+		log.Printf("%s", err)
+		return false, err
+	}
+	// fmt.Printf("%s", data)
+
+	// dec := json.NewDecoder(strings.NewReader(string(data[:])))
+	// fmt.Println(dec)
+
+	var parsed map[string][]map[string]string
+	err = json.Unmarshal([]byte(data), &parsed)
+	// fmt.Println(parsed["authorized"])
+	// var auth map[string][string]interface{}
+
+	for _, v := range parsed["authorized"] {
+		// fmt.Println(v)
+		for _, pub := range v {
+			// fmt.Println(name)
+			if pub == pubkey {
+				// fmt.Println(pub)
+				// fmt.Println("pubkey:", pubkey)
+				return true, nil
+			}
+		}
+	}
+	return false, nil
 }
