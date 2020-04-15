@@ -1,9 +1,12 @@
 package sagoutil
 
 import (
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"kmdgo"
 	"log"
+	"net/http"
 )
 
 // WInfo type stores data to display on Wallet info screen
@@ -68,9 +71,10 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 // DEXHandle stores data to get authorised/unauthorised hanldes from all broadcasting traders
 type DEXHandle struct {
-	Pubkey    string
-	Handle    string
-	DEXPubkey string
+	Pubkey     string
+	Handle     string
+	DEXPubkey  string
+	authorised bool
 }
 
 // DEXHandles returns public address's public Key, DEX CC specific public key, and handle data set picked from:
@@ -125,8 +129,8 @@ func DEXHandles() []DEXHandle {
 
 	}
 
-	fmt.Println(len(handles))
-	fmt.Println(handles)
+	// fmt.Println(len(handles))
+	// fmt.Println(handles)
 	// fmt.Println(handles[0])
 	// fmt.Println(handles[1])
 
@@ -142,4 +146,25 @@ func DEXHandles() []DEXHandle {
 	}
 
 	fmt.Println(handle)
+	return handles
+}
+
+// DLSubJSONData downloads the latest updated subatomic.json file data and saves it to "assets/subatomic.json" file in subatomicgo app
+func DLSubJSONData() error {
+	res, err := http.Get("https://raw.githubusercontent.com/jl777/komodo/jl777/src/cc/dapps/subatomic.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	subJSONData, err := ioutil.ReadAll(res.Body)
+	res.Body.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if res.Status == "200 OK" {
+		ioutil.WriteFile("assets/subatomic.json", subJSONData, 0644)
+		return nil
+	} else {
+		// fmt.Println(res.Status)
+		return errors.New(res.Status)
+	}
 }
