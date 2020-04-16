@@ -13,38 +13,48 @@
             <div class="col-8"> <!-- trading pair div start -->
                 <div class="card text-white bg-dark"> <!-- trading pair card start -->
                     <div class="card-body" style="font-size: 18px;"> <!-- trading pair body start -->
-                        <form>
+                        <form action="/orderbook" method="POST">
                           <div class="form-row">
                             
                             <table class="table table-borderless text-white text-center" style="margin-bottom: 0;">
                               <tr>
-                                <td>PIRATE</td>
+                                {{/* <td>PIRATE</td> */}}
                                 <td>
                                   <div class="input-group">
                                     <div class="input-group-prepend">
-                                      <label class="input-group-text" for="inputGroupSelect01">Base</label>
+                                      <label class="input-group-text" for="coin_base">Base</label>
                                     </div>
-                                    <select class="custom-select" id="inputGroupSelect01">
+                                    <select class="custom-select" id="coin_base" name="coin_base">
                                       <option>Choose...</option>
-                                      <option value="KMD" selected>Komodo (KMD)</option>
-                                      <option value="PIRATE">PIRATE (ARRR)</option>
+                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}}>Komodo (KMD)</option>
+                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
+                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
+                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
+                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
+                                      <option value="BTC" {{if eq .Base "BTC"}} selected {{end}}>Bitcoin (BTC)</option>
+                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}}>DEX (DEX)</option>
                                     </select>
                                   </div>
                                 </td>
                                 <td><span class="fas fa-exchange-alt"></span></td>
                                 <td>
                                   <div class="input-group">
-                                    <select class="custom-select" id="inputGroupSelect02">
+                                    <select class="custom-select" id="coin_rel" name="coin_rel">
                                       <option>Choose...</option>
-                                      <option value="KMD">Komodo (KMD)</option>
-                                      <option value="PIRATE" selected>PIRATE (ARRR)</option>
+                                      <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}}>Komodo (KMD)</option>
+                                      <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
+                                      <option value="VRSC" {{if eq .Rel "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
+                                      <option value="HUSH3" {{if eq .Rel "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
+                                      <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
+                                      <option value="BTC" {{if eq .Rel "BTC"}} selected {{end}}>Bitcoin (BTC)</option>
+                                      <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}}>DEX (DEX)</option>
                                     </select>
                                     <div class="input-group-append">
-                                      <label class="input-group-text" for="inputGroupSelect02">Rel</label>
+                                      <label class="input-group-text" for="coin_rel">Rel</label>
                                     </div>
                                   </div>
                                 </td>
-                                <td>KMD</td>
+                                <td><button type="submit" class="btn btn-primary">List Orders</button></td>
                               </tr>
                             </table>
 
@@ -58,12 +68,12 @@
 
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
             
-            {{range .}}
+            {{range .OrderList}}
             <div class="col-8"> <!-- Order List div start -->
                 <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
-                        <div class="col-8" style="text-align: left; font-size: small;">{{if .Authorized}} <svg width="13" height="13" class="octicon octicon-verified" viewBox="0 0 16 16" version="1.1" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Authorized" ><path fill-rule="evenodd" d="M15.67 7.066l-1.08-1.34a1.5 1.5 0 01-.309-.77l-.19-1.698a1.51 1.51 0 00-1.329-1.33l-1.699-.19c-.3-.03-.56-.159-.78-.329L8.945.33a1.504 1.504 0 00-1.878 0l-1.34 1.08a1.5 1.5 0 01-.77.31l-1.698.19c-.7.08-1.25.63-1.33 1.329l-.19 1.699c-.03.3-.159.56-.329.78L.33 7.055a1.504 1.504 0 000 1.878l1.08 1.34c.17.22.28.48.31.77l.19 1.698c.08.7.63 1.25 1.329 1.33l1.699.19c.3.03.56.159.78.329l1.339 1.08c.55.439 1.329.439 1.878 0l1.34-1.08c.22-.17.48-.28.77-.31l1.698-.19c.7-.08 1.25-.63 1.33-1.329l.19-1.699c.03-.3.159-.56.329-.78l1.08-1.339a1.504 1.504 0 000-1.878zM6.5 12.01L3 8.51l1.5-1.5 2 2 5-5L13 5.56l-6.5 6.45z"></path></svg>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
+                        <div class="col-8" style="text-align: left; font-size: small;">{{if .Authorized}} <svg width="13" height="13" class="octicon octicon-verified" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M15.67 7.066l-1.08-1.34a1.5 1.5 0 01-.309-.77l-.19-1.698a1.51 1.51 0 00-1.329-1.33l-1.699-.19c-.3-.03-.56-.159-.78-.329L8.945.33a1.504 1.504 0 00-1.878 0l-1.34 1.08a1.5 1.5 0 01-.77.31l-1.698.19c-.7.08-1.25.63-1.33 1.329l-.19 1.699c-.03.3-.159.56-.329.78L.33 7.055a1.504 1.504 0 000 1.878l1.08 1.34c.17.22.28.48.31.77l.19 1.698c.08.7.63 1.25 1.329 1.33l1.699.19c.3.03.56.159.78.329l1.339 1.08c.55.439 1.329.439 1.878 0l1.34-1.08c.22-.17.48-.28.77-.31l1.698-.19c.7-.08 1.25-.63 1.33-1.329l.19-1.699c.03-.3.159-.56.329-.78l1.08-1.339a1.504 1.504 0 000-1.878zM6.5 12.01L3 8.51l1.5-1.5 2 2 5-5L13 5.56l-6.5 6.45z"></path></svg>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
                         <div class="col-4" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | {{.Timestamp}}</div>
                       </div>
                     </div>
@@ -76,7 +86,7 @@
                           <div class="col-4 text-center">
                             <button class="btn btn-lg btn-primary" style="width: 200px;">
                               <span style="font-size: 14px;">Exchange with</span><br>
-                              <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <svg width="18" height="18" class="octicon octicon-verified-lg" viewBox="0 0 16 16" version="1.1" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Authorized" ><path fill-rule="evenodd" d="M15.67 7.066l-1.08-1.34a1.5 1.5 0 01-.309-.77l-.19-1.698a1.51 1.51 0 00-1.329-1.33l-1.699-.19c-.3-.03-.56-.159-.78-.329L8.945.33a1.504 1.504 0 00-1.878 0l-1.34 1.08a1.5 1.5 0 01-.77.31l-1.698.19c-.7.08-1.25.63-1.33 1.329l-.19 1.699c-.03.3-.159.56-.329.78L.33 7.055a1.504 1.504 0 000 1.878l1.08 1.34c.17.22.28.48.31.77l.19 1.698c.08.7.63 1.25 1.329 1.33l1.699.19c.3.03.56.159.78.329l1.339 1.08c.55.439 1.329.439 1.878 0l1.34-1.08c.22-.17.48-.28.77-.31l1.698-.19c.7-.08 1.25-.63 1.33-1.329l.19-1.699c.03-.3.159-.56.329-.78l1.08-1.339a1.504 1.504 0 000-1.878zM6.5 12.01L3 8.51l1.5-1.5 2 2 5-5L13 5.56l-6.5 6.45z"></path></svg>{{end}}</span>
+                              <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <svg width="18" height="18" class="octicon octicon-verified-lg" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M15.67 7.066l-1.08-1.34a1.5 1.5 0 01-.309-.77l-.19-1.698a1.51 1.51 0 00-1.329-1.33l-1.699-.19c-.3-.03-.56-.159-.78-.329L8.945.33a1.504 1.504 0 00-1.878 0l-1.34 1.08a1.5 1.5 0 01-.77.31l-1.698.19c-.7.08-1.25.63-1.33 1.329l-.19 1.699c-.03.3-.159.56-.329.78L.33 7.055a1.504 1.504 0 000 1.878l1.08 1.34c.17.22.28.48.31.77l.19 1.698c.08.7.63 1.25 1.329 1.33l1.699.19c.3.03.56.159.78.329l1.339 1.08c.55.439 1.329.439 1.878 0l1.34-1.08c.22-.17.48-.28.77-.31l1.698-.19c.7-.08 1.25-.63 1.33-1.329l.19-1.699c.03-.3.159-.56.329-.78l1.08-1.339a1.504 1.504 0 000-1.878zM6.5 12.01L3 8.51l1.5-1.5 2 2 5-5L13 5.56l-6.5 6.45z"></path></svg>{{end}}</span>
                             </button>
                           </div>
                         </div>

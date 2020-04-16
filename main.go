@@ -14,7 +14,7 @@ import (
 
 var tpl *template.Template
 
-var chains = []kmdgo.AppType{"komodo", "PIRATE"}
+var chains = []kmdgo.AppType{"komodo", "PIRATE", "VRSC", "HUSH3", "DEX"}
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
@@ -23,7 +23,7 @@ func init() {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
-	r.HandleFunc("/orderbook", orderbook)
+	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 
 	// favicon.ico file
 	r.HandleFunc("/favicon.ico", faviconHandler)
@@ -54,10 +54,26 @@ func idx(w http.ResponseWriter, r *http.Request) {
 }
 
 func orderbook(w http.ResponseWriter, r *http.Request) {
-	var orderlist []sagoutil.OrderData
-	orderlist = sagoutil.OrderBookList("KMD", "PIRATE", "10")
 
-	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", orderlist)
+	type OrderPost struct {
+		Base      string `json:"coin_base"`
+		Rel       string `json:"coin_rel"`
+		OrderList []sagoutil.OrderData
+	}
+
+	// fmt.Println("r.FormValue", r.FormValue("coin_base"))
+	// fmt.Println("r.FormValue", r.FormValue("coin_rel"))
+
+	var orderlist []sagoutil.OrderData
+	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), "10")
+
+	data := OrderPost{
+		Base:      r.FormValue("coin_base"),
+		Rel:       r.FormValue("coin_rel"),
+		OrderList: orderlist,
+	}
+
+	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", data)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)
