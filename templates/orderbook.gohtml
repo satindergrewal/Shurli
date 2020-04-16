@@ -67,7 +67,7 @@
 
 
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
-            
+            {{if not .OrderList}} <div class="alert alert-info" role="alert">There doesn't seem to be any order available for this pair. Please try again later.</div> {{end}}
             {{range .OrderList}}
             <div class="col-8"> <!-- Order List div start -->
                 <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
