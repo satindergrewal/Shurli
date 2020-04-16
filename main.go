@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"subatomicgo/sagoutil"
 	"text/template"
 
-	// "github.com/satindergrewal/kmdgo"
-	"kmdgo"
+	"github.com/satindergrewal/subatomicgo/sagoutil"
+
+	"github.com/satindergrewal/kmdgo"
 
 	"github.com/gorilla/mux"
 )

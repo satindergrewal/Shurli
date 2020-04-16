@@ -5,12 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"kmdgo"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/satindergrewal/kmdgo"
 )
 
 // WInfo type stores data to display on Wallet info screen
