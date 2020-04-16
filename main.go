@@ -54,7 +54,10 @@ func idx(w http.ResponseWriter, r *http.Request) {
 }
 
 func orderbook(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", nil)
+	var orderlist []sagoutil.OrderData
+	orderlist = sagoutil.OrderBookList("KMD", "PIRATE", "10")
+
+	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", orderlist)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)

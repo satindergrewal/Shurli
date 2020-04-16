@@ -80,3 +80,12 @@ body {
     height: 300px;
     overflow-y: auto;
 }
+
+.octicon-verified {
+	fill: #1DA1F2;
+	margin-bottom: 3px;
+}
+
+.octicon-verified-lg {
+	fill: #81ff47;
+}

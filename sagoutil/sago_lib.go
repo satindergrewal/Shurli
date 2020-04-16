@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // WInfo type stores data to display on Wallet info screen
@@ -213,7 +214,7 @@ type OrderData struct {
 	Base       string
 	Rel        string
 	OrderID    int64
-	Timestamp  int
+	Timestamp  string
 	Handle     string
 	Pubkey     string
 	Authorized bool
@@ -252,6 +253,11 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 		// fmt.Println(pubkey)
 		// fmt.Println(auth)
 
+		var unixTime int64 = int64(v.Timestamp)
+		t := time.Unix(unixTime, 0)
+		strDate := t.Format(time.UnixDate)
+		// fmt.Println(strDate)
+
 		orderList = append(orderList, OrderData{
 			Price:      v.Price,
 			MaxVolume:  v.Relamount,
@@ -259,7 +265,7 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 			Base:       obook.Result.Base,
 			Rel:        obook.Result.Rel,
 			OrderID:    v.ID,
-			Timestamp:  v.Timestamp,
+			Timestamp:  strDate,
 			Handle:     handle,
 			Pubkey:     pubkey,
 			Authorized: auth,
