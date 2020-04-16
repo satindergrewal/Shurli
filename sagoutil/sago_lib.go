@@ -88,7 +88,6 @@ func DEXHandles() []DEXHandle {
 	var handles []DEXHandle
 
 	// handles = append(handles, DEXHandle{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
-	// handles = append(handles, DEXHandle{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
 
 	var appName kmdgo.AppType
 	appName = `DEX`
@@ -204,4 +203,86 @@ func MatchedAuthorized(pubkey string) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+// OrderData type is used to get formated data to display on Orderbook page
+type OrderData struct {
+	Price      string
+	MaxVolume  string
+	DexPubkey  string
+	Base       string
+	Rel        string
+	OrderID    int64
+	Timestamp  int
+	Handle     string
+	Pubkey     string
+	Authorized bool
+}
+
+// OrderBookList returns processed data for Orderbook page
+func OrderBookList(base, rel, maxentries string) []OrderData {
+	var orderList []OrderData
+
+	var appName kmdgo.AppType
+	appName = `DEX`
+
+	var obook kmdgo.DEXOrderbook
+
+	args := make(kmdgo.APIParams, 4)
+	// maxentries eg. "10"
+	args[0] = maxentries
+	// minpriority
+	args[1] = "0"
+	// tagA/Base eg. "KMD"
+	args[2] = base
+	// tagB/Rel eg. "DEX"
+	args[3] = rel
+	// fmt.Println(args)
+
+	obook, err := appName.DEXOrderbook(args)
+	if err != nil {
+		fmt.Printf("Code: %v\n", obook.Error.Code)
+		fmt.Printf("Message: %v\n\n", obook.Error.Message)
+		log.Fatalln("Err happened", err)
+	}
+
+	for _, v := range obook.Result.Asks {
+		handle, pubkey, auth := GetHandle(v.Pubkey)
+		// fmt.Println(handle)
+		// fmt.Println(pubkey)
+		// fmt.Println(auth)
+
+		orderList = append(orderList, OrderData{
+			Price:      v.Price,
+			MaxVolume:  v.Relamount,
+			DexPubkey:  v.Pubkey,
+			Base:       obook.Result.Base,
+			Rel:        obook.Result.Rel,
+			OrderID:    v.ID,
+			Timestamp:  v.Timestamp,
+			Handle:     handle,
+			Pubkey:     pubkey,
+			Authorized: auth,
+		})
+	}
+
+	// fmt.Println(orderList)
+	return orderList
+}
+
+// GetHandle returns Handle, Public Key and Authorized status of that pubkey
+func GetHandle(pubkey string) (string, string, bool) {
+	var handles []DEXHandle
+	handles = DEXHandles()
+
+	for _, value := range handles {
+		// fmt.Println(index)
+		// fmt.Println(value)
+		if pubkey == value.DEXPubkey {
+			// fmt.Println(value.Handle, value.Pubkey, value.Authorised)
+			return value.Handle, value.Pubkey, value.Authorised
+		}
+	}
+
+	return "", "", false
 }
