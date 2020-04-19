@@ -109,7 +109,7 @@
   });
 
   $('#total').on('input', function() {
-      console.log($("#total").val())
+      //console.log($("#total").val())
       maxtotal = {{.MaxVolume}} * {{.Price}}
       if ($("#total").val() > maxtotal) {
         $("#total").val(maxtotal)
