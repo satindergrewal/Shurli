@@ -55,7 +55,7 @@
                       <div class="form-group row">
                         <label for="amount" class="col-md-2 col-sm-4 col-form-label">Amount</label>
                         <div class="col-md-10 col-sm-8">
-                          <input type="text" class="form-control" id="amount">
+                          <input type="text" class="form-control" id="amount" required>
                           <small id="amountHelp" class="form-text text-muted">
                             Max volume you can buy with this order: {{.MaxVolume}} {{.Rel}}
                           </small>
@@ -64,7 +64,7 @@
                       <div class="form-group row">
                         <label for="total" class="col-md-2 col-sm-4 col-form-label">Total</label>
                         <div class="col-md-10 col-sm-8">
-                          <input type="text" class="form-control" id="total">
+                          <input type="text" class="form-control" id="total" required>
                           <small id="totalHelp" class="form-text text-muted">
                             Total {{.Base}} it will cost to buy the entered {{.Rel}} amount.
                           </small>
@@ -96,6 +96,27 @@
   $( document ).ready(function() {
     var stepper = new Stepper($('.bs-stepper')[0])
     stepper.to(2)
+  });
+
+  $('#amount').on('input', function() {
+      //console.log($("#amount").val())
+      if ($("#amount").val() > {{.MaxVolume}}) {
+        //console.log("value can not be greater than: {{.MaxVolume}}");
+        $("#amount").val({{.MaxVolume}})
+      }
+      total = $("#amount").val() * {{.Price}}
+      $('#total').val(parseFloat(total.toFixed(8)));
+  });
+
+  $('#total').on('input', function() {
+      console.log($("#total").val())
+      maxtotal = {{.MaxVolume}} * {{.Price}}
+      if ($("#total").val() > maxtotal) {
+        $("#total").val(maxtotal)
+        //console.log("value can not be greater than:" + maxtotal);
+      }
+      amount = $("#total").val() / {{.Price}}
+      $('#amount').val(parseFloat(amount.toFixed(8)));
   });
 </script>
 
