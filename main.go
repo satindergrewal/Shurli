@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -89,7 +88,7 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// fmt.Println(vars)
-	fmt.Println(id)
+	// fmt.Println(id)
 
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)

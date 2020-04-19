@@ -81,11 +81,6 @@ body {
     overflow-y: auto;
 }
 
-.octicon-verified {
-	fill: #1DA1F2;
-	margin-bottom: 3px;
-}
-
-.octicon-verified-lg {
-	fill: #81ff47;
+.bs-stepper .line, .bs-stepper-line {
+	background-color: rgba(255, 255, 255, 0.12) !important;
 }

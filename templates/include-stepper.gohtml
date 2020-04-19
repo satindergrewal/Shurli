@@ -1,0 +1,35 @@
+{{define "bs-order-stepper"}}
+        <div class="col-md-10">
+          <div class="bs-stepper">
+            <div class="bs-stepper-header" role="tablist">
+              <!-- your steps here -->
+              <div class="step" data-target="#select-order">
+                <button type="button" class="step-trigger disabled" style="opacity: 100;" role="tab" aria-controls="select-order" id="select-order-trigger">
+                  <span class="bs-stepper-circle">1</span>
+                  <span class="bs-stepper-label">Select Order</span>
+                </button>
+              </div>
+              <div class="line"></div>
+              <div class="step" data-target="#enter-amount">
+                <button type="button" class="step-trigger disabled" style="opacity: 100;" role="tab" aria-controls="enter-amount" id="enter-amount-trigger">
+                  <span class="bs-stepper-circle">2</span>
+                  <span class="bs-stepper-label">Enter Amount</span>
+                </button>
+              </div>
+              <div class="line"></div>
+              <div class="step" data-target="#init-trade">
+                <button type="button" class="step-trigger disabled" style="opacity: 100;" role="tab" aria-controls="init-trade" id="init-trade-trigger">
+                  <span class="bs-stepper-circle">3</span>
+                  <span class="bs-stepper-label">Initiate Trade</span>
+                </button>
+              </div>
+            </div>
+            <div class="bs-stepper-content">
+              <!-- your steps content here -->
+              <div id="select-order" class="content" role="tabpanel" aria-labelledby="select-order-trigger"></div>
+              <div id="enter-amount" class="content" role="tabpanel" aria-labelledby="enter-amount-trigger"></div>
+              <div id="init-trade" class="content" role="tabpanel" aria-labelledby="init-trade-trigger"></div>
+            </div>
+          </div>
+        </div>
+{{end}}}

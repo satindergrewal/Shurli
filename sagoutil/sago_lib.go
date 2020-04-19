@@ -220,6 +220,8 @@ type OrderData struct {
 	Handle     string
 	Pubkey     string
 	Authorized bool
+	BaseBal    float64
+	RelBal     float64
 }
 
 // OrderBookList returns processed data for Orderbook page
@@ -345,6 +347,27 @@ func OrderID(id string) OrderData {
 	price := amountB / amountA
 	// fmt.Println("price:", price)
 
+	var base kmdgo.AppType
+	var rel kmdgo.AppType
+	if orderData.Base == "KMD" {
+		base = "komodo"
+	} else {
+		base = kmdgo.AppType(orderData.Base)
+	}
+
+	if orderData.Rel == "KMD" {
+		rel = "komodo"
+	} else {
+		rel = kmdgo.AppType(orderData.Rel)
+	}
+
+	var baseRelWallet = []kmdgo.AppType{base, rel}
+
+	var wallets []WInfo
+	wallets = WalletInfo(baseRelWallet)
+	// fmt.Println(wallets[0].Balance)
+	// fmt.Println(wallets[1].Balance)
+
 	orderData = OrderData{
 		Price:      fmt.Sprintf("%f", price),
 		MaxVolume:  orderid.Result.AmountB,
@@ -356,6 +379,8 @@ func OrderID(id string) OrderData {
 		Handle:     handle,
 		Pubkey:     pubkey,
 		Authorized: auth,
+		BaseBal:    wallets[0].Balance,
+		RelBal:     wallets[1].Balance,
 	}
 
 	return orderData

@@ -8,39 +8,96 @@
     </nav>
 
     <div class="container-fluid" style="margin-top: 15px;">
+    
 
-       <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
-            <div class="col-8"> <!-- Order List div start -->
-                <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
-                    <div class="card-header">
-                      <div class="row">
-                        <div class="col-8" style="text-align: left; font-size: small;">
-                          {{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}
-                        </div>
-                        <div class="col-4" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | {{.Timestamp}}</div>
-                      </div>
-                    </div>
-                    <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
-                        <div class="row">
-                          <div class="col-8">
-                            Price: {{.Price}} {{.Base}}<br>
-                            Max Volume: {{.MaxVolume}} {{.Rel}}
-                          </div>
-                          <div class="col-4 text-center">
-                            <button class="btn btn-lg btn-primary" style="width: 200px;">
-                              <span style="font-size: 14px;">Exchange with</span><br>
-                              <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
-                            </button>
-                          </div>
-                        </div>
-                    </div> <!-- Order List body end -->
-                </div> <!-- Order List card end -->
-            </div> <!-- Order List div end -->
+      <div class="row justify-content-md-center" style="margin-bottom: 1em;">
+
+        {{template "bs-order-stepper"}}
+
+        <div class="col-md-4">
+          <div class="card text-white bg-dark">
+            <div class="card-header">
+              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Current Balance</div>
+            </div>
+            <div clas="card-body">
+              <table class="table table-dark table-striped">
+                <tr>
+                  <td>{{.Base}}</td>
+                  <td>{{.BaseBal}}</td>
+                </tr>
+                <tr>
+                  <td>{{.Rel}}</td>
+                  <td>{{.RelBal}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
 
-        {{/* {{template "asksbids-tables"}} */}}
+        <div class="col-md-6"> <!-- OrderData div start -->
+            <div class="card text-white bg-dark mb-2"> <!-- OrderData card start -->
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-3" style="text-align: left;">
+                      Trading with: {{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}}
+                    </div>
+                    <div class="col-9" style="text-align: right;">Order ID: {{.OrderID}} | {{.Timestamp}}</div>
+                  </div>
+                </div>
+                <div class="card-body" style="font-size: 18px;"> <!-- OrderData body start -->
+                    <form>
+                      <div class="form-group row">
+                        <label for="price" class="col-md-2 col-sm-4 col-form-label">Price</label>
+                        <div class="col-md-10 col-sm-8">
+                          {{.Price}} {{.Base}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="amount" class="col-md-2 col-sm-4 col-form-label">Amount</label>
+                        <div class="col-md-10 col-sm-8">
+                          <input type="text" class="form-control" id="amount">
+                          <small id="amountHelp" class="form-text text-muted">
+                            Max volume you can buy with this order: {{.MaxVolume}} {{.Rel}}
+                          </small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="total" class="col-md-2 col-sm-4 col-form-label">Total</label>
+                        <div class="col-md-10 col-sm-8">
+                          <input type="text" class="form-control" id="total">
+                          <small id="totalHelp" class="form-text text-muted">
+                            Total {{.Base}} it will cost to buy the entered {{.Rel}} amount.
+                          </small>
+                        </div>
+                      </div>
+                    </form>
+                </div> <!-- OrderData body end -->
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col-6" style="text-align: left;">
+                      <form action="/orderbook" method="POST">
+                        <input type="hidden" name="coin_base" value="{{.Base}}">
+                        <input type="hidden" name="coin_rel" value="{{.Rel}}">
+                        <button type="submit" class="btn btn-secondary">back</button>
+                      </form>
+                    </div>
+                    <div class="col-6" style="text-align: right;">
+                      <button type="submit" class="btn btn-primary">Buy {{.Rel}}</button>
+                    </div>
+                  </div>
+                </div>
+            </div> <!-- OrderData card end -->
+        </div> <!-- OrderData div end -->
+      </div>
     
     </div>
+{{template "footer-scripts"}}
+<script>
+  $( document ).ready(function() {
+    var stepper = new Stepper($('.bs-stepper')[0])
+    stepper.to(2)
+  });
+</script>
 
 {{template "footer"}}
 

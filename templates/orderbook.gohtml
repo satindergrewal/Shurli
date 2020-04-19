@@ -10,6 +10,9 @@
     <div class="container-fluid" style="margin-top: 15px;">
 
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
+
+            {{template "bs-order-stepper"}}
+
             <div class="col-8"> <!-- trading pair div start -->
                 <div class="card text-white bg-dark"> <!-- trading pair card start -->
                     <div class="card-body" style="font-size: 18px;"> <!-- trading pair body start -->
@@ -79,11 +82,11 @@
                     </div>
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
                         <div class="row">
-                          <div class="col-8">
+                          <div class="col-lg-8 col-sm-12">
                             Price: {{.Price}} {{.Base}}<br>
                             Max Volume: {{.MaxVolume}} {{.Rel}}
                           </div>
-                          <div class="col-4 text-center">
+                          <div class="col-lg-4 col-sm-12 text-center">
                             <a class="btn btn-lg btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
                               <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
@@ -101,6 +104,11 @@
         {{/* {{template "asksbids-tables"}} */}}
     
     </div>
-
+{{template "footer-scripts"}}
+<script>
+  $(document).ready(function () {
+    var stepper = new Stepper($('.bs-stepper')[0])
+  })
+</script>
 {{template "footer"}}
 
