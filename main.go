@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/satindergrewal/kmdgo"
 
@@ -24,6 +26,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
+	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 
 	// favicon.ico file
 	r.HandleFunc("/favicon.ico", faviconHandler)
@@ -74,6 +77,24 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := tpl.ExecuteTemplate(w, "orderbook.gohtml", data)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		log.Fatalln(err)
+	}
+}
+
+func orderid(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	// fmt.Println(vars)
+	fmt.Println(id)
+
+	var orderData sagoutil.OrderData
+	orderData = sagoutil.OrderID(id)
+
+	err := tpl.ExecuteTemplate(w, "orderid.gohtml", orderData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)

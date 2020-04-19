@@ -1,0 +1,46 @@
+{{template "header"}}
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand"><img src="/assets/images/antara150x150.png" class="logo"/> Subatomic Go</a>
+        <form class="form-inline">
+            {{template "menu-button-array"}}
+        </form>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 15px;">
+
+       <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
+            <div class="col-8"> <!-- Order List div start -->
+                <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-8" style="text-align: left; font-size: small;">
+                          {{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}
+                        </div>
+                        <div class="col-4" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | {{.Timestamp}}</div>
+                      </div>
+                    </div>
+                    <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
+                        <div class="row">
+                          <div class="col-8">
+                            Price: {{.Price}} {{.Base}}<br>
+                            Max Volume: {{.MaxVolume}} {{.Rel}}
+                          </div>
+                          <div class="col-4 text-center">
+                            <button class="btn btn-lg btn-primary" style="width: 200px;">
+                              <span style="font-size: 14px;">Exchange with</span><br>
+                              <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
+                            </button>
+                          </div>
+                        </div>
+                    </div> <!-- Order List body end -->
+                </div> <!-- Order List card end -->
+            </div> <!-- Order List div end -->
+        </div>
+
+        {{/* {{template "asksbids-tables"}} */}}
+    
+    </div>
+
+{{template "footer"}}
+

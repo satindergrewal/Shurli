@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/satindergrewal/kmdgo"
@@ -292,4 +293,70 @@ func GetHandle(pubkey string) (string, string, bool) {
 	}
 
 	return "", "", false
+}
+
+// OrderID returns data to display on orderbook/{orderid} page
+func OrderID(id string) OrderData {
+
+	var orderData OrderData
+
+	var appName kmdgo.AppType
+	appName = `DEX`
+
+	var orderid kmdgo.DEXGet
+
+	args := make(kmdgo.APIParams, 1)
+	args[0] = id
+	// args[1] = "0138d849d6bc81ff1c5389aae9a60ba3ee9cfd7858d93a3864679c25937e70951f"
+	// args[2] = "BTC"
+	// args[3] = "KMD"
+	// fmt.Println(args)
+
+	orderid, err := appName.DEXGet(args)
+	if err != nil {
+		fmt.Printf("Code: %v\n", orderid.Error.Code)
+		fmt.Printf("Message: %v\n\n", orderid.Error.Message)
+		log.Fatalln("Err happened", err)
+	}
+
+	// fmt.Println(orderid.Result)
+
+	handle, pubkey, auth := GetHandle(orderid.Result.Pubkey)
+	// fmt.Println(handle)
+	// fmt.Println(pubkey)
+	// fmt.Println(auth)
+
+	var unixTime int64 = int64(orderid.Result.Timestamp)
+	t := time.Unix(unixTime, 0)
+	strDate := t.Format(time.UnixDate)
+	// fmt.Println(strDate)̉̉̉
+
+	amountA, err := strconv.ParseFloat(orderid.Result.AmountA, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	amountB, err := strconv.ParseFloat(orderid.Result.AmountB, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// fmt.Println("amountA:", amountA)
+	// fmt.Println("amountB: ", amountB)
+	price := amountB / amountA
+	// fmt.Println("price:", price)
+
+	orderData = OrderData{
+		Price:      fmt.Sprintf("%f", price),
+		MaxVolume:  orderid.Result.AmountB,
+		DexPubkey:  orderid.Result.Pubkey,
+		Base:       orderid.Result.TagA,
+		Rel:        orderid.Result.TagB,
+		OrderID:    int64(orderid.Result.ID),
+		Timestamp:  strDate,
+		Handle:     handle,
+		Pubkey:     pubkey,
+		Authorized: auth,
+	}
+
+	return orderData
 }

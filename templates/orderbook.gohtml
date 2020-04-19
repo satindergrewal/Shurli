@@ -84,10 +84,10 @@
                             Max Volume: {{.MaxVolume}} {{.Rel}}
                           </div>
                           <div class="col-4 text-center">
-                            <button class="btn btn-lg btn-primary" style="width: 200px;">
+                            <a class="btn btn-lg btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
                               <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
-                            </button>
+                            </a>
                           </div>
                         </div>
                     </div> <!-- Order List body end -->
