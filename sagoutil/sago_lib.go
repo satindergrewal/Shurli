@@ -28,9 +28,14 @@ type WInfo struct {
 func WalletInfo(chains []kmdgo.AppType) []WInfo {
 	var wallets []WInfo
 
+	// fmt.Println(chains)
+
 	for _, v := range chains {
 		// fmt.Println(i)
 		// fmt.Println(v)
+		if v == "KMD" {
+			v = "komodo"
+		}
 		appName := kmdgo.NewAppType(v)
 
 		var info kmdgo.GetInfo
@@ -347,21 +352,9 @@ func OrderID(id string) OrderData {
 	price := amountB / amountA
 	// fmt.Println("price:", price)
 
-	var base kmdgo.AppType
-	var rel kmdgo.AppType
-	if orderData.Base == "KMD" {
-		base = "komodo"
-	} else {
-		base = kmdgo.AppType(orderData.Base)
-	}
+	var baseRelWallet = []kmdgo.AppType{kmdgo.AppType(orderid.Result.TagA), kmdgo.AppType(orderid.Result.TagB)}
 
-	if orderData.Rel == "KMD" {
-		rel = "komodo"
-	} else {
-		rel = kmdgo.AppType(orderData.Rel)
-	}
-
-	var baseRelWallet = []kmdgo.AppType{base, rel}
+	// fmt.Println(baseRelWallet)
 
 	var wallets []WInfo
 	wallets = WalletInfo(baseRelWallet)
