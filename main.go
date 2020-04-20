@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -26,6 +27,7 @@ func main() {
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
+	r.HandleFunc("/orderbook/swap/{id}/{amount}", orderinit).Methods("GET")
 
 	// favicon.ico file
 	r.HandleFunc("/favicon.ico", faviconHandler)
@@ -94,6 +96,29 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 	orderData = sagoutil.OrderID(id)
 
 	err := tpl.ExecuteTemplate(w, "orderid.gohtml", orderData)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		log.Fatalln(err)
+	}
+}
+
+func orderinit(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+	amount := vars["amount"]
+
+	// fmt.Println(vars)
+	// fmt.Println(id)
+	// fmt.Println(amount)
+
+	var orderData sagoutil.OrderData
+	orderData = sagoutil.OrderID(id)
+
+	cmdString := `./subatomic ` + orderData.Base + ` ` + id + ` ` + amount
+	fmt.Println(cmdString)
+
+	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", orderData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)

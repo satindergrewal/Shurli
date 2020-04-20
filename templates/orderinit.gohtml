@@ -1,0 +1,62 @@
+{{template "header"}}
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand"><img src="/assets/images/antara150x150.png" class="logo"/> Subatomic Go</a>
+        <form class="form-inline">
+            {{template "menu-button-array"}}
+        </form>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 15px;">
+    
+
+      <div class="row justify-content-md-center" style="margin-bottom: 1em;">
+
+        {{template "bs-order-stepper"}}
+
+        <div class="col-md-4">
+          <div class="card text-white bg-dark">
+            <div class="card-header">
+              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Current Balance</div>
+            </div>
+            <div clas="card-body">
+              <table class="table table-dark table-striped">
+                <tr>
+                  <td>{{.Base}}</td>
+                  <td>{{.BaseBal}}</td>
+                </tr>
+                <tr>
+                  <td>{{.Rel}}</td>
+                  <td>{{.RelBal}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6"> <!-- OrderStatus div start -->
+            <div class="card text-white bg-dark mb-2"> <!-- OrderStatus card start -->
+                <div class="card-header">
+                  Order Status
+                </div>
+                <div class="card-body" style="font-size: 18px;"> <!-- OrderStatus body start -->
+                    
+                </div> <!-- OrderStatus body end -->
+                <div class="card-footer">
+                  
+                </div>
+            </div> <!-- OrderStatus card end -->
+        </div> <!-- OrderStatus div end -->
+      </div>
+    
+    </div>
+{{template "footer-scripts"}}
+<script>
+  $( document ).ready(function() {
+    var stepper = new Stepper($('.bs-stepper')[0])
+    stepper.to(3)
+  });
+</script>
+
+{{template "footer"}}
+

@@ -48,6 +48,9 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			if info.Error.Message == "Loading block index..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{string(v), "Loading...", 0.0, 0, false})
+			} else if info.Error.Message == "Rescanning..." {
+				fmt.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{string(v), "Rescanning...", 0.0, 0, false})
 			} else {
 				fmt.Println(v, "- Err happened:", err)
 				wallets = append(wallets, WInfo{string(v), "Offline", 0.0, 0, false})
