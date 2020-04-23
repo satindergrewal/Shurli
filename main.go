@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os/exec"
 	"text/template"
 
 	// "github.com/satindergrewal/subatomicgo/sagoutil"
@@ -12,11 +16,15 @@ import (
 	"github.com/satindergrewal/kmdgo"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 )
 
 var tpl *template.Template
 
 var chains = []kmdgo.AppType{"komodo", "PIRATE", "VRSC", "HUSH3", "DEX"}
+
+var subAtomicExec string = "./subatomic"
+var subAtomicExecDir string = "/Users/satinder/repositories/jl777/komodo/src"
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
@@ -28,6 +36,8 @@ func main() {
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 	r.HandleFunc("/orderbook/swap/{id}/{amount}", orderinit).Methods("GET")
+
+	r.HandleFunc("/echo", echo)
 
 	// favicon.ico file
 	r.HandleFunc("/favicon.ico", faviconHandler)
@@ -118,9 +128,95 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	cmdString := `./subatomic ` + orderData.Rel + ` "" ` + id + ` ` + amount
 	fmt.Println(cmdString)
 
-	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", orderData)
+	data := struct {
+		ID     string
+		Amount string
+		sagoutil.OrderData
+	}{
+		ID:        id,
+		Amount:    amount,
+		OrderData: orderData,
+	}
+
+	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", data)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		log.Fatalln(err)
+	}
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+func echo(w http.ResponseWriter, r *http.Request) {
+	c, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Print("upgrade:", err)
+		return
+	}
+	defer c.Close()
+
+	c.WriteMessage(1, []byte("Starting...\n"))
+
+	for {
+		mt, message, err := c.ReadMessage()
+		if err != nil {
+			log.Println("read:", err)
+			break
+		}
+		log.Printf("recv: %s", message)
+
+		err = c.WriteMessage(mt, message)
+
+		var parsed []string
+		err = json.Unmarshal([]byte(message), &parsed)
+		fmt.Println("parsed", parsed)
+		fmt.Println("parsed Rel:", parsed[0])
+		fmt.Println("parsed ID:", parsed[1])
+		fmt.Println("parsed Amount:", parsed[2])
+
+		cmd := exec.Command(subAtomicExec, parsed[0], "", parsed[1], parsed[2])
+		cmd.Dir = subAtomicExecDir
+		stdout, err := cmd.StdoutPipe()
+		if err != nil {
+			log.Println(err)
+			fmt.Println("StdOut Nil")
+			return
+		}
+		stderr, err := cmd.StderrPipe()
+		if err != nil {
+			log.Println(err)
+			fmt.Println("Err Nil")
+			return
+		}
+
+		if err := cmd.Start(); err != nil {
+			log.Println(err)
+			fmt.Println("Start")
+			return
+		}
+
+		s := bufio.NewScanner(io.MultiReader(stdout, stderr))
+		for s.Scan() {
+			log.Printf("CMD Bytes: %s", s.Bytes())
+			c.WriteMessage(1, s.Bytes())
+		}
+
+		err = c.WriteMessage(mt, message)
+		if err != nil {
+			log.Println("write:", err)
+			break
+		}
+
+		if err := cmd.Wait(); err != nil {
+			log.Println(err)
+			c.WriteMessage(1, []byte(err.Error()))
+			fmt.Println("Wait")
+			return
+		}
+
+		c.WriteMessage(1, []byte("Finished\n"))
 	}
 }

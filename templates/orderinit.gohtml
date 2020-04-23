@@ -22,12 +22,12 @@
             <div clas="card-body">
               <table class="table table-dark table-striped">
                 <tr>
-                  <td>{{.Base}}</td>
-                  <td>{{.BaseBal}}</td>
+                  <td>{{.OrderData.Base}}</td>
+                  <td>{{.OrderData.BaseBal}}</td>
                 </tr>
                 <tr>
-                  <td>{{.Rel}}</td>
-                  <td>{{.RelBal}}</td>
+                  <td>{{.OrderData.Rel}}</td>
+                  <td>{{.OrderData.RelBal}}</td>
                 </tr>
               </table>
             </div>
@@ -40,7 +40,24 @@
                   Order Status
                 </div>
                 <div class="card-body" style="font-size: 18px;"> <!-- OrderStatus body start -->
-                    
+                    <code></code>
+                    <script>
+                      var ws = new WebSocket("ws://localhost:8080/echo")
+                      console.log("{{.OrderData.Rel}}")
+                      console.log("{{.ID}}")
+                      console.log("{{.Amount}}")
+                      tmpJson = ["{{.OrderData.Rel}}","{{.ID}}", "{{.Amount}}"]
+                      console.log(tmpJson)
+                      
+                      ws.onopen = function(event) {
+                        console.log("WebSocket is open now.");
+                        ws.send(JSON.stringify(tmpJson))
+                      };
+                      
+                      ws.onmessage = function(e) {
+                        document.querySelector("code").innerHTML += e.data + "<br>"
+                      }
+                    </script>
                 </div> <!-- OrderStatus body end -->
                 <div class="card-footer">
                   
