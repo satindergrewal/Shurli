@@ -327,11 +327,12 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 		// fmt.Println(strDate)
 
 		orderList = append(orderList, OrderData{
-			Price:      v.Price,
-			MaxVolume:  v.Relamount,
+			Price: v.Price,
+			// MaxVolume:  v.Relamount,
+			MaxVolume:  v.Baseamount,
 			DexPubkey:  v.Pubkey,
-			Base:       obook.Result.Base,
-			Rel:        obook.Result.Rel,
+			Base:       obook.Result.Rel,
+			Rel:        obook.Result.Base,
 			OrderID:    v.ID,
 			Timestamp:  strDate,
 			Handle:     handle,
@@ -411,7 +412,7 @@ func OrderID(id string) OrderData {
 	price := amountB / amountA
 	// fmt.Println("price:", price)
 
-	var baseRelWallet = []kmdgo.AppType{kmdgo.AppType(orderid.Result.TagA), kmdgo.AppType(orderid.Result.TagB)}
+	var baseRelWallet = []kmdgo.AppType{kmdgo.AppType(orderid.Result.TagB), kmdgo.AppType(orderid.Result.TagA)}
 
 	// fmt.Println(baseRelWallet)
 
@@ -422,10 +423,10 @@ func OrderID(id string) OrderData {
 
 	orderData = OrderData{
 		Price:      fmt.Sprintf("%f", price),
-		MaxVolume:  orderid.Result.AmountB,
+		MaxVolume:  orderid.Result.AmountA,
 		DexPubkey:  orderid.Result.Pubkey,
-		Base:       orderid.Result.TagA,
-		Rel:        orderid.Result.TagB,
+		Base:       orderid.Result.TagB,
+		Rel:        orderid.Result.TagA,
 		OrderID:    int64(orderid.Result.ID),
 		Timestamp:  strDate,
 		Handle:     handle,

@@ -35,7 +35,7 @@ func main() {
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
-	r.HandleFunc("/orderbook/swap/{id}/{amount}", orderinit).Methods("GET")
+	r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
 
 	r.HandleFunc("/echo", echo)
 
@@ -117,24 +117,28 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	amount := vars["amount"]
+	total := vars["total"]
 
 	// fmt.Println(vars)
 	// fmt.Println(id)
 	// fmt.Println(amount)
+	// fmt.Println(total)
 
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
 
-	cmdString := `./subatomic ` + orderData.Rel + ` "" ` + id + ` ` + amount
+	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	fmt.Println(cmdString)
 
 	data := struct {
 		ID     string
 		Amount string
+		Total  string
 		sagoutil.OrderData
 	}{
 		ID:        id,
 		Amount:    amount,
+		Total:     total,
 		OrderData: orderData,
 	}
 

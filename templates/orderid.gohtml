@@ -15,12 +15,13 @@
         {{template "bs-order-stepper"}}
 
         <div class="col-md-4">
-          <div class="card text-white bg-dark">
+
+          <div class="card text-white bg-dark mb-2">
             <div class="card-header">
               <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Current Balance</div>
             </div>
             <div clas="card-body">
-              <table class="table table-dark table-striped">
+              <table class="table table-dark table-striped table-card">
                 <tr>
                   <td>{{.Base}}</td>
                   <td>{{.BaseBal}}</td>
@@ -32,6 +33,29 @@
               </table>
             </div>
           </div>
+
+          <div class="card text-white bg-dark">
+            <div class="card-header">
+              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Order Info</div>
+            </div>
+            <div clas="card-body">
+              <table class="table table-dark table-striped table-card">
+                <tr>
+                  <td>Order ID</td>
+                  <td>{{.OrderID}}</td>
+                </tr>
+                <tr>
+                  <td>Price</td>
+                  <td>{{.Price}} {{.Base}}</td>
+                </tr>
+                <tr>
+                  <td>Max Volume</td>
+                  <td>{{.MaxVolume}} {{.Rel}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
         </div>
 
         <div class="col-md-6"> <!-- OrderData div start -->
@@ -54,7 +78,8 @@
                     <div class="form-group row">
                       <label for="amount" class="col-md-2 col-sm-4 col-form-label">Amount</label>
                       <div class="col-md-10 col-sm-8">
-                        <input type="text" class="form-control" id="amount" required>
+                        <input type="text" class="form-control" id="amount" autocomplete="off" required>
+                        <span id="amountHelp" style="float: right; margin: -32px 10px 0 0; color: #808080;">{{.Rel}}</span>
                         <small id="amountHelp" class="form-text text-muted">
                           Max volume you can buy with this order: {{.MaxVolume}} {{.Rel}}
                         </small>
@@ -63,7 +88,8 @@
                     <div class="form-group row">
                       <label for="total" class="col-md-2 col-sm-4 col-form-label">Total</label>
                       <div class="col-md-10 col-sm-8">
-                        <input type="text" class="form-control" id="total" required>
+                        <input type="text" class="form-control" id="total" autocomplete="off" required>
+                        <span id="totalHelp" style="float: right; margin: -32px 10px 0 0; color: #808080;">{{.Base}}</span>
                         <small id="totalHelp" class="form-text text-muted">
                           Total {{.Base}} it will cost to buy the entered {{.Rel}} amount.
                         </small>
@@ -103,24 +129,24 @@
       if ($("#amount").val() > {{.MaxVolume}}) {
         //console.log("value can not be greater than: {{.MaxVolume}}");
         $("#amount").val({{.MaxVolume}})
-        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/{{.MaxVolume}}')
+        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/{{.MaxVolume}}'+ '/' + $("#total").val())
       }
       total = $("#amount").val() * {{.Price}}
       $('#total').val(parseFloat(total.toFixed(8)));
-      $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val())
+      $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val()+ '/' + $("#total").val())
   });
 
   $('#total').on('input', function() {
       //console.log($("#total").val())
       maxtotal = {{.MaxVolume}} * {{.Price}}
       if ($("#total").val() > maxtotal) {
-        $("#total").val(maxtotal)
-        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val())
+        $("#total").val(parseFloat(maxtotal.toFixed(8)))
+        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val() + '/' + $("#total").val())
         //console.log("value can not be greater than:" + maxtotal);
       }
       amount = $("#total").val() / {{.Price}}
       $('#amount').val(parseFloat(amount.toFixed(8)));
-      $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + parseFloat(amount.toFixed(8)))
+      $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + parseFloat(amount.toFixed(8)) + '/' + $("#total").val())
   });
 </script>
 

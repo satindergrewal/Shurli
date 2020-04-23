@@ -15,12 +15,13 @@
         {{template "bs-order-stepper"}}
 
         <div class="col-md-4">
-          <div class="card text-white bg-dark">
+
+          <div class="card text-white bg-dark mb-2">
             <div class="card-header">
               <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Current Balance</div>
             </div>
             <div clas="card-body">
-              <table class="table table-dark table-striped">
+              <table class="table table-dark table-striped table-card">
                 <tr>
                   <td>{{.OrderData.Base}}</td>
                   <td>{{.OrderData.BaseBal}}</td>
@@ -32,6 +33,29 @@
               </table>
             </div>
           </div>
+
+          <div class="card text-white bg-dark">
+            <div class="card-header">
+              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Order Info</div>
+            </div>
+            <div clas="card-body">
+              <table class="table table-dark table-striped table-card">
+                <tr>
+                  <td>Order ID</td>
+                  <td>{{.ID}}</td>
+                </tr>
+                <tr>
+                  <td>Selling</td>
+                  <td>{{.Total}} {{.OrderData.Base}}</td>
+                </tr>
+                <tr>
+                  <td>Buying</td>
+                  <td>{{.Amount}} {{.OrderData.Rel}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
         </div>
 
         <div class="col-md-6"> <!-- OrderStatus div start -->
@@ -43,10 +67,11 @@
                     <code></code>
                     <script>
                       var ws = new WebSocket("ws://localhost:8080/echo")
-                      console.log("{{.OrderData.Rel}}")
+                      {{/* console.log("{{.OrderData.Base}}")
                       console.log("{{.ID}}")
                       console.log("{{.Amount}}")
-                      tmpJson = ["{{.OrderData.Rel}}","{{.ID}}", "{{.Amount}}"]
+                      console.log("{{.Total}}") */}}
+                      tmpJson = ["{{.OrderData.Base}}","{{.ID}}", "{{.Total}}"]
                       console.log(tmpJson)
                       
                       ws.onopen = function(event) {

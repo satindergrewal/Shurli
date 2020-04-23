@@ -15,6 +15,10 @@ body {
 	background-color: #283547;
 }
 
+.table-card {
+	margin-bottom: 0px;
+}
+
 .table-dark td, .table-dark th, .table-dark thead th {
 	border-color: #14263C;
 }
