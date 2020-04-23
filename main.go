@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
@@ -21,10 +22,32 @@ import (
 
 var tpl *template.Template
 
-var chains = []kmdgo.AppType{"komodo", "PIRATE", "VRSC", "HUSH3", "DEX"}
+// SubAtomicConfig holds the app's confugration settings
+type SubAtomicConfig struct {
+	Chains       []string `json:"chains"`
+	SubatomicExe string   `json:"subatomic_exe"`
+	SubatomicDir string   `json:"subatomic_dir"`
+}
 
-var subAtomicExec string = "./subatomic"
-var subAtomicExecDir string = "/Users/satinder/repositories/jl777/komodo/src"
+//SubAtomicConfInfo returns application's config params
+func SubAtomicConfInfo() SubAtomicConfig {
+	var conf SubAtomicConfig
+	content, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(content, &conf)
+	return conf
+}
+
+//StrToAppType converts and returns slice of string as slice of kmdgo.AppType
+func StrToAppType(chain []string) []kmdgo.AppType {
+	var chainskmd []kmdgo.AppType
+	for _, v := range chain {
+		chainskmd = append(chainskmd, kmdgo.AppType(v))
+	}
+	return chainskmd
+}
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
@@ -53,6 +76,10 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 
 // idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
 func idx(w http.ResponseWriter, r *http.Request) {
+
+	var conf SubAtomicConfig = SubAtomicConfInfo()
+
+	var chains = StrToAppType(conf.Chains)
 
 	var wallets []sagoutil.WInfo
 	wallets = sagoutil.WalletInfo(chains)
@@ -155,6 +182,11 @@ var upgrader = websocket.Upgrader{
 }
 
 func echo(w http.ResponseWriter, r *http.Request) {
+
+	var conf SubAtomicConfig = SubAtomicConfInfo()
+	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
+	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
+
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
@@ -181,8 +213,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("parsed ID:", parsed[1])
 		fmt.Println("parsed Amount:", parsed[2])
 
-		cmd := exec.Command(subAtomicExec, parsed[0], "", parsed[1], parsed[2])
-		cmd.Dir = subAtomicExecDir
+		cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+		cmd.Dir = conf.SubatomicDir
 		stdout, err := cmd.StdoutPipe()
 		if err != nil {
 			log.Println(err)

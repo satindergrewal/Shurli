@@ -1,0 +1,11 @@
+{
+    "chains": [
+        "komodo",
+        "PIRATE",
+        "VRSC",
+        "HUSH3",
+        "DEX"
+    ],
+    "subatomic_exe": "./subatomic",
+    "subatomic_dir": "/Users/satinder/repositories/jl777/komodo/src"
+}
