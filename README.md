@@ -35,17 +35,22 @@ If you don't find this directory then create the following:
 mkdir -p $HOME/go/{bin,src,pkg}
 ```
 
-Now, you'll need to go to `%HOME/go/src` and clone this repository there.
-
-```shell
-cd $HOME/go/src
-git clone https://github.com/satindergrewal/subatomicgo.git
+```
+go get -u github.com/satindergrewal/subatomicgo
+cd $HOME/go/src/github.com/satindergrewal/subatomicgo
 ```
 
 #### Configure config.json with absolute path of subatomic binary
 
 You must configure the `config.json` file with full path where `subatomic` file is located.
 For example if you have compiled and installed `Komodo` and `subatomic` as per the guide link provided earlier, you probably has the komodo compiled in your `$HOME/komodo` location.
+
+Make a copy of `config.json` file from `config.json.sample` file:
+
+```shell
+cd $HOME/go/src/github.com/satindergrewal/subatomicgo
+cp config.json.sample config.json
+```
 
 Open `config.json` in text editor and edit value of only `subatomic_dir` key.
 
@@ -76,6 +81,7 @@ After:
 
 To start the app execute following command inside `subatomicgo` directory:
 ```shell
+cd $HOME/go/src/github.com/satindergrewal/subatomicgo
 go run main.go
 ```
 

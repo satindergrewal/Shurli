@@ -11,8 +11,8 @@ import (
 	"os/exec"
 	"text/template"
 
-	// "github.com/satindergrewal/subatomicgo/sagoutil"
-	"subatomicgo/sagoutil"
+	"github.com/satindergrewal/subatomicgo/sagoutil"
+	// "subatomicgo/sagoutil"
 
 	"github.com/satindergrewal/kmdgo"
 
