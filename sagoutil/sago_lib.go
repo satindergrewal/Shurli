@@ -30,12 +30,24 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 	// fmt.Println(chains)
 
+	stats, err := kmdgo.NewAppType("DEX").DEXStats()
+	if err != nil {
+		fmt.Printf("Code: %v\n", stats.Error.Code)
+		fmt.Printf("Message: %v\n\n", stats.Error.Message)
+		log.Fatalln("Err happened", err)
+	}
+
+	// fmt.Println("stats value", stats)
+	// fmt.Println("Recvaddr", stats.Result.Recvaddr)
+	// fmt.Println("RecvZaddr", stats.Result.RecvZaddr)
+
 	for _, v := range chains {
 		// fmt.Println(i)
 		// fmt.Println(v)
 		if v == "KMD" {
 			v = "komodo"
 		}
+
 		appName := kmdgo.NewAppType(v)
 
 		var info kmdgo.GetInfo
@@ -68,13 +80,44 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					tempSyncStatus = true
 				}
 
-				wallets = append(wallets, WInfo{
-					Ticker:  info.Result.Name,
-					Status:  "Online",
-					Balance: info.Result.Balance,
-					Blocks:  info.Result.Longestchain,
-					Synced:  tempSyncStatus,
-				})
+				if v == "PIRATE" {
+					// fmt.Println("it is PIRATE")
+					var zblc kmdgo.ZGetBalance
+
+					args := make(kmdgo.APIParams, 2)
+					args[0] = stats.Result.RecvZaddr
+					//args[1] = 1
+					// fmt.Println(args)
+
+					zblc, err := appName.ZGetBalance(args)
+					if err != nil {
+						fmt.Printf("Code: %v\n", zblc.Error.Code)
+						fmt.Printf("Message: %v\n\n", zblc.Error.Message)
+						log.Fatalln("Err happened", err)
+					}
+
+					// fmt.Println("zblc value", zblc)
+					// fmt.Println("-------")
+					// fmt.Printf("\n%0.8f\n", zblc.Result)
+
+					wallets = append(wallets, WInfo{
+						Ticker:  info.Result.Name,
+						Status:  "Online",
+						Balance: zblc.Result,
+						Blocks:  info.Result.Longestchain,
+						Synced:  tempSyncStatus,
+					})
+
+				} else {
+					wallets = append(wallets, WInfo{
+						Ticker:  info.Result.Name,
+						Status:  "Online",
+						Balance: info.Result.Balance,
+						Blocks:  info.Result.Longestchain,
+						Synced:  tempSyncStatus,
+					})
+				}
+
 			}
 		}
 	}
@@ -251,6 +294,18 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 	// tagB/Rel eg. "DEX"
 	args[3] = rel
 	// fmt.Println(args)
+
+	fmt.Println("compiled command is:")
+	fmt.Println("dex-cli DEX_orderbook", maxentries, args[1], base, rel, " | jq .asks")
+	fmt.Println(`
+	from Asks :-
+	buying = ` + base + `
+	selling = ` + rel + `
+
+	from Bids :-
+	buying = ` + rel + `
+	selling = ` + base + `
+	`)
 
 	obook, err := appName.DEXOrderbook(args)
 	if err != nil {

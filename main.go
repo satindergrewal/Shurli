@@ -115,7 +115,7 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
 
-	cmdString := `./subatomic ` + orderData.Base + ` ` + id + ` ` + amount
+	cmdString := `./subatomic ` + orderData.Rel + ` "" ` + id + ` ` + amount
 	fmt.Println(cmdString)
 
 	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", orderData)
