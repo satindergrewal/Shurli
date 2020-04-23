@@ -295,17 +295,18 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 	args[3] = rel
 	// fmt.Println(args)
 
-	fmt.Println("compiled command is:")
-	fmt.Println("dex-cli DEX_orderbook", maxentries, args[1], base, rel, " | jq .asks")
-	fmt.Println(`
-	from Asks :-
-	buying = ` + base + `
-	selling = ` + rel + `
+	// Debug outputs
+	// fmt.Println("compiled command is:")
+	// fmt.Println("dex-cli DEX_orderbook", maxentries, args[1], base, rel, " | jq .asks")
+	// fmt.Println(`
+	// from Asks :-
+	// buying = ` + base + `
+	// selling = ` + rel + `
 
-	from Bids :-
-	buying = ` + rel + `
-	selling = ` + base + `
-	`)
+	// from Bids :-
+	// buying = ` + rel + `
+	// selling = ` + base + `
+	// `)
 
 	obook, err := appName.DEXOrderbook(args)
 	if err != nil {
