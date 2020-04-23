@@ -11,7 +11,7 @@
 Follow this instruction guide and install `Komodo` and `subatomic` binaries on your system:
 https://gist.github.com/himu007/add3181427bb53ab5dc5160537f0c238
 
-### Install Go language on your system
+### Install Go on your system
 On Ubuntu can follow this guide: https://github.com/golang/go/wiki/Ubuntu
 
 ```shell
