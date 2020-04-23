@@ -34,7 +34,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 	if err != nil {
 		fmt.Printf("Code: %v\n", stats.Error.Code)
 		fmt.Printf("Message: %v\n\n", stats.Error.Message)
-		log.Fatalln("Err happened", err)
+		// log.Fatalln("Err happened", err)
 	}
 
 	// fmt.Println("stats value", stats)
@@ -93,7 +93,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					if err != nil {
 						fmt.Printf("Code: %v\n", zblc.Error.Code)
 						fmt.Printf("Message: %v\n\n", zblc.Error.Message)
-						log.Fatalln("Err happened", err)
+						// log.Fatalln("Err happened", err)
 					}
 
 					// fmt.Println("zblc value", zblc)
@@ -161,7 +161,7 @@ func DEXHandles() []DEXHandle {
 	if err != nil {
 		fmt.Printf("Code: %v\n", list.Error.Code)
 		fmt.Printf("Message: %v\n\n", list.Error.Message)
-		log.Fatalln("Err happened", err)
+		// log.Fatalln("Err happened", err)
 	}
 
 	var tmpPubkey string
@@ -312,7 +312,7 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 	if err != nil {
 		fmt.Printf("Code: %v\n", obook.Error.Code)
 		fmt.Printf("Message: %v\n\n", obook.Error.Message)
-		log.Fatalln("Err happened", err)
+		// log.Fatalln("Err happened", err)
 	}
 
 	for _, v := range obook.Result.Asks {
@@ -383,7 +383,7 @@ func OrderID(id string) OrderData {
 	if err != nil {
 		fmt.Printf("Code: %v\n", orderid.Error.Code)
 		fmt.Printf("Message: %v\n\n", orderid.Error.Message)
-		log.Fatalln("Err happened", err)
+		// log.Fatalln("Err happened", err)
 	}
 
 	// fmt.Println(orderid.Result)
