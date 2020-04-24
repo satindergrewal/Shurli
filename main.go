@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"text/template"
 	"time"
 
@@ -27,6 +28,7 @@ var tpl *template.Template
 func check(e error) {
 	if e != nil {
 		panic(e)
+		// log.Println(e)
 	}
 }
 
@@ -237,10 +239,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		var parsed []string
 		err = json.Unmarshal([]byte(message), &parsed)
-		fmt.Println("parsed", parsed)
-		fmt.Println("parsed Rel:", parsed[0])
-		fmt.Println("parsed ID:", parsed[1])
-		fmt.Println("parsed Amount:", parsed[2])
+		// fmt.Println("parsed", parsed)
+		// fmt.Println("parsed Rel:", parsed[0])
+		// fmt.Println("parsed ID:", parsed[1])
+		// fmt.Println("parsed Amount:", parsed[2])
 
 		cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 		cmd.Dir = conf.SubatomicDir
@@ -265,9 +267,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		s := bufio.NewScanner(io.MultiReader(stdout, stderr))
 
+		newpath := filepath.Join(".", "swaplogs")
+		err = os.MkdirAll(newpath, 0755)
+		check(err)
+
 		currentUnixTimestamp := int32(time.Now().Unix())
 		filename := "./swaplogs/" + String(currentUnixTimestamp) + "_" + parsed[1] + ".log"
-		// fmt.Println(filename)
+		fmt.Println(filename)
 		// fmt.Println(String(currentUnixTimestamp))
 
 		// If the file doesn't exist, create it, or append to the file
