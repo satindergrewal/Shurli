@@ -8,8 +8,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"text/template"
+	"time"
 
 	"github.com/satindergrewal/subatomicgo/sagoutil"
 	// "subatomicgo/sagoutil"
@@ -21,6 +23,33 @@ import (
 )
 
 var tpl *template.Template
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func String(n int32) string {
+	buf := [11]byte{}
+	pos := len(buf)
+	i := int64(n)
+	signed := i < 0
+	if signed {
+		i = -i
+	}
+	for {
+		pos--
+		buf[pos], i = '0'+byte(i%10), i/10
+		if i == 0 {
+			if signed {
+				pos--
+				buf[pos] = '-'
+			}
+			return string(buf[pos:])
+		}
+	}
+}
 
 // SubAtomicConfig holds the app's confugration settings
 type SubAtomicConfig struct {
@@ -235,10 +264,32 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		s := bufio.NewScanner(io.MultiReader(stdout, stderr))
+
+		currentUnixTimestamp := int32(time.Now().Unix())
+		filename := "./swaplogs/" + String(currentUnixTimestamp) + "_" + parsed[1] + ".log"
+		// fmt.Println(filename)
+		// fmt.Println(String(currentUnixTimestamp))
+
+		// If the file doesn't exist, create it, or append to the file
+		f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		check(err)
+		defer f.Close()
+
+		w := bufio.NewWriter(f)
+
 		for s.Scan() {
 			log.Printf("CMD Bytes: %s", s.Bytes())
 			c.WriteMessage(1, s.Bytes())
+
+			l := s.Bytes()
+			newLine := "\n"
+			l = append(l, newLine...)
+			_, err := w.Write(l)
+			check(err)
+			// fmt.Printf("wrote %d bytes\n", n4)
 		}
+
+		w.Flush()
 
 		err = c.WriteMessage(mt, message)
 		if err != nil {
