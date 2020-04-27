@@ -55,9 +55,10 @@ func String(n int32) string {
 
 // SubAtomicConfig holds the app's confugration settings
 type SubAtomicConfig struct {
-	Chains       []string `json:"chains"`
-	SubatomicExe string   `json:"subatomic_exe"`
-	SubatomicDir string   `json:"subatomic_dir"`
+	Chains       []string          `json:"chains"`
+	SubatomicExe string            `json:"subatomic_exe"`
+	SubatomicDir string            `json:"subatomic_dir"`
+	Explorers    map[string]string `json:"explorers"`
 }
 
 //SubAtomicConfInfo returns application's config params
@@ -68,6 +69,7 @@ func SubAtomicConfInfo() SubAtomicConfig {
 		log.Fatal(err)
 	}
 	err = json.Unmarshal(content, &conf)
+	// fmt.Println(conf.Explorers["KMD"])
 	return conf
 }
 
@@ -188,16 +190,22 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	fmt.Println(cmdString)
 
+	var conf SubAtomicConfig = SubAtomicConfInfo()
+
 	data := struct {
-		ID     string
-		Amount string
-		Total  string
+		ID           string
+		Amount       string
+		Total        string
+		BaseExplorer string
+		RelExplorer  string
 		sagoutil.OrderData
 	}{
-		ID:        id,
-		Amount:    amount,
-		Total:     total,
-		OrderData: orderData,
+		ID:           id,
+		Amount:       amount,
+		Total:        total,
+		OrderData:    orderData,
+		BaseExplorer: conf.Explorers[orderData.Base],
+		RelExplorer:  conf.Explorers[orderData.Rel],
 	}
 
 	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", data)
@@ -291,7 +299,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				// fmt.Println(err)
 			} else {
-				fmt.Println(logstr)
+				// fmt.Println(logstr)
 				c.WriteMessage(1, []byte(logstr))
 			}
 

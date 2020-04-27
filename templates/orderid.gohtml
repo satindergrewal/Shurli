@@ -100,8 +100,8 @@
                   <div class="row">
                     <div class="col-6" style="text-align: left;">
                       <form action="/orderbook" method="POST">
-                        <input type="hidden" name="coin_base" value="{{.Base}}">
-                        <input type="hidden" name="coin_rel" value="{{.Rel}}">
+                        <input type="hidden" name="coin_base" value="{{.Rel}}">
+                        <input type="hidden" name="coin_rel" value="{{.Base}}">
                         <button type="submit" class="btn btn-secondary">back</button>
                       </form>
                     </div>
