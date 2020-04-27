@@ -14,8 +14,8 @@ import (
 	"text/template"
 	"time"
 
-	// "github.com/satindergrewal/subatomicgo/sagoutil"
-	"subatomicgo/sagoutil"
+	"github.com/satindergrewal/subatomicgo/sagoutil"
+	// "subatomicgo/sagoutil"
 
 	"github.com/satindergrewal/kmdgo"
 
@@ -225,17 +225,17 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 
-	c.WriteMessage(1, []byte("Starting...\n"))
+	c.WriteMessage(1, []byte(`{"state":"Starting...}"`))
 
 	for {
-		mt, message, err := c.ReadMessage()
+		_, message, err := c.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
 		}
 		log.Printf("recv: %s", message)
 
-		err = c.WriteMessage(mt, message)
+		// err = c.WriteMessage(mt, message)
 
 		var parsed []string
 		err = json.Unmarshal([]byte(message), &parsed)
@@ -287,25 +287,29 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			log.Printf("CMD Bytes: %s", s.Bytes())
 			// c.WriteMessage(1, s.Bytes())
 
-			logstr := sagoutil.SwapLogFilter(string(s.Bytes()))
-			fmt.Println(logstr)
-			c.WriteMessage(1, []byte(logstr))
+			logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()))
+			if err != nil {
+				// fmt.Println(err)
+			} else {
+				fmt.Println(logstr)
+				c.WriteMessage(1, []byte(logstr))
+			}
 
 			l := s.Bytes()
 			newLine := "\n"
 			l = append(l, newLine...)
-			_, err := w.Write(l)
+			_, err = w.Write(l)
 			check(err)
 			// fmt.Printf("wrote %d bytes\n", n4)
 		}
 
 		w.Flush()
 
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
+		// err = c.WriteMessage(mt, message)
+		// if err != nil {
+		// 	log.Println("write:", err)
+		// 	break
+		// }
 
 		if err := cmd.Wait(); err != nil {
 			log.Println(err)
@@ -314,6 +318,6 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		c.WriteMessage(1, []byte("Finished\n"))
+		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
 	}
 }
