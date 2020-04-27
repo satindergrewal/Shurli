@@ -14,8 +14,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
-	// "subatomicgo/sagoutil"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/satindergrewal/kmdgo"
 
@@ -285,7 +285,11 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		for s.Scan() {
 			log.Printf("CMD Bytes: %s", s.Bytes())
-			c.WriteMessage(1, s.Bytes())
+			// c.WriteMessage(1, s.Bytes())
+
+			logstr := sagoutil.SwapLogFilter(string(s.Bytes()))
+			fmt.Println(logstr)
+			c.WriteMessage(1, []byte(logstr))
 
 			l := s.Bytes()
 			newLine := "\n"
