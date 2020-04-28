@@ -254,7 +254,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		// fmt.Println("parsed Amount:", parsed[2])
 
 		// Create a new context and add a timeout to it
-		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 		defer cancel() // The cancel should be deferred so resources are cleaned up
 
 		// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
