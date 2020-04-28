@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -252,7 +253,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		// fmt.Println("parsed ID:", parsed[1])
 		// fmt.Println("parsed Amount:", parsed[2])
 
-		cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+		// Create a new context and add a timeout to it
+		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+		defer cancel() // The cancel should be deferred so resources are cleaned up
+
+		// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+		// Create the command with our context
+		cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 		cmd.Dir = conf.SubatomicDir
 		stdout, err := cmd.StdoutPipe()
 		if err != nil {
@@ -270,6 +277,14 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		if err := cmd.Start(); err != nil {
 			log.Println(err)
 			fmt.Println("Start")
+			return
+		}
+
+		// We want to check the context error to see if the timeout was executed.
+		// The error returned by cmd.Output() will be OS specific based on what
+		// happens when a process is killed.
+		if ctx.Err() == context.DeadlineExceeded {
+			fmt.Println("Command timed out")
 			return
 		}
 
@@ -321,7 +336,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		if err := cmd.Wait(); err != nil {
 			log.Println(err)
-			c.WriteMessage(1, []byte(err.Error()))
+			c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
 			fmt.Println("Wait")
 			return
 		}
