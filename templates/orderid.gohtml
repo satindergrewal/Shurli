@@ -24,11 +24,13 @@
               <table class="table table-dark table-striped table-card">
                 <tr>
                   <td>{{.Base}}</td>
-                  <td>{{.BaseBal}}</td>
+                  <td>{{if not .ZBase}} {{if eq .Base "PIRATE"}} {{.ZBaseBal}} {{.Base}} {{else}} {{.BaseBal}} {{.Base}} {{end}} {{else}} {{.ZBaseBal}} {{.Base}} {{end}}</td>
+                  {{/* <td>{{if eq .Base "PIRATE"}} {{.ZBaseBal}} {{.Base}} {{else}} {{.BaseBal}} {{.Base}}<br>{{.ZBaseBal}} {{.Base}} {{end}}</td> */}}
                 </tr>
                 <tr>
                   <td>{{.Rel}}</td>
-                  <td>{{.RelBal}}</td>
+                  <td>{{if not .ZRel}} {{if eq .Rel "PIRATE"}} {{.ZRelBal}} {{.Rel}} {{else}} {{.RelBal}} {{.Rel}} {{end}} {{else}} {{.ZRelBal}} {{.Rel}} {{end}}</td>
+                  {{/* <td>{{if eq .Rel "PIRATE"}} {{.ZRelBal}} {{else}} {{.RelBal}} {{.Rel}}<br>{{.ZRelBal}} {{.Rel}} {{end}}</td> */}}
                 </tr>
               </table>
             </div>

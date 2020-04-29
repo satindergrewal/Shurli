@@ -10,18 +10,23 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/satindergrewal/kmdgo"
 )
 
 // WInfo type stores data to display on Wallet info screen
 type WInfo struct {
-	Ticker  string
-	Status  string
-	Balance float64
-	Blocks  int
-	Synced  bool
+	Name     string
+	Ticker   string
+	Status   string
+	Balance  float64
+	ZBalance float64
+	Blocks   int
+	Synced   bool
+	Shielded bool
 }
 
 // WalletInfo method returns processed data to display on Dashboard
@@ -44,11 +49,24 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 	for _, v := range chains {
 		// fmt.Println(i)
 		// fmt.Println(v)
-		if v == "KMD" {
+
+		switch v {
+		case "KMD":
 			v = "komodo"
+		case "Pirate":
+			v = "PIRATE"
 		}
 
-		appName := kmdgo.NewAppType(v)
+		vWithoutZ := strings.ReplaceAll(string(v), "z", "")
+
+		coinConfInfo := GetCoinConfInfo(vWithoutZ)
+		// fmt.Println(coinConfInfo)
+		// if !!coinConfInfo.Shielded {
+		// 	fmt.Println(coinConfInfo.Shielded)
+		// 	fmt.Println(!coinConfInfo.Shielded)
+		// }
+
+		appName := kmdgo.NewAppType(kmdgo.AppType(vWithoutZ))
 
 		var info kmdgo.GetInfo
 
@@ -59,18 +77,18 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
 			if info.Error.Message == "Loading block index..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{string(v), "Loading...", 0.0, 0, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Loading...", 0.0, 0, 0, false, false})
 			} else if info.Error.Message == "Rescanning..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{string(v), "Rescanning...", 0.0, 0, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Rescanning...", 0.0, 0, 0, false, false})
 			} else {
 				fmt.Println(v, "- Err happened:", err)
-				wallets = append(wallets, WInfo{string(v), "Offline", 0.0, 0, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
 			}
 		} else {
 			if info.Error.Message == "connection refused" {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{string(v), "Offline", 0.0, 0, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
 			} else {
 				// Check status of the blockchain sync
 				var tempSyncStatus bool
@@ -80,8 +98,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					tempSyncStatus = true
 				}
 
-				if v == "PIRATE" {
-					// fmt.Println("it is PIRATE")
+				if !!coinConfInfo.Shielded {
+					// fmt.Printf("it is %s, Getting it's Z balance...\n", coinConfInfo.Name)
 					var zblc kmdgo.ZGetBalance
 
 					args := make(kmdgo.APIParams, 2)
@@ -101,20 +119,25 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					// fmt.Printf("\n%0.8f\n", zblc.Result)
 
 					wallets = append(wallets, WInfo{
-						Ticker:  info.Result.Name,
-						Status:  "Online",
-						Balance: zblc.Result,
-						Blocks:  info.Result.Longestchain,
-						Synced:  tempSyncStatus,
+						Name:     coinConfInfo.Name,
+						Ticker:   info.Result.Name,
+						Status:   "Online",
+						ZBalance: zblc.Result,
+						Balance:  info.Result.Balance,
+						Blocks:   info.Result.Longestchain,
+						Synced:   tempSyncStatus,
+						Shielded: coinConfInfo.Shielded,
 					})
 
 				} else {
 					wallets = append(wallets, WInfo{
-						Ticker:  info.Result.Name,
-						Status:  "Online",
-						Balance: info.Result.Balance,
-						Blocks:  info.Result.Longestchain,
-						Synced:  tempSyncStatus,
+						Name:     coinConfInfo.Name,
+						Ticker:   info.Result.Name,
+						Status:   "Online",
+						Balance:  info.Result.Balance,
+						Blocks:   info.Result.Longestchain,
+						Synced:   tempSyncStatus,
+						Shielded: coinConfInfo.Shielded,
 					})
 				}
 
@@ -265,14 +288,27 @@ type OrderData struct {
 	MaxVolume  string
 	DexPubkey  string
 	Base       string
+	ZBase      bool
 	Rel        string
+	ZRel       bool
 	OrderID    int64
 	Timestamp  string
 	Handle     string
 	Pubkey     string
 	Authorized bool
 	BaseBal    float64
+	ZBaseBal   float64
 	RelBal     float64
+	ZRelBal    float64
+}
+
+func IsLower(s string) bool {
+	for _, r := range s {
+		if !unicode.IsLower(r) && unicode.IsLetter(r) {
+			return false
+		}
+	}
+	return true
 }
 
 // OrderBookList returns processed data for Orderbook page
@@ -426,14 +462,18 @@ func OrderID(id string) OrderData {
 		MaxVolume:  orderid.Result.AmountA,
 		DexPubkey:  orderid.Result.Pubkey,
 		Base:       orderid.Result.TagB,
+		ZBase:      IsLower(orderid.Result.TagB[0:1]),
 		Rel:        orderid.Result.TagA,
+		ZRel:       IsLower(orderid.Result.TagA[0:1]),
 		OrderID:    int64(orderid.Result.ID),
 		Timestamp:  strDate,
 		Handle:     handle,
 		Pubkey:     pubkey,
 		Authorized: auth,
 		BaseBal:    wallets[0].Balance,
+		ZBaseBal:   wallets[0].ZBalance,
 		RelBal:     wallets[1].Balance,
+		ZRelBal:    wallets[1].ZBalance,
 	}
 
 	return orderData

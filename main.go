@@ -6,19 +6,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
-	// "subatomicgo/sagoutil"
-
-	"github.com/satindergrewal/kmdgo"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -54,40 +52,12 @@ func String(n int32) string {
 	}
 }
 
-// SubAtomicConfig holds the app's confugration settings
-type SubAtomicConfig struct {
-	Chains       []string          `json:"chains"`
-	SubatomicExe string            `json:"subatomic_exe"`
-	SubatomicDir string            `json:"subatomic_dir"`
-	Explorers    map[string]string `json:"explorers"`
-}
-
-//SubAtomicConfInfo returns application's config params
-func SubAtomicConfInfo() SubAtomicConfig {
-	var conf SubAtomicConfig
-	content, err := ioutil.ReadFile("config.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = json.Unmarshal(content, &conf)
-	// fmt.Println(conf.Explorers["KMD"])
-	return conf
-}
-
-//StrToAppType converts and returns slice of string as slice of kmdgo.AppType
-func StrToAppType(chain []string) []kmdgo.AppType {
-	var chainskmd []kmdgo.AppType
-	for _, v := range chain {
-		chainskmd = append(chainskmd, kmdgo.AppType(v))
-	}
-	return chainskmd
-}
-
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
 func main() {
+
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
@@ -111,9 +81,9 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 // idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
 func idx(w http.ResponseWriter, r *http.Request) {
 
-	var conf SubAtomicConfig = SubAtomicConfInfo()
+	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
-	var chains = StrToAppType(conf.Chains)
+	var chains = sagoutil.StrToAppType(conf.Chains)
 
 	var wallets []sagoutil.WInfo
 	wallets = sagoutil.WalletInfo(chains)
@@ -165,6 +135,7 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
+	// fmt.Println(orderData)
 
 	err := tpl.ExecuteTemplate(w, "orderid.gohtml", orderData)
 	if err != nil {
@@ -191,7 +162,7 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	fmt.Println(cmdString)
 
-	var conf SubAtomicConfig = SubAtomicConfInfo()
+	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
 	data := struct {
 		ID           string
@@ -205,8 +176,8 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 		Amount:       amount,
 		Total:        total,
 		OrderData:    orderData,
-		BaseExplorer: conf.Explorers[orderData.Base],
-		RelExplorer:  conf.Explorers[orderData.Rel],
+		BaseExplorer: conf.Explorers[strings.ReplaceAll(orderData.Base, "z", "")],
+		RelExplorer:  conf.Explorers[strings.ReplaceAll(orderData.Rel, "z", "")],
 	}
 
 	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", data)
@@ -223,7 +194,7 @@ var upgrader = websocket.Upgrader{
 
 func echo(w http.ResponseWriter, r *http.Request) {
 
-	var conf SubAtomicConfig = SubAtomicConfInfo()
+	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
 	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
 

@@ -138,16 +138,16 @@
                           case "5":
                             $('.progress-bar').css('width', '85.68%')
                             $('.progress-bar').attr('aria-valuenow', '85.68')
-                            $('.swapstatus').text("Incoming {{.OrderData.Base}} Payment Fully Paid")
+                            $('.swapstatus').text("Insured {{.OrderData.Base}} Payment Fully Paid")
                             break;
                           case "6":
                             $('.progress-bar').css('width', '100%')
                             $('.progress-bar').attr('aria-valuenow', '100')
                             $('.progress-bar').attr('class', 'progress-bar progress-bar-striped progress-bar-animated bg-success')
                             if (swap_json.state == "incomingclose") {
-                              $('.swapstatus').text("Trade cannel with Seller closed.")
+                              $('.swapstatus').text("Trade channel with Seller closed.")
                             } else if (swap_json.state == "dpow_broadcast") {
-                              $('.swapstatus').text("Swap completed Successfully!")
+                              $('.swapstatus').text("Swap finished Successfully!")
                               baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
                               $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
                             }
