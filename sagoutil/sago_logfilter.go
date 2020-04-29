@@ -407,6 +407,35 @@ func SwapLogFilter(logString string) (string, error) {
 	}
 
 	// fmt.Println(`----`)
+	var expOpid = regexp.MustCompile(`(?m)opid..+$`)
+	opID := expOpid.FindString(logString)
+	// fmt.Println(opID)
+	opIDSf := strings.Fields(opID)
+	// fmt.Println(opIDSf[0])
+
+	if len(opIDSf) > 0 {
+
+		opIDSs := strings.Split(opIDSf[0], ".")
+		// fmt.Println(opIDSs[1])
+		opIDRa := strings.ReplaceAll(opIDSs[1], "(", "")
+		opIDRa = strings.ReplaceAll(opIDRa, ")", "")
+		// fmt.Println(opIDRa)
+
+		state6 := SwapStatus{
+			State:    "opid",
+			Status:   "6",
+			BaseTxID: opIDRa,
+		}
+
+		state6JSON, _ := json.Marshal(state6)
+		// fmt.Println("SWAP COMPLETE")
+		// fmt.Println("state6 JSON:", string(state6JSON))
+		return string(state6JSON), nil
+	} else {
+		// fmt.Printf("length of opIDSf is lower: %d\n", len(opIDSf))
+	}
+
+	// fmt.Println(`----`)
 	var expDpow = regexp.MustCompile(`(?m)dpow_broadcast.+$`)
 	dPowBcast := expDpow.FindString(logString)
 	// fmt.Println(dPowBcast)

@@ -57,7 +57,6 @@ func init() {
 }
 
 func main() {
-
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
@@ -208,14 +207,14 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	c.WriteMessage(1, []byte(`{"state":"Starting...}"`))
 
 	for {
-		_, message, err := c.ReadMessage()
+		mt, message, err := c.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
 		}
 		log.Printf("recv: %s", message)
 
-		// err = c.WriteMessage(mt, message)
+		err = c.WriteMessage(mt, message)
 
 		var parsed []string
 		err = json.Unmarshal([]byte(message), &parsed)
@@ -298,6 +297,20 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Flush()
+
+		// type opIdMsg struct {
+		// 	Opid string `json:"opid"`
+		// 	Coin string `json:"coin"`
+		// }
+		// var opidmsg opIdMsg
+		// err = json.Unmarshal([]byte(message), &opidmsg)
+		// fmt.Println(opidmsg.Opid)
+		// fmt.Println(opidmsg.Coin)
+
+		// txidMsg, _ := sagoutil.TxIDFromOpID(opidmsg.Coin, opidmsg.Opid)
+		// fmt.Println(txidMsg)
+
+		// err = c.WriteMessage(1, []byte(txidMsg))
 
 		// err = c.WriteMessage(mt, message)
 		// if err != nil {

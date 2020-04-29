@@ -478,3 +478,36 @@ func OrderID(id string) OrderData {
 
 	return orderData
 }
+
+// TxIDFromOpID returns TxID for provided opid and coin
+func TxIDFromOpID(coin, opid string) (string, error) {
+	var appName kmdgo.AppType
+	appName = kmdgo.AppType(coin)
+
+	var oprst kmdgo.ZGetOperationStatus
+
+	args := make(kmdgo.APIParams, 1)
+	args[0] = []string{opid}
+	// fmt.Println(args)
+
+	oprst, err := appName.ZGetOperationStatus(args)
+	if err != nil {
+		fmt.Printf("Code: %v\n", oprst.Error.Code)
+		fmt.Printf("Message: %v\n\n", oprst.Error.Message)
+		log.Fatalln("Err happened", err)
+	}
+
+	for _, v := range oprst.Result {
+		state6 := SwapStatus{
+			State:    "opid_txid",
+			Status:   "6",
+			BaseTxID: v.Result.Txid,
+		}
+		state6JSON, _ := json.Marshal(state6)
+		// fmt.Println("state6 JSON:", string(state6JSON))
+
+		return string(state6JSON), nil
+	}
+
+	return "", nil
+}

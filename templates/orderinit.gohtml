@@ -24,11 +24,13 @@
               <table class="table table-dark table-striped table-card">
                 <tr>
                   <td>{{.OrderData.Base}}</td>
-                  <td>{{.OrderData.BaseBal}}</td>
+                  <td>{{if not .OrderData.ZBase}} {{if eq .OrderData.Base "PIRATE"}} {{.OrderData.ZBaseBal}} {{.OrderData.Base}} {{else}} {{.OrderData.BaseBal}} {{.OrderData.Base}} {{end}} {{else}} {{.OrderData.ZBaseBal}} {{.OrderData.Base}} {{end}}</td>
+                  {{/* <td>{{.OrderData.BaseBal}}</td> */}}
                 </tr>
                 <tr>
                   <td>{{.OrderData.Rel}}</td>
-                  <td>{{.OrderData.RelBal}}</td>
+                  <td>{{if not .OrderData.ZRel}} {{if eq .OrderData.Rel "PIRATE"}} {{.OrderData.ZRelBal}} {{.OrderData.Rel}} {{else}} {{.OrderData.RelBal}} {{.OrderData.Rel}} {{end}} {{else}} {{.OrderData.ZRelBal}} {{.OrderData.Rel}} {{end}}</td>
+                  {{/* <td>{{.OrderData.RelBal}}</td> */}}
                 </tr>
               </table>
             </div>
@@ -144,12 +146,29 @@
                             $('.progress-bar').css('width', '100%')
                             $('.progress-bar').attr('aria-valuenow', '100')
                             $('.progress-bar').attr('class', 'progress-bar progress-bar-striped progress-bar-animated bg-success')
+                            switch (swap_json.state) {
+                              case "incomingclose":
+                                $('.swapstatus').text("Trade channel with Seller closed.")
+                                break;
+                              case "opid":
+                                tmpJson = {"opid": swap_json.base_txid,"coin":"{{.OrderData.Base}}"}
+                                ws.send(JSON.stringify(tmpJson))
+                                break;
+                              case "opid_txid":
+                                $('.swapstatus').text("Swap finished Successfully!")
+                                baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
+                                $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
+                                break;
+                              case "dpow_broadcast":
+                                $('.swapstatus').text("Swap finished Successfully!")
+                                baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
+                                $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
+                                break;
+                            }
                             if (swap_json.state == "incomingclose") {
-                              $('.swapstatus').text("Trade channel with Seller closed.")
+                              
                             } else if (swap_json.state == "dpow_broadcast") {
-                              $('.swapstatus').text("Swap finished Successfully!")
-                              baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
-                              $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
+                              
                             }
                             break;
                         }
