@@ -357,9 +357,9 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 		// fmt.Println(pubkey)
 		// fmt.Println(auth)
 
-		var unixTime int64 = int64(v.Timestamp)
-		t := time.Unix(unixTime, 0)
-		strDate := t.Format(time.UnixDate)
+		// var unixTime int64 = int64(v.Timestamp)
+		// t := time.Unix(unixTime, 0)
+		// strDate := t.Format(time.UnixDate)
 		// fmt.Println(strDate)
 
 		orderList = append(orderList, OrderData{
@@ -370,7 +370,7 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 			Base:       obook.Result.Rel,
 			Rel:        obook.Result.Base,
 			OrderID:    v.ID,
-			Timestamp:  strDate,
+			Timestamp:  IntToString(int32(v.Timestamp)),
 			Handle:     handle,
 			Pubkey:     pubkey,
 			Authorized: auth,
@@ -510,4 +510,26 @@ func TxIDFromOpID(coin, opid string) (string, error) {
 	}
 
 	return "", nil
+}
+
+// IntToString Converts Int value to string
+func IntToString(n int32) string {
+	buf := [11]byte{}
+	pos := len(buf)
+	i := int64(n)
+	signed := i < 0
+	if signed {
+		i = -i
+	}
+	for {
+		pos--
+		buf[pos], i = '0'+byte(i%10), i/10
+		if i == 0 {
+			if signed {
+				pos--
+				buf[pos] = '-'
+			}
+			return string(buf[pos:])
+		}
+	}
 }

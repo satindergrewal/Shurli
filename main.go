@@ -15,8 +15,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
-	// "subatomicgo/sagoutil"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -28,27 +28,6 @@ func check(e error) {
 	if e != nil {
 		panic(e)
 		// log.Println(e)
-	}
-}
-
-func String(n int32) string {
-	buf := [11]byte{}
-	pos := len(buf)
-	i := int64(n)
-	signed := i < 0
-	if signed {
-		i = -i
-	}
-	for {
-		pos--
-		buf[pos], i = '0'+byte(i%10), i/10
-		if i == 0 {
-			if signed {
-				pos--
-				buf[pos] = '-'
-			}
-			return string(buf[pos:])
-		}
 	}
 }
 
@@ -283,7 +262,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename := "./swaplogs/" + String(currentUnixTimestamp) + "_" + parsed[1] + ".log"
+			filename := "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[1] + ".log"
 			fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
