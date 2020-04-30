@@ -159,11 +159,11 @@
                                 baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
                                 $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
                                 break;
-                              case "dpow_broadcast":
+                              {{/* case "dpow_broadcast":
                                 $('.swapstatus').text("Swap finished Successfully!")
                                 baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
                                 $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
-                                break;
+                                break; */}}
                             }
                             if (swap_json.state == "incomingclose") {
                               

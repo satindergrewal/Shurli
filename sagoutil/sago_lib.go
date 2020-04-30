@@ -482,7 +482,7 @@ func OrderID(id string) OrderData {
 // TxIDFromOpID returns TxID for provided opid and coin
 func TxIDFromOpID(coin, opid string) (string, error) {
 	var appName kmdgo.AppType
-	appName = kmdgo.AppType(coin)
+	appName = kmdgo.AppType(strings.ReplaceAll(string(coin), "z", ""))
 
 	var oprst kmdgo.ZGetOperationStatus
 

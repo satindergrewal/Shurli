@@ -216,113 +216,118 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		err = c.WriteMessage(mt, message)
 
-		var parsed []string
-		err = json.Unmarshal([]byte(message), &parsed)
-		// fmt.Println("parsed", parsed)
-		// fmt.Println("parsed Rel:", parsed[0])
-		// fmt.Println("parsed ID:", parsed[1])
-		// fmt.Println("parsed Amount:", parsed[2])
-
-		// Create a new context and add a timeout to it
-		ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
-		defer cancel() // The cancel should be deferred so resources are cleaned up
-
-		// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
-		// Create the command with our context
-		cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
-		cmd.Dir = conf.SubatomicDir
-		stdout, err := cmd.StdoutPipe()
-		if err != nil {
-			log.Println(err)
-			fmt.Println("StdOut Nil")
-			return
+		type opIdMsg struct {
+			Opid string `json:"opid"`
+			Coin string `json:"coin"`
 		}
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			log.Println(err)
-			fmt.Println("Err Nil")
-			return
-		}
-
-		if err := cmd.Start(); err != nil {
-			log.Println(err)
-			fmt.Println("Start")
-			return
-		}
-
-		// We want to check the context error to see if the timeout was executed.
-		// The error returned by cmd.Output() will be OS specific based on what
-		// happens when a process is killed.
-		if ctx.Err() == context.DeadlineExceeded {
-			fmt.Println("Command timed out")
-			return
-		}
-
-		s := bufio.NewScanner(io.MultiReader(stdout, stderr))
-
-		newpath := filepath.Join(".", "swaplogs")
-		err = os.MkdirAll(newpath, 0755)
-		check(err)
-
-		currentUnixTimestamp := int32(time.Now().Unix())
-		filename := "./swaplogs/" + String(currentUnixTimestamp) + "_" + parsed[1] + ".log"
-		fmt.Println(filename)
-		// fmt.Println(String(currentUnixTimestamp))
-
-		// If the file doesn't exist, create it, or append to the file
-		f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		check(err)
-		defer f.Close()
-
-		w := bufio.NewWriter(f)
-
-		for s.Scan() {
-			log.Printf("CMD Bytes: %s", s.Bytes())
-			// c.WriteMessage(1, s.Bytes())
-
-			logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()))
-			if err != nil {
-				// fmt.Println(err)
-			} else {
-				// fmt.Println(logstr)
-				c.WriteMessage(1, []byte(logstr))
-			}
-
-			l := s.Bytes()
-			newLine := "\n"
-			l = append(l, newLine...)
-			_, err = w.Write(l)
-			check(err)
-			// fmt.Printf("wrote %d bytes\n", n4)
-		}
-
-		w.Flush()
-
-		// type opIdMsg struct {
-		// 	Opid string `json:"opid"`
-		// 	Coin string `json:"coin"`
-		// }
-		// var opidmsg opIdMsg
-		// err = json.Unmarshal([]byte(message), &opidmsg)
+		var opidmsg opIdMsg
+		err = json.Unmarshal([]byte(message), &opidmsg)
 		// fmt.Println(opidmsg.Opid)
 		// fmt.Println(opidmsg.Coin)
 
-		// txidMsg, _ := sagoutil.TxIDFromOpID(opidmsg.Coin, opidmsg.Opid)
-		// fmt.Println(txidMsg)
+		if len(opidmsg.Opid) > 0 {
+			txidMsg, _ := sagoutil.TxIDFromOpID(opidmsg.Coin, opidmsg.Opid)
+			fmt.Println(txidMsg)
 
-		// err = c.WriteMessage(1, []byte(txidMsg))
+			err = c.WriteMessage(1, []byte(txidMsg))
+		}
 
-		// err = c.WriteMessage(mt, message)
-		// if err != nil {
-		// 	log.Println("write:", err)
-		// 	break
-		// }
+		var parsed []string
+		err = json.Unmarshal([]byte(message), &parsed)
+		// fmt.Println("parsed", parsed)
 
-		if err := cmd.Wait(); err != nil {
-			log.Println(err)
-			c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
-			fmt.Println("Wait")
-			return
+		if len(parsed) > 0 {
+			// fmt.Println("parsed Rel:", parsed[0])
+			// fmt.Println("parsed ID:", parsed[1])
+			// fmt.Println("parsed Amount:", parsed[2])
+
+			// Create a new context and add a timeout to it
+			ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
+			defer cancel() // The cancel should be deferred so resources are cleaned up
+
+			// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+			// Create the command with our context
+			cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+			cmd.Dir = conf.SubatomicDir
+			stdout, err := cmd.StdoutPipe()
+			if err != nil {
+				log.Println(err)
+				fmt.Println("StdOut Nil")
+				return
+			}
+			stderr, err := cmd.StderrPipe()
+			if err != nil {
+				log.Println(err)
+				fmt.Println("Err Nil")
+				return
+			}
+
+			if err := cmd.Start(); err != nil {
+				log.Println(err)
+				fmt.Println("Start")
+				return
+			}
+
+			// We want to check the context error to see if the timeout was executed.
+			// The error returned by cmd.Output() will be OS specific based on what
+			// happens when a process is killed.
+			if ctx.Err() == context.DeadlineExceeded {
+				fmt.Println("Command timed out")
+				return
+			}
+
+			s := bufio.NewScanner(io.MultiReader(stdout, stderr))
+
+			newpath := filepath.Join(".", "swaplogs")
+			err = os.MkdirAll(newpath, 0755)
+			check(err)
+
+			currentUnixTimestamp := int32(time.Now().Unix())
+			filename := "./swaplogs/" + String(currentUnixTimestamp) + "_" + parsed[1] + ".log"
+			fmt.Println(filename)
+			// fmt.Println(String(currentUnixTimestamp))
+
+			// If the file doesn't exist, create it, or append to the file
+			f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+			check(err)
+			defer f.Close()
+
+			w := bufio.NewWriter(f)
+
+			for s.Scan() {
+				log.Printf("CMD Bytes: %s", s.Bytes())
+				// c.WriteMessage(1, s.Bytes())
+
+				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()))
+				if err != nil {
+					// fmt.Println(err)
+				} else {
+					// fmt.Println(logstr)
+					c.WriteMessage(1, []byte(logstr))
+				}
+
+				l := s.Bytes()
+				newLine := "\n"
+				l = append(l, newLine...)
+				_, err = w.Write(l)
+				check(err)
+				// fmt.Printf("wrote %d bytes\n", n4)
+			}
+
+			w.Flush()
+
+			// err = c.WriteMessage(mt, message)
+			// if err != nil {
+			// 	log.Println("write:", err)
+			// 	break
+			// }
+
+			if err := cmd.Wait(); err != nil {
+				log.Println(err)
+				c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
+				fmt.Println("Wait")
+				return
+			}
 		}
 
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
