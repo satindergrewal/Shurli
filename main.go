@@ -15,8 +15,8 @@ import (
 	"text/template"
 	"time"
 
-	// "github.com/satindergrewal/subatomicgo/sagoutil"
-	"subatomicgo/sagoutil"
+	"github.com/satindergrewal/subatomicgo/sagoutil"
+	// "subatomicgo/sagoutil"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
