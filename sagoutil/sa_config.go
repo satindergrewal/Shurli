@@ -40,8 +40,8 @@ func SubAtomicConfInfo() SubAtomicConfig {
 func StrToAppType(chain []ConfigCoins) []kmdgo.AppType {
 	var chainskmd []kmdgo.AppType
 	for _, v := range chain {
-		// fmt.Println(v.Name)
-		chainskmd = append(chainskmd, kmdgo.AppType(v.Name))
+		// fmt.Println(v.Coin)
+		chainskmd = append(chainskmd, kmdgo.AppType(v.Coin))
 	}
 	return chainskmd
 }
@@ -56,7 +56,7 @@ func GetCoinConfInfo(coin string) ConfigCoins {
 		coin = "komodo"
 	}
 
-	// fmt.Println(coin)
+	// fmt.Println("getCoinConfInfo:", coin)
 
 	var coininfo ConfigCoins
 	for _, v := range confChains {
