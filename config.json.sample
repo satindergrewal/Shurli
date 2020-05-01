@@ -1,10 +1,35 @@
 {
     "chains": [
-        "komodo",
-        "PIRATE",
-        "VRSC",
-        "HUSH3",
-        "DEX"
+        {
+            "coin": "komodo",
+            "ticker": "KMD",
+            "name": "Komodo",
+            "shielded": false
+        },
+        {
+            "coin": "PIRATE",
+            "ticker": "ARRR",
+            "name": "Pirate",
+            "shielded": true
+        },
+        {
+            "coin": "VRSC",
+            "ticker": "VRSC",
+            "name": "VerusCoin",
+            "shielded": true
+        },
+        {
+            "coin": "HUSH3",
+            "ticker": "HUSH3",
+            "name": "Hush",
+            "shielded": true
+        },
+        {
+            "coin": "DEX",
+            "ticker": "DEX",
+            "name": "DEX",
+            "shielded": true
+        }
     ],
     "explorers": {
         "KMD": "https://www.kmdexplorer.io/",
