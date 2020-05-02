@@ -284,22 +284,23 @@ func MatchedAuthorized(pubkey string) (bool, error) {
 
 // OrderData type is used to get formated data to display on Orderbook page
 type OrderData struct {
-	Price      string
-	MaxVolume  string
-	DexPubkey  string
-	Base       string
-	ZBase      bool
-	Rel        string
-	ZRel       bool
-	OrderID    int64
-	Timestamp  string
-	Handle     string
-	Pubkey     string
-	Authorized bool
-	BaseBal    float64
-	ZBaseBal   float64
-	RelBal     float64
-	ZRelBal    float64
+	Price        string
+	MaxVolume    string
+	DexPubkey    string
+	Base         string
+	ZBase        bool
+	Rel          string
+	ZRel         bool
+	OrderID      int64
+	TimestampStr string
+	Timestamp    string
+	Handle       string
+	Pubkey       string
+	Authorized   bool
+	BaseBal      float64
+	ZBaseBal     float64
+	RelBal       float64
+	ZRelBal      float64
 }
 
 func IsLower(s string) bool {
@@ -357,23 +358,25 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 		// fmt.Println(pubkey)
 		// fmt.Println(auth)
 
-		// var unixTime int64 = int64(v.Timestamp)
-		// t := time.Unix(unixTime, 0)
-		// strDate := t.Format(time.UnixDate)
+		var unixTime int64 = int64(v.Timestamp)
+		t := time.Unix(unixTime, 0)
+		// fmt.Println("t", t)
+		strDate := t.Format(time.UnixDate)
 		// fmt.Println(strDate)
 
 		orderList = append(orderList, OrderData{
 			Price: v.Price,
 			// MaxVolume:  v.Relamount,
-			MaxVolume:  v.Baseamount,
-			DexPubkey:  v.Pubkey,
-			Base:       obook.Result.Rel,
-			Rel:        obook.Result.Base,
-			OrderID:    v.ID,
-			Timestamp:  IntToString(int32(v.Timestamp)),
-			Handle:     handle,
-			Pubkey:     pubkey,
-			Authorized: auth,
+			MaxVolume:    v.Baseamount,
+			DexPubkey:    v.Pubkey,
+			Base:         obook.Result.Rel,
+			Rel:          obook.Result.Base,
+			OrderID:      v.ID,
+			TimestampStr: strDate,
+			Timestamp:    IntToString(int32(v.Timestamp)),
+			Handle:       handle,
+			Pubkey:       pubkey,
+			Authorized:   auth,
 		})
 	}
 
