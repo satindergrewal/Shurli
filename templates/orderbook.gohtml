@@ -24,26 +24,9 @@
                                 {{/* <td>PIRATE</td> */}}
                                 <td>
                                   <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <label class="input-group-text" for="coin_base">Buying/Base</label>
+                                    <div class="input-group-append">
+                                      <label class="input-group-text" for="coin_rel">Selling/Rel</label>
                                     </div>
-                                    <select class="custom-select" id="coin_base" name="coin_base">
-                                      <option>Choose...</option>
-                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}}>Komodo (KMD)</option>
-                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
-                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
-                                      <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}}>VerusCoin (zVRSC)</option>
-                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
-                                      <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}}>Hush (zHUSH3)</option>
-                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
-                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}}>DEX (DEX)</option>
-                                      <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}}>DEX (zDEX)</option>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td><button class="btn text-white"><span class="fas fa-exchange-alt"></span></button></td>
-                                <td>
-                                  <div class="input-group">
                                     <select class="custom-select" id="coin_rel" name="coin_rel">
                                       <option>Choose...</option>
                                       <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}}>Komodo (KMD)</option>
@@ -56,8 +39,25 @@
                                       <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}}>DEX (DEX)</option>
                                       <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}}>DEX (zDEX)</option>
                                     </select>
-                                    <div class="input-group-append">
-                                      <label class="input-group-text" for="coin_rel">Selling/Rel</label>
+                                  </div>
+                                </td>
+                                <td><button class="btn text-white"><span class="fas fa-exchange-alt"></span></button></td>
+                                <td>
+                                  <div class="input-group">
+                                    <select class="custom-select" id="coin_base" name="coin_base">
+                                      <option>Choose...</option>
+                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}}>Komodo (KMD)</option>
+                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
+                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
+                                      <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}}>VerusCoin (zVRSC)</option>
+                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
+                                      <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}}>Hush (zHUSH3)</option>
+                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
+                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}}>DEX (DEX)</option>
+                                      <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}}>DEX (zDEX)</option>
+                                    </select>
+                                    <div class="input-group-prepend">
+                                      <label class="input-group-text" for="coin_base">Buying/Base</label>
                                     </div>
                                   </div>
                                 </td>
@@ -106,7 +106,7 @@
             {{if not .OrderList}} <div class="alert alert-info" role="alert">There doesn't seem to be any order available for this pair. Please select another trading pair or try again later.</div> {{end}}
             {{range .OrderList}}
             <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- Order List div start -->
-                <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
+                <div class="card text-white bg-dark mb-2 card-{{.OrderID}}"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
@@ -146,20 +146,40 @@
     var interval = 1000;
     //var timestamp_el = $('.timestamp');
     var timestamp_el = document.getElementsByClassName('timestamp');
+    var ts = []
+    ts.length = timestamp_el.length
     for (let i = 0; i < timestamp_el.length; i++) {
       let item = timestamp_el[i];
 
-      setInterval(function() {
-        var ts = $('.timestamp').eq(i).attr('class').split(' ')[1];
-        var eventTime= parseInt(ts) + 3600;
-        var currentTime = moment().unix();
-        var diffTime = eventTime - currentTime;
-        var duration = moment.duration(diffTime*1000, 'milliseconds');
-        duration = moment.duration(duration - interval, 'milliseconds')
-        //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-        item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
+      ts[i] = setInterval(function() {
+        if ($('.timestamp').eq(i).attr('class') != undefined) {
+          var class_arr = $('.timestamp').eq(i).attr('class').split(' ')
+          var ts = class_arr[1];
+          var cardid = class_arr[2];
+          var cardclass = '.card-'+cardid
+          var eventTime= parseInt(ts) + 3600;
+          var currentTime = moment().unix();
+          var diffTime = eventTime - currentTime;
+          var duration = moment.duration(diffTime*1000, 'milliseconds');
+          duration = moment.duration(duration - interval, 'milliseconds')
+          //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+          item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
+          if (duration.minutes() <= 0 && duration.seconds() <= 0) {
+            console.log(cardclass);
+            stop_counter(i, cardclass);
+          }
+          if (duration.minutes() <= 0) {
+            console.log("cardclass: "+ cardclass);
+          }
+        }
       }, interval);
     }
+
+    function stop_counter(n, id) {
+      $(id).remove();
+      clearInterval(ts[n]);
+    }
+
   })
 </script>
 {{template "footer"}}
