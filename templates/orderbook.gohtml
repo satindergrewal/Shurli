@@ -13,7 +13,7 @@
 
             {{template "bs-order-stepper"}}
 
-            <div class="col-8"> <!-- trading pair div start -->
+            <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- trading pair div start -->
                 <div class="card text-white bg-dark"> <!-- trading pair card start -->
                     <div class="card-body" style="font-size: 18px;"> <!-- trading pair body start -->
                         <form action="/orderbook" method="POST">
@@ -82,12 +82,12 @@
                                 <td>
                                   <div class="input-group">
                                     <select class="custom-select" id="sortby" name="sortby">
-                                      <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Soon</option>
-                                      <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Late</option>
+                                      <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Expiring Soon</option>
+                                      <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Expiring Late</option>
                                     </select>
-                                    <div class="input-group-append">
+                                    {{/* <div class="input-group-append">
                                       <label class="input-group-text" for="result_limit">Sort By</label>
-                                    </div>
+                                    </div> */}}
                                   </div>
                                 </td>
                                 <td><button type="submit" class="btn btn-primary">List Orders</button></td>
@@ -105,21 +105,21 @@
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
             {{if not .OrderList}} <div class="alert alert-info" role="alert">There doesn't seem to be any order available for this pair. Please select another trading pair or try again later.</div> {{end}}
             {{range .OrderList}}
-            <div class="col-8"> <!-- Order List div start -->
+            <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- Order List div start -->
                 <div class="card text-white bg-dark mb-2"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
-                        <div class="col-8" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
-                        <div class="col-4" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | <span class="timestamp {{.Timestamp}} {{.OrderID}}"></span></div>
+                        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | <span class="timestamp {{.Timestamp}} {{.OrderID}}"></span></div>
                       </div>
                     </div>
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
                         <div class="row">
-                          <div class="col-lg-8 col-sm-12">
+                          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             Price: {{.Price}} {{.Base}}<br>
                             Max Volume: {{.MaxVolume}} {{.Rel}}
                           </div>
-                          <div class="col-lg-4 col-sm-12 text-center">
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
                             <a class="btn btn-sm btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
                               <span style="font-size: 18px; font-weight: 700;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
