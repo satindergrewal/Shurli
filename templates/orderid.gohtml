@@ -65,7 +65,7 @@
                     <div class="col-3" style="text-align: left;">
                       Trading with: {{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}}
                     </div>
-                    <div class="col-9" style="text-align: right;">Order ID: {{.OrderID}} | {{.Timestamp}}</div>
+                    <div class="col-9" style="text-align: right;">Order ID: {{.OrderID}} | <span class="timestamp {{.Timestamp}} {{.OrderID}}"></span></div>
                   </div>
                 </div>
                 <div class="card-body" style="font-size: 18px;"> <!-- OrderData body start -->
@@ -122,6 +122,26 @@
   $( document ).ready(function() {
     var stepper = new Stepper($('.bs-stepper')[0])
     stepper.to(2)
+
+    // countdown for orders
+    var interval = 1000;
+    //var timestamp_el = $('.timestamp');
+    var timestamp_el = document.getElementsByClassName('timestamp');
+    for (let i = 0; i < timestamp_el.length; i++) {
+      let item = timestamp_el[i];
+
+      setInterval(function() {
+        var ts = $('.timestamp').eq(i).attr('class').split(' ')[1];
+        var eventTime= parseInt(ts) + 3600;
+        var currentTime = moment().unix();
+        var diffTime = eventTime - currentTime;
+        var duration = moment.duration(diffTime*1000, 'milliseconds');
+        duration = moment.duration(duration - interval, 'milliseconds')
+        //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+        item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
+      }, interval);
+    }
+
   });
 
   $('#amount').on('input', function() {
@@ -148,6 +168,8 @@
       $('#amount').val(parseFloat(amount.toFixed(8)));
       $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + parseFloat(amount.toFixed(8)) + '/' + $("#total").val())
   });
+
+  
 </script>
 
 {{template "footer"}}

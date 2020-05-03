@@ -133,23 +133,23 @@
     var stepper = new Stepper($('.bs-stepper')[0])
     
     // countdown for orders
-      var interval = 1000;
-      //var timestamp_el = $('.timestamp');
-      var timestamp_el = document.getElementsByClassName('timestamp');
-      for (let i = 0; i < timestamp_el.length; i++) {
-        let item = timestamp_el[i];
+    var interval = 1000;
+    //var timestamp_el = $('.timestamp');
+    var timestamp_el = document.getElementsByClassName('timestamp');
+    for (let i = 0; i < timestamp_el.length; i++) {
+      let item = timestamp_el[i];
 
-        setInterval(function() {
-          var ts = $('.timestamp').eq(i).attr('class').split(' ')[1];
-          var eventTime= parseInt(ts) + 3600;
-          var currentTime = moment().unix();
-          var diffTime = eventTime - currentTime;
-          var duration = moment.duration(diffTime*1000, 'milliseconds');
-          duration = moment.duration(duration - interval, 'milliseconds')
-          //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-          item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
-        }, interval);
-      }
+      setInterval(function() {
+        var ts = $('.timestamp').eq(i).attr('class').split(' ')[1];
+        var eventTime= parseInt(ts) + 3600;
+        var currentTime = moment().unix();
+        var diffTime = eventTime - currentTime;
+        var duration = moment.duration(diffTime*1000, 'milliseconds');
+        duration = moment.duration(duration - interval, 'milliseconds')
+        //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+        item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
+      }, interval);
+    }
   })
 </script>
 {{template "footer"}}

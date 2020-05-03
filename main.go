@@ -85,9 +85,9 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		OrderList []sagoutil.OrderData
 	}
 
-	fmt.Println("r.FormValue", r.FormValue("coin_base"))
-	fmt.Println("r.FormValue", r.FormValue("coin_rel"))
-	fmt.Println("r.FormValue", r.FormValue("result_limit"))
+	// fmt.Println("r.FormValue", r.FormValue("coin_base"))
+	// fmt.Println("r.FormValue", r.FormValue("coin_rel"))
+	// fmt.Println("r.FormValue", r.FormValue("result_limit"))
 
 	var orderlist []sagoutil.OrderData
 	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"))
