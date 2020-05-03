@@ -82,20 +82,23 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		Base      string `json:"coin_base"`
 		Rel       string `json:"coin_rel"`
 		Results   string `json:"results"`
+		SortBy    string `json:"sortby"`
 		OrderList []sagoutil.OrderData
 	}
 
 	// fmt.Println("r.FormValue", r.FormValue("coin_base"))
 	// fmt.Println("r.FormValue", r.FormValue("coin_rel"))
 	// fmt.Println("r.FormValue", r.FormValue("result_limit"))
+	// fmt.Println("r.FormValue", r.FormValue("sortby"))
 
 	var orderlist []sagoutil.OrderData
-	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"))
+	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"), r.FormValue("sortby"))
 
 	data := OrderPost{
 		Base:      r.FormValue("coin_base"),
 		Rel:       r.FormValue("coin_rel"),
 		Results:   r.FormValue("result_limit"),
+		SortBy:    r.FormValue("sortby"),
 		OrderList: orderlist,
 	}
 

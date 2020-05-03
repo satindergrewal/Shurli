@@ -102,6 +102,8 @@
                       <form action="/orderbook" method="POST">
                         <input type="hidden" name="coin_base" value="{{.Rel}}">
                         <input type="hidden" name="coin_rel" value="{{.Base}}">
+                        <input type="hidden" name="result_limit" value="100">
+                        <input type="hidden" name="sortby" value="soon">
                         <button type="submit" class="btn btn-secondary">back</button>
                       </form>
                     </div>

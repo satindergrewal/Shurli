@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -313,7 +314,7 @@ func IsLower(s string) bool {
 }
 
 // OrderBookList returns processed data for Orderbook page
-func OrderBookList(base, rel, maxentries string) []OrderData {
+func OrderBookList(base, rel, maxentries, sortby string) []OrderData {
 	var orderList []OrderData
 
 	var appName kmdgo.AppType
@@ -377,6 +378,17 @@ func OrderBookList(base, rel, maxentries string) []OrderData {
 			Handle:       handle,
 			Pubkey:       pubkey,
 			Authorized:   auth,
+		})
+	}
+
+	if sortby == "soon" {
+		sort.Slice(orderList, func(i, j int) bool {
+			return orderList[i].Timestamp < orderList[j].Timestamp
+		})
+	}
+	if sortby == "late" {
+		sort.Slice(orderList, func(i, j int) bool {
+			return orderList[i].Timestamp > orderList[j].Timestamp
 		})
 	}
 

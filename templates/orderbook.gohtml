@@ -78,7 +78,17 @@
                                       <label class="input-group-text" for="result_limit">Results</label>
                                     </div>
                                   </div>
-                                  
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <select class="custom-select" id="sortby" name="sortby">
+                                      <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Soon</option>
+                                      <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Late</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                      <label class="input-group-text" for="result_limit">Sort By</label>
+                                    </div>
+                                  </div>
                                 </td>
                                 <td><button type="submit" class="btn btn-primary">List Orders</button></td>
                               </tr>
