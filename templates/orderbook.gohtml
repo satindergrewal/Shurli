@@ -41,7 +41,7 @@
                                     </select>
                                   </div>
                                 </td>
-                                <td><span class="fas fa-exchange-alt"></span></td>
+                                <td><button class="btn text-white"><span class="fas fa-exchange-alt"></span></button></td>
                                 <td>
                                   <div class="input-group">
                                     <select class="custom-select" id="coin_rel" name="coin_rel">
@@ -60,6 +60,25 @@
                                       <label class="input-group-text" for="coin_rel">Selling/Rel</label>
                                     </div>
                                   </div>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <select class="custom-select" id="result_limit" name="result_limit">
+                                      <option value="10" {{if eq .Results "10"}} selected {{end}}>10</option>
+                                      <option value="20" {{if eq .Results "20"}} selected {{end}}>20</option>
+                                      <option value="33" {{if eq .Results "33"}} selected {{end}}>33</option>
+                                      <option value="40" {{if eq .Results "40"}} selected {{end}}>40</option>
+                                      <option value="50" {{if eq .Results "50"}} selected {{end}}>50</option>
+                                      <option value="100" {{if eq .Results "100"}} selected {{end}}>100</option>
+                                      <option value="150" {{if eq .Results "150"}} selected {{end}}>150</option>
+                                      <option value="200" {{if eq .Results "200"}} selected {{end}}>200</option>
+                                      <option value="300" {{if eq .Results "300"}} selected {{end}}>300</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                      <label class="input-group-text" for="result_limit">Results</label>
+                                    </div>
+                                  </div>
+                                  
                                 </td>
                                 <td><button type="submit" class="btn btn-primary">List Orders</button></td>
                               </tr>
@@ -91,9 +110,9 @@
                             Max Volume: {{.MaxVolume}} {{.Rel}}
                           </div>
                           <div class="col-lg-4 col-sm-12 text-center">
-                            <a class="btn btn-lg btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
+                            <a class="btn btn-sm btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
-                              <span style="font-size: 25px;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
+                              <span style="font-size: 18px; font-weight: 700;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
                             </a>
                           </div>
                         </div>

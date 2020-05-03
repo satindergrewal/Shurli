@@ -15,8 +15,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
-	// "subatomicgo/sagoutil"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -81,18 +81,21 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 	type OrderPost struct {
 		Base      string `json:"coin_base"`
 		Rel       string `json:"coin_rel"`
+		Results   string `json:"results"`
 		OrderList []sagoutil.OrderData
 	}
 
-	// fmt.Println("r.FormValue", r.FormValue("coin_base"))
-	// fmt.Println("r.FormValue", r.FormValue("coin_rel"))
+	fmt.Println("r.FormValue", r.FormValue("coin_base"))
+	fmt.Println("r.FormValue", r.FormValue("coin_rel"))
+	fmt.Println("r.FormValue", r.FormValue("result_limit"))
 
 	var orderlist []sagoutil.OrderData
-	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), "10")
+	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"))
 
 	data := OrderPost{
 		Base:      r.FormValue("coin_base"),
 		Rel:       r.FormValue("coin_rel"),
+		Results:   r.FormValue("result_limit"),
 		OrderList: orderlist,
 	}
 
