@@ -59,13 +59,13 @@
         </div>
 
         <div class="col-lg-6 col-md-8"> <!-- OrderData div start -->
-            <div class="card text-white bg-dark mb-2"> <!-- OrderData card start -->
+            <div class="card text-white bg-dark mb-2 card-order card-{{.OrderID}}" data-orderid="{{.OrderID}}"> <!-- OrderData card start -->
                 <div class="card-header">
                   <div class="row">
                     <div class="col-3" style="text-align: left;">
                       Trading with: {{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}}
                     </div>
-                    <div class="col-9" style="text-align: right;">Order ID: {{.OrderID}} | <span class="timestamp {{.Timestamp}} {{.OrderID}}"></span></div>
+                    <div class="col-9" style="text-align: right;">Order ID: {{.OrderID}} | <span class="timestamp" data-timestamp="{{.Timestamp}}"></span></div>
                   </div>
                 </div>
                 <div class="card-body" style="font-size: 18px;"> <!-- OrderData body start -->
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-6" style="text-align: right;">
                       <form action="/orderbook/swap/" id="orderform" method="GET">
-                        <button type="submit" class="btn btn-primary">Buy {{.Rel}}</button>
+                        <button type="submit" class="btn btn-primary btn-buyorder">Buy {{.Rel}}</button>
                       </form>
                     </div>
                   </div>
@@ -126,23 +126,31 @@
     stepper.to(2)
 
     // countdown for orders
-    var interval = 1000;
-    //var timestamp_el = $('.timestamp');
-    var timestamp_el = document.getElementsByClassName('timestamp');
-    for (let i = 0; i < timestamp_el.length; i++) {
-      let item = timestamp_el[i];
-
-      setInterval(function() {
-        var ts = $('.timestamp').eq(i).attr('class').split(' ')[1];
-        var eventTime= parseInt(ts) + 3600;
-        var currentTime = moment().unix();
-        var diffTime = eventTime - currentTime;
-        var duration = moment.duration(diffTime*1000, 'milliseconds');
+    let interval = 1000;
+    let cdInterval = setInterval(function(){
+      let timestamp_el = $('.timestamp')
+      let ordercards = $('.card-order')
+      for (i = 0; i < timestamp_el.length; i++) {
+        let cardorder = $(ordercards).eq(i).data('orderid');
+        let timestamp = $(timestamp_el).eq(i).data('timestamp');
+        let cardOrderClass = '.card-'+cardorder
+        // console.log(timestamp);
+        // console.log(cardorder);
+        let eventTime= parseInt(timestamp) + 3600;
+        let currentTime = moment().unix();
+        let diffTime = eventTime - currentTime;
+        let duration = moment.duration(diffTime*1000, 'milliseconds');
         duration = moment.duration(duration - interval, 'milliseconds')
         //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-        item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
-      }, interval);
-    }
+        $(timestamp_el).eq(i).html('<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds());
+        if (duration.minutes() <= 0 && duration.seconds() <= 0) {
+          //console.log('removing: '+cardOrderClass);
+          //$(cardOrderClass).remove();
+          $(timestamp_el).eq(i).html('<span class="badge badge-warning">ORDER EXPIRED</span>');
+          $('.btn-buyorder').addClass('disabled');
+        }
+      }
+    }, interval);
 
   });
 
