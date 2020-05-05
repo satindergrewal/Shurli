@@ -381,16 +381,23 @@ func OrderBookList(base, rel, maxentries, sortby string) []OrderData {
 		})
 	}
 
+	// Sort by the soon to expire orders
 	if sortby == "soon" {
 		sort.Slice(orderList, func(i, j int) bool {
 			return orderList[i].Timestamp < orderList[j].Timestamp
 		})
 	}
+	// Sort by the late to expire orders
 	if sortby == "late" {
 		sort.Slice(orderList, func(i, j int) bool {
 			return orderList[i].Timestamp > orderList[j].Timestamp
 		})
 	}
+	// TODO
+	// Sort by low/high price
+	// Sort by Maxvolume
+	// Sort by authorised pubkeys first
+	// Sort by autorhised pubkeys first + other sorted formats
 
 	// fmt.Println(orderList)
 	return orderList
