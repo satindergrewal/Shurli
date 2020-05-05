@@ -86,3 +86,17 @@ go run main.go
 ```
 
 Now open http://localhost:8080
+
+#### Making a release build
+You can also make static build of Subatomic Go app using the following instructions:
+```shell
+cd $HOME/go/src/github.com/satindergrewal/subatomicgo
+go build
+mkdir dist
+cp -av assets config.json config.json.sample favicon.ico public subatomicgo swaplogs templates dist/
+```
+
+The directory `dist` from `$HOME/go/src/github.com/satindergrewal/subatomicgo/` can be renamed or moved to anywhere on the machine.
+From this directory you just need to execute the `./subatomicgo` binary and it will start the application which you can use at following address:
+
+http://localhost:8080
