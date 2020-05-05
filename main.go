@@ -189,7 +189,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 
-	c.WriteMessage(1, []byte(`{"state":"Starting...}"`))
+	c.WriteMessage(1, []byte(`{"state":"Starting..."}`))
 
 	for {
 		mt, message, err := c.ReadMessage()

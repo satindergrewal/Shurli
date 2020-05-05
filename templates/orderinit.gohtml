@@ -58,6 +58,12 @@
             </div>
           </div>
 
+          <div class="card text-white bg-dark">
+            <div clas="card-body">
+              <div class="time-elapsed text-center" style="font-size: 200%;"></div>
+            </div>
+          </div>
+
         </div>
 
         <div class="col-md-6"> <!-- OrderStatus div start -->
@@ -100,6 +106,54 @@
 
                         //console.log(e.data)
                         swap_json = JSON.parse(e.data)
+
+                        // Order time elapsed counter
+                        let interval = 1000;
+                        //console.log(swap_json.state);
+                        if (swap_json.state == "Starting...") {
+                          console.log("Starting: "+swap_json.state);
+                          orderTimeElapsed();
+                        }
+
+                        // order time elapsed counter
+                        var swInterval;
+                        function orderTimeElapsed(){
+                          let startTime = moment().unix();
+                          swInterval = setInterval(function(){
+                            let currentTime = moment().unix();
+                            let diffTime = currentTime - startTime;
+                            let duration = moment.duration(diffTime*1000, 'milliseconds');
+                            //console.log(duration.minutes() + ":" + duration.seconds());
+                            var minutes;
+                            if (duration.minutes() <= 9) {
+                              minutes = "0"+duration.minutes();
+                            } else {
+                              minutes = duration.minutes();
+                            }
+                            var seconds;
+                            if (duration.seconds() <= 9) {
+                              seconds = "0"+duration.seconds();
+                            } else {
+                              seconds = duration.seconds();
+                            }
+                            //console.log(minutes + ":" + seconds);
+                            $('.time-elapsed').html(`<i class="fad fa-alarm-clock" style="color: #17a2b8;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
+                            if (swap_json.state == "signal: killed") {
+                              console.log("signal: killed: "+swap_json.state);
+                              $('.time-elapsed').html(`<i class="fad fa-exclamation-triangle" style="color: #dc3545;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
+                              clearInterval(swInterval);
+                            }
+                            if (swap_json.state == "Finished") {
+                              console.log("Finished: "+swap_json.state);
+                              $('.time-elapsed').html(`<i class="fad fa-check-circle" style="color: #28a745;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
+                              clearInterval(swInterval);
+                            }
+                          }, interval)
+                        }
+
+                        //function stopTimer(){
+                          //clearInterval(swInterval);
+                        //}
 
                         //console.log(swap_json.status)
                         switch (swap_json.status) {
@@ -158,17 +212,14 @@
                                 $('.swapstatus').text("Swap finished Successfully!")
                                 baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
                                 $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
+                                //stopTimer();
                                 break;
                               case "dpow_broadcast":
                                 $('.swapstatus').text("Swap finished Successfully!")
                                 baselink = "{{.BaseExplorer}}tx/" + swap_json.base_txid
                                 $('.base-txid').html("<a href="+baselink+" target=\"_blank\">"+swap_json.base_txid+"</a>")
+                                //stopTimer();
                                 break;
-                            }
-                            if (swap_json.state == "incomingclose") {
-                              
-                            } else if (swap_json.state == "dpow_broadcast") {
-                              
                             }
                             break;
                         }
@@ -184,6 +235,7 @@
                         }
 
                         document.querySelector("code").innerHTML += e.data + "<br>"
+
                       }
                     </script>
                 </div> <!-- OrderStatus body end -->
