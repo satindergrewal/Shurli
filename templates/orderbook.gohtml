@@ -16,7 +16,7 @@
             <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- trading pair div start -->
                 <div class="card text-white bg-dark"> <!-- trading pair card start -->
                     <div class="card-body" style="font-size: 18px;"> <!-- trading pair body start -->
-                        <form action="/orderbook" method="POST">
+                        <form action="/orderbook" id="orderbook-form" method="POST">
                           <div class="form-row">
                             
                             <table class="table table-borderless text-white text-center" style="margin-bottom: 0;">
@@ -41,7 +41,7 @@
                                     </select>
                                   </div>
                                 </td>
-                                <td><button class="btn text-white"><span class="fas fa-exchange-alt"></span></button></td>
+                                <td><button class="btn text-white change-pair"><span class="fas fa-exchange-alt"></span></button></td>
                                 <td>
                                   <div class="input-group">
                                     <select class="custom-select" id="coin_base" name="coin_base">
@@ -90,7 +90,7 @@
                                     </div> */}}
                                   </div>
                                 </td>
-                                <td><button type="submit" class="btn btn-primary">List Orders</button></td>
+                                {{/* <td><button type="submit" class="btn btn-primary">List Orders</button></td> */}}
                               </tr>
                             </table>
 
@@ -166,6 +166,28 @@
         }
       }
     }, interval);
+
+    //Load orderbook orders on form input changes
+    $('#coin_rel').change(function(){
+      $('#orderbook-form').submit();
+    });
+    $('#coin_base').change(function(){
+      $('#orderbook-form').submit();
+    });
+    $('#result_limit').change(function(){
+      $('#orderbook-form').submit();
+    });
+    $('#sortby').change(function(){
+      $('#orderbook-form').submit();
+    });
+
+    // change pair on swap button click
+    $('.change-pair').click(function(){
+      baseval = $('#coin_base').find(":selected").val();
+      relval = $('#coin_rel').find(":selected").val();
+      $('#coin_base').find(":selected").val(relval).change();
+      $('#coin_rel').find(":selected").val(baseval).change();
+    });
 
   })
 </script>
