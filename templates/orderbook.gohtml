@@ -106,11 +106,11 @@
             {{if not .OrderList}} <div class="alert alert-info" role="alert">There doesn't seem to be any order available for this pair. Please select another trading pair or try again later.</div> {{end}}
             {{range .OrderList}}
             <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- Order List div start -->
-                <div class="card text-white bg-dark mb-2 card-{{.OrderID}}"> <!-- Order List card start -->
+                <div class="card text-white bg-dark mb-2 card-order card-{{.OrderID}}" data-orderid="{{.OrderID}}"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | <span class="timestamp {{.Timestamp}} {{.OrderID}}"></span></div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | <span class="timestamp" data-timestamp="{{.Timestamp}}"></span></div>
                       </div>
                     </div>
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
@@ -143,39 +143,29 @@
     var stepper = new Stepper($('.bs-stepper')[0])
     
     // countdown for orders
-    var interval = 1000;
-    //var timestamp_el = $('.timestamp');
-    var timestamp_el = document.getElementsByClassName('timestamp');
-    var ts = []
-    ts.length = timestamp_el.length
-    for (let i = 0; i < timestamp_el.length; i++) {
-      let item = timestamp_el[i];
-
-      ts[i] = setInterval(function() {
-        if ($('.timestamp').eq(i).attr('class') != undefined) {
-          var class_arr = $('.timestamp').eq(i).attr('class').split(' ')
-          var ts = class_arr[1];
-          var cardid = class_arr[2];
-          var cardclass = '.card-'+cardid
-          var eventTime= parseInt(ts) + 3600;
-          var currentTime = moment().unix();
-          var diffTime = eventTime - currentTime;
-          var duration = moment.duration(diffTime*1000, 'milliseconds');
-          duration = moment.duration(duration - interval, 'milliseconds')
-          //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-          item.innerHTML = '<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds()
-          if (duration.minutes() <= 0 && duration.seconds() <= 0) {
-            console.log(cardclass);
-            stop_counter(i, cardclass);
-          }
+    let interval = 1000;
+    let cdInterval = setInterval(function(){
+      let timestamp_el = $('.timestamp')
+      let ordercards = $('.card-order')
+      for (i = 0; i < timestamp_el.length; i++) {
+        let cardorder = $(ordercards).eq(i).data('orderid');
+        let timestamp = $(timestamp_el).eq(i).data('timestamp');
+        let cardOrderClass = '.card-'+cardorder
+        // console.log(timestamp);
+        // console.log(cardorder);
+        let eventTime= parseInt(timestamp) + 3600;
+        let currentTime = moment().unix();
+        let diffTime = eventTime - currentTime;
+        let duration = moment.duration(diffTime*1000, 'milliseconds');
+        duration = moment.duration(duration - interval, 'milliseconds')
+        //console.log(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+        $(timestamp_el).eq(i).html('<i class="far fa-alarm-clock" style="color: #ffb100;"></i> ' + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds());
+        if (duration.minutes() <= 0 && duration.seconds() <= 0) {
+          //console.log('removing: '+cardOrderClass);
+          $(cardOrderClass).remove();
         }
-      }, interval);
-    }
-
-    function stop_counter(n, id) {
-      $(id).remove();
-      clearInterval(ts[n]);
-    }
+      }
+    }, interval);
 
   })
 </script>
