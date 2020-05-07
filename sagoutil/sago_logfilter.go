@@ -65,9 +65,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("state0 JSON:", string(state0JSON))
 		return string(state0JSON), nil
 
-	} else {
-		// fmt.Printf("length of openReqSf is lower: %d\n", len(openReqSf))
-	}
+	} //else {
+	// fmt.Printf("length of openReqSf is lower: %d\n", len(openReqSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expChAprov = regexp.MustCompile(`(?m)channelapproved.+$`)
@@ -130,9 +130,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Channel Approval ID")
 		// fmt.Println("state1 JSON:", string(state1JSON))
 		return string(state1JSON), nil
-	} else {
-		// fmt.Printf("length of aprovIDSf is lower: %d\n", len(aprovIDSf))
-	}
+	} //else {
+	// fmt.Printf("length of aprovIDSf is lower: %d\n", len(aprovIDSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expIncCh = regexp.MustCompile(`(?m)incomingchannel.+$`)
@@ -187,9 +187,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Sending TxID")
 		// fmt.Println("state3 JSON:", string(state3JSON))
 		return string(state3JSON), nil
-	} else {
-		// fmt.Printf("length of TxIDSf is lower: %d\n", len(TxIDSf))
-	}
+	} //else {
+	// fmt.Printf("length of TxIDSf is lower: %d\n", len(TxIDSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expZFrom = regexp.MustCompile(`(?m)from..+$`)
@@ -231,9 +231,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Sending Z tx")
 		// fmt.Println("state3 JSON:", string(state3JSON))
 		return string(state3JSON), nil
-	} else {
-		// fmt.Printf("length of zFromSf is lower: %d\n", len(zFromSf))
-	}
+	} //else {
+	// fmt.Printf("length of zFromSf is lower: %d\n", len(zFromSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expIncPay = regexp.MustCompile(`(?m)incomingpayment.+$`)
@@ -259,9 +259,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Incoming Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
 		return string(state4JSON), nil
-	} else {
-		// fmt.Printf("length of incPaySf is lower: %d\n", len(incPaySf))
-	}
+	} //else {
+	// fmt.Printf("length of incPaySf is lower: %d\n", len(incPaySf))
+	//}
 
 	// fmt.Println(`----`)
 	var expAliceWait = regexp.MustCompile(`(?m)alice waits.+$`)
@@ -299,9 +299,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Alice Waiting Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
 		return string(state4JSON), nil
-	} else {
-		// fmt.Printf("length of aliceWaitSf is lower: %d\n", len(aliceWaitSf))
-	}
+	} //else {
+	// fmt.Printf("length of aliceWaitSf is lower: %d\n", len(aliceWaitSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expAliceRcvd = regexp.MustCompile(`(?m)received.+$`)
@@ -326,9 +326,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("Alice Received Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
 		return string(state4JSON), nil
-	} else {
-		// fmt.Printf("length of aliceRcvdSf is lower: %d\n", len(aliceRcvdSf))
-	}
+	} //else {
+	// fmt.Printf("length of aliceRcvdSf is lower: %d\n", len(aliceRcvdSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expSwpCompl = regexp.MustCompile(`(?m)SWAP COMPLETE.+$`)
@@ -350,9 +350,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state4 JSON:", string(state4JSON))
 		return string(state4JSON), nil
-	} else {
-		// fmt.Printf("length of swpComplSf is lower: %d\n", len(swpComplSf))
-	}
+	} //else {
+	// fmt.Printf("length of swpComplSf is lower: %d\n", len(swpComplSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expIncPaid = regexp.MustCompile(`(?m)incomingfullypaid.+$`)
@@ -376,9 +376,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state5 JSON:", string(state5JSON))
 		return string(state5JSON), nil
-	} else {
-		// fmt.Printf("length of incPaidSf is lower: %d\n", len(incPaidSf))
-	}
+	} //else {
+	// fmt.Printf("length of incPaidSf is lower: %d\n", len(incPaidSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expIncClose = regexp.MustCompile(`(?m)incomingclose.+$`)
@@ -402,9 +402,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
 		return string(state6JSON), nil
-	} else {
-		// fmt.Printf("length of incCloseSf is lower: %d\n", len(incCloseSf))
-	}
+	} //else {
+	// fmt.Printf("length of incCloseSf is lower: %d\n", len(incCloseSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expOpid = regexp.MustCompile(`(?m)opid..+$`)
@@ -431,9 +431,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
 		return string(state6JSON), nil
-	} else {
-		// fmt.Printf("length of opIDSf is lower: %d\n", len(opIDSf))
-	}
+	} //else {
+	// fmt.Printf("length of opIDSf is lower: %d\n", len(opIDSf))
+	//}
 
 	// fmt.Println(`----`)
 	var expDpow = regexp.MustCompile(`(?m)dpow_broadcast.+$`)
@@ -456,9 +456,9 @@ func SwapLogFilter(logString string) (string, error) {
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
 		return string(state6JSON), nil
-	} else {
-		// fmt.Printf("length of dPowBcastSf is lower: %d\n", len(dPowBcastSf))
-	}
+	} //else {
+	// fmt.Printf("length of dPowBcastSf is lower: %d\n", len(dPowBcastSf))
+	//}
 
 	return "{}", errors.New("no log found")
 
