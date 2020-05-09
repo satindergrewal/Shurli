@@ -3,6 +3,7 @@ package sagoutil
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -34,12 +35,14 @@ type ZFrom []struct {
 }
 
 // SwapLogFilter returns JSON processed data for submitted log string
-func SwapLogFilter(logString string) (string, error) {
+func SwapLogFilter(logString, answer string) (string, error) {
 	var expOpenReq = regexp.MustCompile(`(?m)openrequest\..+$`)
 	openReq := expOpenReq.FindString(logString)
 	// fmt.Println(openReq)
 	openReqSf := strings.Fields(openReq)
 	// fmt.Println(openReqSf[2])
+
+	var statuses []SwapStatus
 
 	if len(openReqSf) > 0 {
 		// fmt.Printf("length of openReqSf is greater: %d\n", len(openReqSf))
@@ -63,7 +66,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state0JSON, _ := json.Marshal(state0)
 		// fmt.Println("Channel Opened")
 		// fmt.Println("state0 JSON:", string(state0JSON))
-		return string(state0JSON), nil
+		if answer == "single" {
+			return string(state0JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state0)
+		}
 
 	} //else {
 	// fmt.Printf("length of openReqSf is lower: %d\n", len(openReqSf))
@@ -93,7 +101,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state1JSON, _ := json.Marshal(state1)
 		// fmt.Println("Channel Approved")
 		// fmt.Println("state1 JSON:", string(state1JSON))
-		return string(state1JSON), nil
+		if answer == "single" {
+			return string(state1JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state1)
+		}
 	} else {
 		// fmt.Printf("length of chAprovSf is lower: %d\n", len(chAprovSf))
 	}
@@ -129,7 +142,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state1JSON, _ := json.Marshal(state1)
 		// fmt.Println("Channel Approval ID")
 		// fmt.Println("state1 JSON:", string(state1JSON))
-		return string(state1JSON), nil
+		if answer == "single" {
+			return string(state1JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state1)
+		}
 	} //else {
 	// fmt.Printf("length of aprovIDSf is lower: %d\n", len(aprovIDSf))
 	//}
@@ -157,7 +175,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state2JSON, _ := json.Marshal(state2)
 		// fmt.Println("Incoming Channel")
 		// fmt.Println("state2 JSON:", string(state2JSON))
-		return string(state2JSON), nil
+		if answer == "single" {
+			return string(state2JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state2)
+		}
 	} else {
 		// fmt.Printf("length of incChSf is lower: %d\n", len(incChSf))
 	}
@@ -186,7 +209,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state3JSON, _ := json.Marshal(state3)
 		// fmt.Println("Sending TxID")
 		// fmt.Println("state3 JSON:", string(state3JSON))
-		return string(state3JSON), nil
+		if answer == "single" {
+			return string(state3JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state3)
+		}
 	} //else {
 	// fmt.Printf("length of TxIDSf is lower: %d\n", len(TxIDSf))
 	//}
@@ -230,7 +258,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state3JSON, _ := json.Marshal(state3)
 		// fmt.Println("Sending Z tx")
 		// fmt.Println("state3 JSON:", string(state3JSON))
-		return string(state3JSON), nil
+		if answer == "single" {
+			return string(state3JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state3)
+		}
 	} //else {
 	// fmt.Printf("length of zFromSf is lower: %d\n", len(zFromSf))
 	//}
@@ -258,7 +291,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state4JSON, _ := json.Marshal(state4)
 		// fmt.Println("Incoming Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
-		return string(state4JSON), nil
+		if answer == "single" {
+			return string(state4JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state4)
+		}
 	} //else {
 	// fmt.Printf("length of incPaySf is lower: %d\n", len(incPaySf))
 	//}
@@ -298,7 +336,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state4JSON, _ := json.Marshal(state4)
 		// fmt.Println("Alice Waiting Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
-		return string(state4JSON), nil
+		if answer == "single" {
+			return string(state4JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state4)
+		}
 	} //else {
 	// fmt.Printf("length of aliceWaitSf is lower: %d\n", len(aliceWaitSf))
 	//}
@@ -325,7 +368,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state4JSON, _ := json.Marshal(state4)
 		// fmt.Println("Alice Received Payment")
 		// fmt.Println("state4 JSON:", string(state4JSON))
-		return string(state4JSON), nil
+		if answer == "single" {
+			return string(state4JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state4)
+		}
 	} //else {
 	// fmt.Printf("length of aliceRcvdSf is lower: %d\n", len(aliceRcvdSf))
 	//}
@@ -349,7 +397,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state4JSON, _ := json.Marshal(state4)
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state4 JSON:", string(state4JSON))
-		return string(state4JSON), nil
+		if answer == "single" {
+			return string(state4JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state4)
+		}
 	} //else {
 	// fmt.Printf("length of swpComplSf is lower: %d\n", len(swpComplSf))
 	//}
@@ -375,7 +428,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state5JSON, _ := json.Marshal(state5)
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state5 JSON:", string(state5JSON))
-		return string(state5JSON), nil
+		if answer == "single" {
+			return string(state5JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state5)
+		}
 	} //else {
 	// fmt.Printf("length of incPaidSf is lower: %d\n", len(incPaidSf))
 	//}
@@ -401,7 +459,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state6JSON, _ := json.Marshal(state6)
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
-		return string(state6JSON), nil
+		if answer == "single" {
+			return string(state6JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state6)
+		}
 	} //else {
 	// fmt.Printf("length of incCloseSf is lower: %d\n", len(incCloseSf))
 	//}
@@ -430,7 +493,12 @@ func SwapLogFilter(logString string) (string, error) {
 		state6JSON, _ := json.Marshal(state6)
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
-		return string(state6JSON), nil
+		if answer == "single" {
+			return string(state6JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state6)
+		}
 	} //else {
 	// fmt.Printf("length of opIDSf is lower: %d\n", len(opIDSf))
 	//}
@@ -455,10 +523,22 @@ func SwapLogFilter(logString string) (string, error) {
 		state6JSON, _ := json.Marshal(state6)
 		// fmt.Println("SWAP COMPLETE")
 		// fmt.Println("state6 JSON:", string(state6JSON))
-		return string(state6JSON), nil
+		if answer == "single" {
+			return string(state6JSON), nil
+		}
+		if answer == "full" {
+			statuses = append(statuses, state6)
+		}
 	} //else {
 	// fmt.Printf("length of dPowBcastSf is lower: %d\n", len(dPowBcastSf))
 	//}
+
+	statusesJSON, _ := json.Marshal(statuses)
+	fmt.Println(statusesJSON)
+
+	if answer == "full" {
+		return string(statusesJSON), nil
+	}
 
 	return "{}", errors.New("no log found")
 

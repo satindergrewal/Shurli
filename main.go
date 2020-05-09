@@ -15,8 +15,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
-	// "subatomicgo/sagoutil"
+	// "github.com/satindergrewal/subatomicgo/sagoutil"
+	"subatomicgo/sagoutil"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -283,7 +283,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 				log.Printf("CMD Bytes: %s", s.Bytes())
 				// c.WriteMessage(1, s.Bytes())
 
-				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()))
+				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()), "single")
 				if err != nil {
 					// fmt.Println(err)
 				} else {

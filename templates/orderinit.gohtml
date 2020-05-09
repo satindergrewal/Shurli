@@ -143,6 +143,11 @@
                               $('.time-elapsed').html(`<i class="fad fa-exclamation-triangle" style="color: #dc3545;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
                               clearInterval(swInterval);
                             }
+                            if (swap_json.state == "exit status 255") {
+                              console.log("signal: killed: "+swap_json.state);
+                              $('.time-elapsed').html(`<i class="fad fa-exclamation-triangle" style="color: #dc3545;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
+                              clearInterval(swInterval);
+                            }
                             if (swap_json.state == "Finished") {
                               console.log("Finished: "+swap_json.state);
                               $('.time-elapsed').html(`<i class="fad fa-check-circle" style="color: #28a745;"></i> ` + minutes + ":" + seconds + ` <small>(mm:ss)</small>`);
@@ -253,7 +258,7 @@
                     <div class="col-6" style="text-align: right;">
                       <div class="form-check pl-0">
                         <label for="toggle-rawlogs" class="toggle-rawlogs-label">Raw Logs</label>
-                        <input type="checkbox" id="toggle-rawlogs" class="toggle-rawlogs" data-toggle="toggle" data-on="show" data-off="hide" data-onstyle="secondary" data-offstyle="dark" data-size="xs">
+                        <input type="checkbox" id="toggle-rawlogs" class="toggle-rawlogs" data-toggle="toggle" data-on="shown" data-off="hidden" data-onstyle="info" data-offstyle="primary" data-size="xs">
                       </div>
                     </div>
                   </div>
