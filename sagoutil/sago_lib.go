@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -91,13 +92,29 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
 			} else {
+
 				// Check status of the blockchain sync
 				var tempSyncStatus bool
-				if info.Result.Longestchain != info.Result.Blocks {
+				// GetBlockChainInfo to get value of "verificationprogress" to check if blockchain synced or not
+				var gb kmdgo.GetBlockchainInfo
+				gb, err := appName.GetBlockchainInfo()
+				if err != nil {
+					fmt.Printf("Code: %v\n", gb.Error.Code)
+					fmt.Printf("Message: %v\n\n", gb.Error.Message)
+					fmt.Println("Err happened", err)
+				}
+
+				if math.Round(gb.Result.Verificationprogress) != 1 {
 					tempSyncStatus = false
 				} else {
 					tempSyncStatus = true
 				}
+
+				// if info.Result.Longestchain != info.Result.Blocks {
+				// 	tempSyncStatus = false
+				// } else {
+				// 	tempSyncStatus = true
+				// }
 
 				if !!coinConfInfo.Shielded {
 					// fmt.Printf("it is %s, Getting it's Z balance...\n", coinConfInfo.Name)
@@ -125,7 +142,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 						Status:   "Online",
 						ZBalance: zblc.Result,
 						Balance:  info.Result.Balance,
-						Blocks:   info.Result.Longestchain,
+						Blocks:   info.Result.Blocks,
 						Synced:   tempSyncStatus,
 						Shielded: coinConfInfo.Shielded,
 					})
