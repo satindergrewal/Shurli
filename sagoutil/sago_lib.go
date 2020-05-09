@@ -153,7 +153,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 						Ticker:   info.Result.Name,
 						Status:   "Online",
 						Balance:  info.Result.Balance,
-						Blocks:   info.Result.Longestchain,
+						Blocks:   info.Result.Blocks,
 						Synced:   tempSyncStatus,
 						Shielded: coinConfInfo.Shielded,
 					})
