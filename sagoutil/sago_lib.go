@@ -83,6 +83,9 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			} else if info.Error.Message == "Rescanning..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Rescanning...", 0.0, 0, 0, false, false})
+			} else if info.Error.Message == "Rewinding blocks if needed..." {
+				fmt.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
 			} else {
 				fmt.Println(v, "- Err happened:", err)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
