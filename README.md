@@ -11,7 +11,7 @@ To build an independent GUI application that works with existing supported walle
 * Komodod
 * Komodo-ocean-qt
 
-## Code of conduct
+### Code of conduct
 
 * While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/satindergrewal/shurli/issues).
 
