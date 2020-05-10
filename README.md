@@ -1,5 +1,21 @@
 # Shurli
+
  Shurli App - Test version
+
+## Objective
+
+ To build an independent GUI application that works with existing supported wallets to make sub-atomic trades.
+
+### Currently supported
+
+* Komodod
+* Komodo-ocean-qt
+* Verus-desktop
+
+### Code of conduct
+
+* While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/satindergrewal/shurli/issues).
+
 
 ### Requirements
     - Go
