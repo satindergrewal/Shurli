@@ -2,6 +2,9 @@
 
  Shurli App - Test version
 
+## :warning: This is in alpha phase right now so please expect breaking changes.
+
+
 ## Objective
 
  To build an independent GUI application that works with existing supported wallets to make sub-atomic trades.
