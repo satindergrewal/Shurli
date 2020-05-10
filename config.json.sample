@@ -42,7 +42,8 @@
         "PIRATE": "https://pirate.explorer.dexstats.info/",
         "DEX": "https://dex.explorer.dexstats.info/",
         "VRSC": "https://explorer.veruscoin.io/",
-        "HUSH3": "https://explorer.myhush.org/"
+        "HUSH3": "https://explorer.myhush.org/",
+        "MCL": "http://explorer.marmara.io/"
     },
     "subatomic_exe": "./subatomic",
     "subatomic_dir": "/Users/satinder/repositories/jl777/komodo/src"
