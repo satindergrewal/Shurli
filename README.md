@@ -1,6 +1,6 @@
 # Shurli
 
- Shurli App - Test version
+ Shurli App - alpha version
 
 ## :warning: This is in alpha phase right now so please expect breaking changes.
 
