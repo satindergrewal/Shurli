@@ -29,6 +29,12 @@
             "ticker": "DEX",
             "name": "DEX",
             "shielded": true
+        },
+        {
+            "coin": "MCL",
+            "ticker": "MCL",
+            "name": "MarmaraChain",
+            "shielded": true
         }
     ],
     "explorers": {

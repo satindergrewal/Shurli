@@ -50,7 +50,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 	for _, v := range chains {
 		// fmt.Println(i)
-		// fmt.Println("v", v)
+		fmt.Println("v", v)
 
 		switch v {
 		case "KMD":
