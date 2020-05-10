@@ -1,15 +1,16 @@
-# subatomicgo
+# Shurli
 
-Subatomic Go Web App - Test version
+ Shurli App - Test version
 
 ## Objective
 
-To build an independent GUI application that works with existing supported wallets to make sub-atomic trades.
+ To build an independent GUI application that works with existing supported wallets to make sub-atomic trades.
 
 ### Currently supported
 
 * Komodod
 * Komodo-ocean-qt
+* Verus-desktop
 
 ### Code of conduct
 
