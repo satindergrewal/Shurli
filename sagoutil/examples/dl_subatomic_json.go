@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/satindergrewal/subatomicgo/sagoutil"
+	"github.com/satindergrewal/shurli/sagoutil"
 )
 
 func main() {
