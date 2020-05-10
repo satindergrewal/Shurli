@@ -1,5 +1,5 @@
-# subatomicgo
- Subatomic Go Web App - Test version
+# Shurli
+ Shurli App - Test version
 
 ### Requirements
     - Go
