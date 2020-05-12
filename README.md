@@ -17,7 +17,7 @@
 
 ### Code of conduct
 
-* While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/satindergrewal/shurli/issues).
+* While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/Meshbits/shurli/issues).
 
 
 ### Requirements
@@ -55,8 +55,8 @@ mkdir -p $HOME/go/{bin,src,pkg}
 ```
 
 ```
-go get -u github.com/satindergrewal/shurli
-cd $HOME/go/src/github.com/satindergrewal/shurli
+go get -u github.com/Meshbits/shurli
+cd $HOME/go/src/github.com/Meshbits/shurli
 ```
 
 #### Configure config.json with absolute path of subatomic binary
@@ -67,7 +67,7 @@ For example if you have compiled and installed `Komodo` and `subatomic` as per t
 Make a copy of `config.json` file from `config.json.sample` file:
 
 ```shell
-cd $HOME/go/src/github.com/satindergrewal/shurli
+cd $HOME/go/src/github.com/Meshbits/shurli
 cp config.json.sample config.json
 ```
 
@@ -100,7 +100,7 @@ After:
 
 To start the app execute following command inside `shurli` directory:
 ```shell
-cd $HOME/go/src/github.com/satindergrewal/shurli
+cd $HOME/go/src/github.com/Meshbits/shurli
 go run main.go
 ```
 
@@ -109,13 +109,13 @@ Now open http://localhost:8080
 #### Making a release build
 You can also make static build of Shurli app using the following instructions:
 ```shell
-cd $HOME/go/src/github.com/satindergrewal/shurli
+cd $HOME/go/src/github.com/Meshbits/shurli
 go build
 mkdir dist
 cp -av assets config.json config.json.sample favicon.ico public shurli swaplogs templates dist/
 ```
 
-The directory `dist` from `$HOME/go/src/github.com/satindergrewal/shurli/` can be renamed or moved to anywhere on the machine.
+The directory `dist` from `$HOME/go/src/github.com/Meshbits/shurli/` can be renamed or moved to anywhere on the machine.
 From this directory you just need to execute the `./shurli` binary and it will start the application which you can use at following address:
 
 http://localhost:8080
