@@ -16,7 +16,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/satindergrewal/kmdgo"
+	"github.com/Meshbits/kmdgo"
 )
 
 // WInfo type stores data to display on Wallet info screen
