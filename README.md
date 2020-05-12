@@ -23,7 +23,7 @@
 ### Requirements
     - Go
     - Git
-    - Komodo Daemon (jl777 branch compiled from http://github.com/jl777/komodo.git)
+    - Komodo Daemon (dev branch compiled from http://github.com/jl777/komodo.git)
 
 
 ### Install Git, Komodo and Subatomic binaries
