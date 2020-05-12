@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"kmdgo"
 
-	"github.com/satindergrewal/shurli/sagoutil"
+	"github.com/Meshbits/shurli/sagoutil"
 )
 
 func main() {
