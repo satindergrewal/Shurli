@@ -46,7 +46,7 @@ brew update
 brew install go
 ```
 
-### Installing SubatomicGo App
+### Installing Shurli App
 In Linux/Mac you must have a `go` directory under your `$HOME` directory in your OS.
 If you don't find this directory then create the following:
 
@@ -56,7 +56,12 @@ mkdir -p $HOME/go/{bin,src,pkg}
 
 ```
 go get -u github.com/Meshbits/shurli
+```
+
+#### For development version change it's git branch
+```shell
 cd $HOME/go/src/github.com/Meshbits/shurli
+git checkout grewal
 ```
 
 #### Configure config.json with absolute path of subatomic binary
@@ -96,7 +101,7 @@ After:
 "subatomic_dir": "/home/satinder/komodo/src"
 ```
 
-#### Start SubatomicGo Web App
+#### Start Shurli App
 
 To start the app execute following command inside `shurli` directory:
 ```shell
