@@ -19,8 +19,8 @@ type ConfigCoins struct {
 // SubAtomicConfig holds the app's confugration settings
 type SubAtomicConfig struct {
 	Chains       []ConfigCoins     `json:"chains,omitempty"`
-	SubatomicExe string            `json:"subatomic_exe,omitempty"`
-	SubatomicDir string            `json:"subatomic_dir,omitempty"`
+	SubatomicExe string            `json:"subatomic_exe"`
+	SubatomicDir string            `json:"subatomic_dir"`
 	Explorers    map[string]string `json:"explorers,omitempty"`
 }
 
