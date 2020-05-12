@@ -15,7 +15,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/satindergrewal/shurli/sagoutil"
+	"github.com/Meshbits/shurli/sagoutil"
 	// "shurli/sagoutil"
 
 	"github.com/gorilla/mux"
