@@ -59,6 +59,7 @@ func main() {
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 	r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
+	r.HandleFunc("/history", swaphistory)
 
 	r.HandleFunc("/echo", echo)
 
@@ -334,5 +335,18 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
+	}
+}
+
+func swaphistory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var history sagoutil.SwapsHistory
+	allhistory, err := history.SwapsHistory()
+	fmt.Println(allhistory)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		json.NewEncoder(w).Encode(allhistory)
 	}
 }

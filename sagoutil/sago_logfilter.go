@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"regexp"
 	"strconv"
@@ -32,6 +33,66 @@ type ZFrom []struct {
 	Address string  `json:"address,omitempty"`
 	Amount  float64 `json:"amount,omitempty"`
 	Memo    string  `json:"memo,omitempty"`
+}
+
+// SwapHistory type stores the single object from Swaps logs history
+type SwapHistory struct {
+	SwapID    string       `json:"swapid"`
+	TimeStamp string       `json:"timestamp"`
+	SwapLog   []SwapStatus `json:"swaplog"`
+}
+
+// SwapsHistory type is used as collection of SwapHistory objects
+type SwapsHistory []SwapHistory
+
+// SwapsHistory returns processed slice of swaplogs in JSON format
+func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
+
+	files, err := ioutil.ReadDir("swaplogs")
+	if err != nil {
+		log.Println(err)
+		return history, errors.New(err.Error())
+	}
+
+	// var multipleLogs = []string{logString, logString0, logString1}
+	for _, file := range files {
+		// fmt.Println(i)
+		// fmt.Println(file)
+
+		fn := strings.Split(file.Name(), "_")
+		fnid := strings.Split(fn[1], ".")
+		timestamp := fn[0]
+		swapid := fnid[0]
+		// fmt.Printf("\ntimestamp: %s\nswapid: %s\n", timestamp, swapid)
+
+		fileRead, err := ioutil.ReadFile("swaplogs/" + file.Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		logval, _ := SwapLogFilter(string(fileRead), "full")
+		// fmt.Println(logval)
+		var _logval []SwapStatus
+		err = json.Unmarshal([]byte(logval), &_logval)
+		if err != nil {
+			log.Println(err)
+		}
+
+		history = append(history, SwapHistory{
+			SwapID:    swapid,
+			TimeStamp: timestamp,
+			SwapLog:   _logval,
+		})
+		// fmt.Println("\n", history)
+	}
+
+	// var historyJSON string
+	// historyJSON, _ := json.Marshal(history)
+	// fmt.Println(len(history))
+	// historyJSON, _ := json.MarshalIndent(history, "", "  ")
+	// fmt.Println(string(historyJSON))
+	// return string(historyJSON)
+	return history, nil
 }
 
 // SwapLogFilter returns JSON processed data for submitted log string
