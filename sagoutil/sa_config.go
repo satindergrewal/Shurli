@@ -2,6 +2,7 @@ package sagoutil
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -18,21 +19,40 @@ type ConfigCoins struct {
 
 // SubAtomicConfig holds the app's confugration settings
 type SubAtomicConfig struct {
-	Chains       []ConfigCoins     `json:"chains"`
+	Chains       []ConfigCoins     `json:"chains,omitempty"`
 	SubatomicExe string            `json:"subatomic_exe"`
 	SubatomicDir string            `json:"subatomic_dir"`
-	Explorers    map[string]string `json:"explorers"`
+	Explorers    map[string]string `json:"explorers,omitempty"`
+}
+
+// ConfigChains holds the list of chains and it's other details like explorers links etc.
+type ConfigChains struct {
+	Chains    []ConfigCoins     `json:"chains"`
+	Explorers map[string]string `json:"explorers"`
 }
 
 //SubAtomicConfInfo returns application's config params
 func SubAtomicConfInfo() SubAtomicConfig {
 	var conf SubAtomicConfig
-	content, err := ioutil.ReadFile("config.json")
+	confJSONContent, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = json.Unmarshal(content, &conf)
-	// fmt.Println(conf.Explorers["zVRSC"])
+	err = json.Unmarshal(confJSONContent, &conf)
+	// fmt.Println("conf1:", conf)
+
+	var chains ConfigChains
+	chainsJSONContent, err := ioutil.ReadFile("chains.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// fmt.Println(chainsJSONContent)
+	err = json.Unmarshal(chainsJSONContent, &chains)
+	conf.Chains = chains.Chains
+	conf.Explorers = chains.Explorers
+	// fmt.Println("chains: ", chains)
+	// fmt.Println("conf2:", conf)
+	// fmt.Println(chains.Explorers["VRSC"])
 	return conf
 }
 
@@ -68,4 +88,20 @@ func GetCoinConfInfo(coin string) ConfigCoins {
 	}
 
 	return coininfo
+}
+
+// ShurliStartMsg printing message at start
+func ShurliStartMsg() {
+	iLShurli := `
+	█████    █████                                         █████████  █████                           ████   ███ 
+	░░███    ░░███                                         ███░░░░░███░░███                           ░░███  ░░░  
+	 ░███     ░███         ██████  █████ █████  ██████    ░███    ░░░  ░███████   █████ ████ ████████  ░███  ████ 
+	 ░███     ░███        ███░░███░░███ ░░███  ███░░███   ░░█████████  ░███░░███ ░░███ ░███ ░░███░░███ ░███ ░░███ 
+	 ░███     ░███       ░███ ░███ ░███  ░███ ░███████     ░░░░░░░░███ ░███ ░███  ░███ ░███  ░███ ░░░  ░███  ░███ 
+	 ░███     ░███      █░███ ░███ ░░███ ███  ░███░░░      ███    ░███ ░███ ░███  ░███ ░███  ░███      ░███  ░███ 
+	 █████    ███████████░░██████   ░░█████   ░░██████    ░░█████████  ████ █████ ░░████████ █████     █████ █████
+	░░░░░    ░░░░░░░░░░░  ░░░░░░     ░░░░░     ░░░░░░      ░░░░░░░░░  ░░░░ ░░░░░   ░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ 
+	`
+
+	fmt.Println(iLShurli)
 }

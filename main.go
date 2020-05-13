@@ -22,6 +22,19 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// ShurliInfo returns general information about application
+// such as version and phases such as alpha, beta, stable etc.
+type ShurliInfo struct {
+	AppVersion string `json:"appversion"`
+	AppPhase   string `json:"appphase"`
+}
+
+// ShurliApp stores the information about applications
+var ShurliApp = ShurliInfo{
+	AppVersion: "0.0.1",
+	AppPhase:   "alpha",
+}
+
 var tpl *template.Template
 
 func check(e error) {
@@ -36,6 +49,11 @@ func init() {
 }
 
 func main() {
+
+	// Display Shurli Application's version and phase
+	fmt.Printf(">>> Shurli version: %s %s\n", ShurliApp.AppVersion, ShurliApp.AppPhase)
+	sagoutil.ShurliStartMsg()
+
 	r := mux.NewRouter()
 	r.HandleFunc("/", idx)
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")

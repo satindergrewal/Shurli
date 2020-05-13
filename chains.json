@@ -1,0 +1,48 @@
+{
+    "chains": [
+        {
+            "coin": "komodo",
+            "ticker": "KMD",
+            "name": "Komodo",
+            "shielded": false
+        },
+        {
+            "coin": "PIRATE",
+            "ticker": "ARRR",
+            "name": "Pirate",
+            "shielded": true
+        },
+        {
+            "coin": "VRSC",
+            "ticker": "VRSC",
+            "name": "VerusCoin",
+            "shielded": true
+        },
+        {
+            "coin": "HUSH3",
+            "ticker": "HUSH3",
+            "name": "Hush",
+            "shielded": true
+        },
+        {
+            "coin": "DEX",
+            "ticker": "DEX",
+            "name": "DEX",
+            "shielded": true
+        },
+        {
+            "coin": "MCL",
+            "ticker": "MCL",
+            "name": "MarmaraChain",
+            "shielded": true
+        }
+    ],
+    "explorers": {
+        "KMD": "https://www.kmdexplorer.io/",
+        "PIRATE": "https://pirate.explorer.dexstats.info/",
+        "DEX": "https://dex.explorer.dexstats.info/",
+        "VRSC": "https://explorer.veruscoin.io/",
+        "HUSH3": "https://explorer.myhush.org/",
+        "MCL": "http://explorer.marmara.io/"
+    }
+}
