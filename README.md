@@ -21,7 +21,7 @@
 
 
 ### Requirements
-    - Go
+    - Go v1.14+
     - Git
     - Komodo Daemon (dev branch compiled from http://github.com/jl777/komodo.git)
 
