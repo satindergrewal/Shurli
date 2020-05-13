@@ -138,23 +138,27 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	//}
 
 	// fmt.Println(`----`)
-	var expChAprov = regexp.MustCompile(`(?m)channelapproved.+$`)
+	var expChAprov = regexp.MustCompile(`(?-s).*channelapproved.*(?s)`)
 	chAprov := expChAprov.FindString(logString)
 	// fmt.Println(chAprov)
 	chAprovSf := strings.Fields(chAprov)
 	if len(chAprovSf) > 0 {
 		// fmt.Printf("length of chAprovSf is greater: %d\n", len(chAprovSf))
 
-		// fmt.Println(chAprovSf[0])
-		// fmt.Println(chAprovSf[1])
-		// fmt.Println(chAprovSf[2])
-		aprStatus := strings.Split(chAprovSf[2], ".")
+		baseRel := strings.Split(chAprovSf[2], "/")
+		rel := strings.ReplaceAll(baseRel[0], "(", "")
+		base := strings.ReplaceAll(baseRel[1], ")", "")
+
+		aprStatus := strings.Split(chAprovSf[5], ".")
 		// fmt.Println(aprStatus[1])
 		// fmt.Printf("Channel with ID approved with status %s\n", aprStatus[1])
 
 		state1 := SwapStatus{
 			Status: aprStatus[1],
-			State:  chAprovSf[0],
+			State:  chAprovSf[3],
+			SwapID: chAprovSf[0],
+			Base:   base,
+			Rel:    rel,
 		}
 
 		// fmt.Println("state 1:", state1)
