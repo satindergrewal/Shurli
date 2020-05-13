@@ -3,7 +3,6 @@ package sagoutil
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
@@ -595,7 +594,7 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	//}
 
 	statusesJSON, _ := json.Marshal(statuses)
-	fmt.Println(statusesJSON)
+	// fmt.Println(statusesJSON)
 
 	if answer == "full" {
 		return string(statusesJSON), nil
