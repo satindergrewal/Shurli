@@ -4,7 +4,7 @@ body {
 }
 
 .logo{
-	width: 25px;
+	width: 35px;
 }
 
 .bg-dark {
@@ -34,9 +34,65 @@ body {
 }
 
 .topnav-dark {
+	padding: 0;
 	-webkit-box-shadow: 0px 10px 30px -8px rgba(0,0,0,0.48);
 	-moz-box-shadow: 0px 10px 30px -8px rgba(0,0,0,0.48);
 	box-shadow: 0px 10px 30px -8px rgba(0,0,0,0.48);
+}
+
+.topnav-icon {
+	margin-right: 5px;
+}
+
+.navbar-brand {
+	padding-top: .8rem;
+    margin-left: 1rem;
+}
+
+.nav-link {
+	padding-top: 1.1rem;
+	padding-bottom: 1.1rem;
+	text-transform: uppercase;
+}
+
+.navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
+	background: #0000003d;
+}
+
+.nav-item .topnav-active {
+	height: 10px;
+	position: absolute;
+	width: 60%;
+	margin: -6px;
+	left: 25%;
+	/* padding: -13px; */
+	background: #fff;
+	border: 1px solid rgba(0,0,0,.125);
+	border-radius: .25rem;
+}
+
+.navbar-dark .navbar-nav .active > .topnav-item > .nav-link {
+	color: #fff;
+}
+
+.nav-item:focus > .topnav-link, .nav-item:hover .topnav-link {
+	height: 10px;
+	position: absolute;
+	width: 40%;
+	margin: -6px;
+	left: 35%;
+	padding: -13px;
+	background: rgb(255, 255, 255);
+	border: 1px solid rgba(0,0,0,.125);
+	border-radius: .25rem;
+}
+
+@media (min-width: 992px)
+{
+	.navbar-expand .navbar-nav .nav-link {
+		padding-right: 1.5rem;
+		padding-left: 1.5rem;
+	}
 }
 
 .login-body {

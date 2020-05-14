@@ -1,13 +1,41 @@
 {{template "header"}}
 
-    <nav class="navbar navbar-dark topnav-dark bg-dark">
-        <a class="navbar-brand"><img src="assets/images/spacemesh_logo.png" class="logo"/> Shurli</a>
-        <form class="form-inline">
+    <nav class="navbar fixed-top navbar-expand navbar-dark topnav-dark bg-dark">
+      <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            {{/* <li class="nav-item">
+                <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+            </li> */}}
+            <li class="nav-item active">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link topnav-active"></div>
+                <a class="nav-link" href="/"><i class="fad fa-rocket-launch topnav-icon"></i> Dashboard <span class="sr-only">(current)</span></a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/orderbook"><i class="fad fa-exchange-alt topnav-icon"></i> Trade</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/history"><i class="fad fa-history topnav-icon"></i> Trade History</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        {{/* <form class="form-inline">
             {{template "menu-button-array"}}
-        </form>
+        </form> */}}
     </nav>
 
-    <div class="container-fluid" style="margin-top: 15px;">
+    <div class="container-fluid" style="margin-top: 75px;">
 
         <div class="row" style="margin-bottom: 1em;">
         <div class="col-12" style="margin-bottom: 10px;"> <!-- GetPeerInfo div start -->
