@@ -101,6 +101,44 @@ body {
 	color: #fff;
 }
 
+.dropdown-menu {
+	background-color: #0e2842;
+	color: #8894a1;
+}
+
+.dropdown-item {
+	color: #8894a1;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+	color: #8894a1;
+    background-color: #0c1f31;
+}
+
+.dropdown-menu-right {
+	right: 0;
+}
+
+.topnav-dropdown-item {
+	padding: .7rem 1.5rem;
+	text-transform: uppercase;
+}
+
+button.btn.dropdown-toggle.btn-dark {
+	color: #f4f5f5;
+    background-color: #0e2842;
+    border-color: #68aee0;
+
+}
+
+.dropdown-item.active, .dropdown-item:active {
+	background-color: #0c1f31;
+}
+
+.dropdown-toggle-right::after {
+    display: none;
+}
+
 .login-body {
 	background-image: url("../images/sub-header-logo-min.png");
 	background-size: auto auto;
