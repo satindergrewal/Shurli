@@ -68,7 +68,7 @@
                   <tbody>
                   {{range .}}
                     <tr>
-                      <td scope="col">{{.Name}}</td>
+                      <td scope="col"><img src='/assets/coins/{{.Icon}}.png' style='width:25px;'/> {{.Name}}</td>
                       <td scope="col">
                         {{if eq .Status "Online"}} <i class="fas fa-signal" style="color: #01ce01;"></i> Online 
                         {{else if eq .Status "Offline"}} <i class="fas fa-signal" style="color: #a2a2a2;"></i> Offline 
