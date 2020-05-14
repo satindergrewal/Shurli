@@ -63,6 +63,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 		vWithoutZ := strings.ReplaceAll(string(v), "z", "")
 
 		coinConfInfo := GetCoinConfInfo(vWithoutZ)
+		// fmt.Println(strings.ToLower(coinConfInfo.Ticker))
+		tmpicon := strings.ToLower(coinConfInfo.Ticker)
 		// fmt.Println(coinConfInfo)
 		// if !!coinConfInfo.Shielded {
 		// 	fmt.Println(coinConfInfo.Shielded)
@@ -80,21 +82,21 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
 			if info.Error.Message == "Loading block index..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, strings.ToLower(coinConfInfo.Ticker), string(v), "Loading...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), tmpicon, "Loading...", 0.0, 0, 0, false, false})
 			} else if info.Error.Message == "Rescanning..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, strings.ToLower(coinConfInfo.Ticker), string(v), "Rescanning...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), tmpicon, "Rescanning...", 0.0, 0, 0, false, false})
 			} else if info.Error.Message == "Rewinding blocks if needed..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, strings.ToLower(coinConfInfo.Ticker), string(v), "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), tmpicon, "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
 			} else {
 				fmt.Println(v, "- Err happened:", err)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, strings.ToLower(coinConfInfo.Ticker), string(v), "Offline", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), tmpicon, "Offline", 0.0, 0, 0, false, false})
 			}
 		} else {
 			if info.Error.Message == "connection refused" {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, strings.ToLower(coinConfInfo.Ticker), string(v), "Offline", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), tmpicon, "Offline", 0.0, 0, 0, false, false})
 			} else {
 
 				// Check status of the blockchain sync
@@ -143,7 +145,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					wallets = append(wallets, WInfo{
 						Name:     coinConfInfo.Name,
 						Ticker:   info.Result.Name,
-						Icon:     strings.ToLower(info.Result.Name),
+						Icon:     strings.ToLower(coinConfInfo.Ticker),
 						Status:   "Online",
 						ZBalance: zblc.Result,
 						Balance:  info.Result.Balance,
@@ -156,7 +158,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					wallets = append(wallets, WInfo{
 						Name:     coinConfInfo.Name,
 						Ticker:   info.Result.Name,
-						Icon:     strings.ToLower(info.Result.Name),
+						Icon:     strings.ToLower(coinConfInfo.Ticker),
 						Status:   "Online",
 						Balance:  info.Result.Balance,
 						Blocks:   info.Result.Blocks,
