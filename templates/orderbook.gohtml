@@ -67,17 +67,17 @@
                                     </div>
                                     <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_rel" name="coin_rel">
                                       <option>Choose...</option>
-                                      <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}}>Komodo (KMD)</option>
-                                      <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
-                                      <option value="VRSC" {{if eq .Rel "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
-                                      <option value="zVRSC" {{if eq .Rel "zVRSC"}} selected {{end}}>VerusCoin (zVRSC)</option>
-                                      <option value="HUSH3" {{if eq .Rel "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
-                                      <option value="zHUSH3" {{if eq .Rel "zHUSH3"}} selected {{end}}>Hush (zHUSH3)</option>
-                                      <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
-                                      <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}}>DEX (DEX)</option>
-                                      <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}}>DEX (zDEX)</option>
-                                      <option value="MCL" {{if eq .Rel "MCL"}} selected {{end}}>MarmaraChain (MCL)</option>
-                                      <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}}>MarmaraChain (zMCL)</option>
+                                      <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> KMD Komodo"></option>
+                                      <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/pirate.png' class='option-kmd' style='width:25px;'/> ARRR PIRATE"></option>
+                                      <option value="VRSC" {{if eq .Rel "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> VRSC VerusCoin"></option>
+                                      <option value="zVRSC" {{if eq .Rel "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> zVRSC VerusCoin"></option>
+                                      <option value="HUSH3" {{if eq .Rel "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> HUSH3 Hush"></option>
+                                      <option value="zHUSH3" {{if eq .Rel "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> zHUSH3 Hush"></option>
+                                      <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> CHIPS Chips"></option>
+                                      <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> DEX DEX"></option>
+                                      <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> zDEX DEX"></option>
+                                      <option value="MCL" {{if eq .Rel "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> MCL MarmaraChain"></option>
+                                      <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> zMCL MarmaraChain"></option>
                                     </select>
                                   </div>
                                 </td>
@@ -86,17 +86,17 @@
                                   <div class="input-group">
                                     <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_base" name="coin_base">
                                       <option>Choose...</option>
-                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}}>Komodo (KMD)</option>
-                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
-                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}}>VerusCoin (VRSC)</option>
-                                      <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}}>VerusCoin (zVRSC)</option>
-                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}}>Hush (HUSH3)</option>
-                                      <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}}>Hush (zHUSH3)</option>
-                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
-                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}}>DEX (DEX)</option>
-                                      <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}}>DEX (zDEX)</option>
-                                      <option value="MCL" {{if eq .Base "MCL"}} selected {{end}}>MarmaraChain (MCL)</option>
-                                      <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}}>MarmaraChain (zMCL)</option>
+                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> KMD Komodo"></option>
+                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/pirate.png' class='option-kmd' style='width:25px;'/> ARRR PIRATE"></option>
+                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> VRSC VerusCoin"></option>
+                                      <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> zVRSC VerusCoin"></option>
+                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> HUSH3 Hush"></option>
+                                      <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> zHUSH3 Hush"></option>
+                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> CHIPS Chips"></option>
+                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> DEX DEX"></option>
+                                      <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> zDEX DEX"></option>
+                                      <option value="MCL" {{if eq .Base "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> MCL MarmaraChain"></option>
+                                      <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> zMCL MarmaraChain"></option>
                                     </select>
                                     <div class="input-group-prepend">
                                       <label class="input-group-text" for="coin_base">Buying/Base</label>
@@ -230,6 +230,10 @@
       $('#coin_base').find(":selected").val(relval).change();
       $('#coin_rel').find(":selected").val(baseval).change();
     });
+
+
+    // Show bootstrap-select coins in different colors
+    //$( "li:has(.option-kmd)" ).addClass('option-kmd')
 
   })
 </script>

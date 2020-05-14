@@ -139,6 +139,27 @@ button.btn.dropdown-toggle.btn-dark {
     display: none;
 }
 
+.bootstrap-select .dropdown-menu {
+	border-color: #184c80;
+}
+
+.bootstrap-select .dropdown-menu li {
+	/* border-style: solid; */
+    /* border-color: #0daba3; */
+    /* border-radius: 10px 0px; */
+    /* margin: 5px; */
+    /* border-width: thin; */
+}
+
+.bootstrap-select .dropdown-menu li a {
+	/* border-radius: 12px; */
+	padding: .25rem .5rem;
+}
+
+.bootstrap-select .dropdown-menu li[class*="option-kmd"] {
+	border-color: #0daba3;
+}
+
 .login-body {
 	background-image: url("../images/sub-header-logo-min.png");
 	background-size: auto auto;
