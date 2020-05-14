@@ -126,9 +126,8 @@ body {
 
 button.btn.dropdown-toggle.btn-dark {
 	color: #f4f5f5;
-    background-color: #0e2842;
-    border-color: #68aee0;
-
+    background-color: #1d4165;
+    border-color: #184c8000;
 }
 
 .dropdown-item.active, .dropdown-item:active {
@@ -158,6 +157,12 @@ button.btn.dropdown-toggle.btn-dark {
 
 .bootstrap-select .dropdown-menu li[class*="option-kmd"] {
 	border-color: #0daba3;
+}
+
+.bs-searchbox .form-control {
+	background: #1e4164;
+	border-style: none;
+	color: aliceblue;
 }
 
 .login-body {
