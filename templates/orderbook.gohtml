@@ -51,7 +51,7 @@
                                     <div class="input-group-append">
                                       <label class="input-group-text" for="coin_rel">Selling/Rel</label>
                                     </div>
-                                    <select class="custom-select" id="coin_rel" name="coin_rel">
+                                    <select class="selectpicker" data-live-search="true" id="coin_rel" name="coin_rel">
                                       <option>Choose...</option>
                                       <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}}>Komodo (KMD)</option>
                                       <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
@@ -70,7 +70,7 @@
                                 <td><button class="btn text-white change-pair"><span class="fas fa-exchange-alt"></span></button></td>
                                 <td>
                                   <div class="input-group">
-                                    <select class="custom-select" id="coin_base" name="coin_base">
+                                    <select class="selectpicker" data-live-search="true" id="coin_base" name="coin_base">
                                       <option>Choose...</option>
                                       <option value="KMD" {{if eq .Base "KMD"}} selected {{end}}>Komodo (KMD)</option>
                                       <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}}>PIRATE (ARRR)</option>
@@ -91,7 +91,7 @@
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <select class="custom-select" id="result_limit" name="result_limit">
+                                    <select class="selectpicker" id="result_limit" name="result_limit">
                                       <option value="10" {{if eq .Results "10"}} selected {{end}}>10</option>
                                       <option value="20" {{if eq .Results "20"}} selected {{end}}>20</option>
                                       <option value="33" {{if eq .Results "33"}} selected {{end}}>33</option>
@@ -109,7 +109,7 @@
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <select class="custom-select" id="sortby" name="sortby">
+                                    <select class="selectpicker" id="sortby" name="sortby">
                                       <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Expiring Soon</option>
                                       <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Expiring Late</option>
                                     </select>

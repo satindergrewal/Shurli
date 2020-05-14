@@ -95,6 +95,12 @@ body {
 	}
 }
 
+.input-group-text {
+	background-color: #e9ecef00;
+	border: 0;
+	color: #fff;
+}
+
 .login-body {
 	background-image: url("../images/sub-header-logo-min.png");
 	background-size: auto auto;
