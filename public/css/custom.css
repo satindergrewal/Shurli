@@ -1,5 +1,5 @@
 body {
-	background-color: #1e2938;
+	background-color: #001625;
 	color: #fff;
 }
 
@@ -8,11 +8,11 @@ body {
 }
 
 .bg-dark {
-	background-color: #283547 !important;
+	background-color: #0e2842 !important;
 }
 
 .table-dark {
-	background-color: #283547;
+	background-color: #0e2842;
 }
 
 .table-card {
@@ -23,11 +23,21 @@ body {
 	border-color: #14263C;
 }
 
+.card {
+	-webkit-box-shadow: 0px 5px 11px 0px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0px 5px 11px 0px rgba(0,0,0,0.3);
+	box-shadow: 0px 5px 11px 0px rgba(0,0,0,0.3);
+}
+
+.card-header {
+	background-color: rgba(0, 0, 0, 0.31);
+}
+
 .login-body {
 	background-image: url("../images/sub-header-logo-min.png");
 	background-size: auto auto;
 	/*text-align: center;*/
-	background-color: #1e2938;
+	background-color: #001625;
 	background-repeat: no-repeat;
 	position: relative;
 	background-position: calc(0% - 200px) calc(100% + 400px);
@@ -44,7 +54,7 @@ body {
 }
 
 .divider .divider-title {
-	background: #1e2938;
+	background: #001625;
 	font-size: 20px;
 	letter-spacing: 1px;
 	padding: 0 20px;

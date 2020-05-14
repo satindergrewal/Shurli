@@ -1,7 +1,7 @@
 {{template "header"}}
 
     <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand"><img src="assets/images/antara150x150.png" class="logo"/> Shurli</a>
+        <a class="navbar-brand"><img src="assets/images/spacemesh_logo.png" class="logo"/> Shurli</a>
         <form class="form-inline">
             {{template "menu-button-array"}}
         </form>
@@ -38,6 +38,8 @@
                                       <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
                                       <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}}>DEX (DEX)</option>
                                       <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}}>DEX (zDEX)</option>
+                                      <option value="MCL" {{if eq .Rel "MCL"}} selected {{end}}>MarmaraChain (MCL)</option>
+                                      <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}}>MarmaraChain (zMCL)</option>
                                     </select>
                                   </div>
                                 </td>
@@ -55,6 +57,8 @@
                                       <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}}>Chips (CHIPS)</option>
                                       <option value="DEX" {{if eq .Base "DEX"}} selected {{end}}>DEX (DEX)</option>
                                       <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}}>DEX (zDEX)</option>
+                                      <option value="MCL" {{if eq .Base "MCL"}} selected {{end}}>MarmaraChain (MCL)</option>
+                                      <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}}>MarmaraChain (zMCL)</option>
                                     </select>
                                     <div class="input-group-prepend">
                                       <label class="input-group-text" for="coin_base">Buying/Base</label>

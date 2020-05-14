@@ -72,7 +72,7 @@ func main() {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "favicon.ico")
+	http.ServeFile(w, r, "favicon.png")
 }
 
 // idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
