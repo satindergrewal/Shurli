@@ -65,7 +65,7 @@ body {
 }
 
 .nav-link {
-	padding-top: 1.1rem;
+	padding-top: 1.4rem;
 	padding-bottom: 1.1rem;
 	text-transform: uppercase;
 }
@@ -137,9 +137,16 @@ body {
 .topnav-dropdown-item {
 	padding: .7rem 1.5rem;
 	text-transform: uppercase;
+	font-size: 80%;
 }
 
 button.btn.dropdown-toggle.btn-dark {
+	color: #f4f5f5;
+    background-color: #1d4165;
+    border-color: #184c8000;
+}
+
+.btn-dark:not(:disabled):not(.disabled).active, .btn-dark:not(:disabled):not(.disabled):active, .show>.btn-dark.dropdown-toggle {
 	color: #f4f5f5;
     background-color: #1d4165;
     border-color: #184c8000;
