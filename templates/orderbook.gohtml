@@ -83,7 +83,7 @@
                             <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>" title="zMCL"></option>
                           </select>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-right" style="{{if eq .RelIcon ""}} display: none; {{end}}">
                           <small style="color: #8894a1">CURRENT BALANCE</small><br><span style="font-size: 20px;">{{.RelBal}}</span>
                         </div>
                       </div> <!-- card-body row end -->
@@ -123,7 +123,7 @@
                             <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>" title="zMCL"></option>
                           </select>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-right" style="{{if eq .BaseIcon ""}} display: none; {{end}}">
                           <small style="color: #8894a1">CURRENT BALANCE</small><br><span style="font-size: 20px;">{{.BaseBal}}</span>
                         </div>
                       </div> <!-- card-body row end -->
