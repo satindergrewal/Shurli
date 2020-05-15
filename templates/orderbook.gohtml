@@ -59,18 +59,15 @@
                   <div class="card text-white bg-dark"> <!-- rel trading pair card start -->
                     <div class="card-header" style="padding: 2px 10px;"> <!-- rel trading pair header start -->
                       <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-12 text-left">
                           <small>SEND</small>
-                        </div>
-                        <div class="col-6 text-right">
-                          <small>{{.RelBal}} - CURRENT BALANCE</small>
                         </div>
                       </div>
                     </div> <!-- rel trading pair header end -->
-                    <div class="card-body" style="padding: 10px 0px 10px 10px;">
+                    <div class="card-body" style="padding: 10px 10px 10px 10px;">
                       <div class="row"> <!-- card-body row start -->
-                        <div class="col-12 text-center">
-                          <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_rel" name="coin_rel">
+                        <div class="col-6 text-center">
+                          <select class="selectpicker" data-live-search="true" data-style="btn-lg btn-dark" id="coin_rel" name="coin_rel">
                             <option>Choose...</option>
                             <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
                             <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
@@ -85,9 +82,9 @@
                             <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
                           </select>
                         </div>
-                        <!--<div class="col-6">
-                          <input type="text" class="form-control"/>
-                        </div>-->
+                        <div class="col-6 text-right">
+                          <small style="color: #8894a1">CURRENT BALANCE</small><br><span style="font-size: 20px;">{{.RelBal}}</span>
+                        </div>
                       </div> <!-- card-body row end -->
                     </div>
                   </div> <!-- rel trading pair card end -->
@@ -101,18 +98,15 @@
                   <div class="card text-white bg-dark"> <!-- base trading pair card start -->
                     <div class="card-header" style="padding: 2px 10px;"> <!-- rel trading pair header start -->
                       <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-12 text-left">
                           <small>RECEIVE</small>
-                        </div>
-                        <div class="col-6 text-right">
-                          <small>{{.BaseBal}} - CURRENT BALANCE</small>
                         </div>
                       </div>
                     </div> <!-- rel trading pair header end -->
-                    <div class="card-body" style="padding: 10px 0px 10px 10px;">
+                    <div class="card-body" style="padding: 10px 10px 10px 10px;">
                       <div class="row"> <!-- card-body row start -->
-                        <div class="col-12 text-center">
-                          <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_base" name="coin_base">
+                        <div class="col-6 text-center">
+                          <select class="selectpicker" data-live-search="true" data-style="btn-lg btn-dark" id="coin_base" name="coin_base">
                             <option>Choose...</option>
                             <option value="KMD" {{if eq .Base "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
                             <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
@@ -127,9 +121,9 @@
                             <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
                           </select>
                         </div>
-                        <!--<div class="col-6">
-                          <input type="text" class="form-control"/>
-                        </div>-->
+                        <div class="col-6 text-right">
+                          <small style="color: #8894a1">CURRENT BALANCE</small><br><span style="font-size: 20px;">{{.BaseBal}}</span>
+                        </div>
                       </div> <!-- card-body row end -->
                     </div>
                   </div> <!-- base trading pair card end -->
@@ -199,7 +193,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center exchange-with">
                             <a class="btn btn-sm btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
                               <span style="font-size: 18px; font-weight: 700;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>

@@ -199,7 +199,7 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
     background-color: #1d4165;
 }
 
-.change-pair-center {
+.change-pair-center, .exchange-with {
 	margin-top: auto;
 	margin-bottom: auto;
 }
