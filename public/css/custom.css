@@ -199,6 +199,16 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
     background-color: #1d4165;
 }
 
+.change-pair-center {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.change-pair {
+	padding: .5rem 1rem;
+    font-size: 2.5rem;
+}
+
 .login-body {
 	background-image: url("../images/sub-header-logo-min.png");
 	background-size: auto auto;
