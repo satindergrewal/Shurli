@@ -186,6 +186,7 @@
           //$(cardOrderClass).remove();
           $(timestamp_el).eq(i).html('<span class="badge badge-warning">ORDER EXPIRED</span>');
           $('.btn-buyorder').addClass('disabled');
+          $('.btn-buyorder').attr('disabled', true);
         }
       }
     }, interval);
