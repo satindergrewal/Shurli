@@ -67,7 +67,7 @@
                     <div class="card-body" style="padding: 10px 10px 10px 10px;">
                       <div class="row"> <!-- card-body row start -->
                         <div class="col-6 text-center">
-                          <label for="coin_rel"><img src='/assets/coins/{{.RelIcon}}.png' style='width:35px;'/></label>
+                          <label for="coin_rel"><img src='/assets/coins/{{.RelIcon}}.png' style='width:35px; {{if eq .RelIcon ""}} display: none; {{end}}'/></label>
                           <select class="selectpicker" data-live-search="true" data-width="130px" data-style="btn-lg btn-dark" id="coin_rel" name="coin_rel">
                             <option title="Choose">Choose...</option>
                             <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>" title="KMD"></option>
@@ -107,7 +107,7 @@
                     <div class="card-body" style="padding: 10px 10px 10px 10px;">
                       <div class="row"> <!-- card-body row start -->
                         <div class="col-6 text-center">
-                          <label for="coin_base"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:35px;'/></label>
+                          <label for="coin_base"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:35px; {{if eq .BaseIcon ""}} display: none; {{end}}'/></label>
                           <select class="selectpicker" data-live-search="true" data-width="130px" data-style="btn-lg btn-dark" id="coin_base" name="coin_base">
                             <option title="Choose">Choose...</option>
                             <option value="KMD" {{if eq .Base "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>" title="KMD"></option>
