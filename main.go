@@ -106,6 +106,8 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		SortBy    string `json:"sortby"`
 		BaseBal   float64
 		RelBal    float64
+		BaseIcon  string
+		RelIcon   string
 		OrderList []sagoutil.OrderData
 	}
 
@@ -150,6 +152,8 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		SortBy:    r.FormValue("sortby"),
 		BaseBal:   baseBalance,
 		RelBal:    relBalance,
+		BaseIcon:  wallets[0].Icon,
+		RelIcon:   wallets[1].Icon,
 		OrderList: orderlist,
 	}
 
