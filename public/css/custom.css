@@ -275,6 +275,41 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
 	background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
+.arrr-color {
+	background-color: #3e300c !important;
+    border-color: #bd993e;
+}
+
+.vrsc-color {
+	background-color: #072669 !important;
+    border-color: #15419e;
+}
+
+.kmd-color {
+	background-color: #073746 !important;
+    border-color: #07695e;
+}
+
+.hush3-color {
+	background-color: #464646 !important;
+    border-color: #929191;
+}
+
+.chips-color {
+	background-color: #133a3a !important;
+    border-color: #6f480f;
+}
+
+.dex-color {
+	background-color: #50331c !important;
+    border-color: #6b6b6b;
+}
+
+.mcl-color {
+	background-color: #380102 !important;
+    border-color: #800103;
+}
+
 .wrapword {
     white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
     white-space: -pre-wrap;      /* Opera 4-6 */
