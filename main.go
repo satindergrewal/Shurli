@@ -16,6 +16,8 @@ import (
 	"time"
 
 	"github.com/Meshbits/shurli/sagoutil"
+	"github.com/satindergrewal/kmdgo"
+
 	// "shurli/sagoutil"
 
 	"github.com/gorilla/mux"
@@ -102,6 +104,8 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		Rel       string `json:"coin_rel"`
 		Results   string `json:"results"`
 		SortBy    string `json:"sortby"`
+		BaseBal   float64
+		RelBal    float64
 		OrderList []sagoutil.OrderData
 	}
 
@@ -113,11 +117,39 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 	var orderlist []sagoutil.OrderData
 	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"), r.FormValue("sortby"))
 
+	var baseRelWallet = []kmdgo.AppType{kmdgo.AppType(r.FormValue("coin_base")), kmdgo.AppType(r.FormValue("coin_rel"))}
+
+	var wallets []sagoutil.WInfo
+	wallets = sagoutil.WalletInfo(baseRelWallet)
+	// fmt.Println(wallets[0].Balance)
+	// fmt.Println(wallets[0].ZBalance)
+	// fmt.Println(wallets[1].Balance)
+	// fmt.Println(wallets[1].ZBalance)
+
+	var relBalance, baseBalance float64
+	if strings.HasPrefix(r.FormValue("coin_base"), "z") {
+		baseBalance = wallets[0].ZBalance
+	} else if strings.HasPrefix(r.FormValue("coin_base"), "PIRATE") {
+		baseBalance = wallets[0].ZBalance
+	} else {
+		baseBalance = wallets[0].Balance
+	}
+
+	if strings.HasPrefix(r.FormValue("coin_rel"), "z") {
+		relBalance = wallets[1].ZBalance
+	} else if strings.HasPrefix(r.FormValue("coin_rel"), "PIRATE") {
+		relBalance = wallets[1].ZBalance
+	} else {
+		relBalance = wallets[1].Balance
+	}
+
 	data := OrderPost{
 		Base:      r.FormValue("coin_base"),
 		Rel:       r.FormValue("coin_rel"),
 		Results:   r.FormValue("result_limit"),
 		SortBy:    r.FormValue("sortby"),
+		BaseBal:   baseBalance,
+		RelBal:    relBalance,
 		OrderList: orderlist,
 	}
 
