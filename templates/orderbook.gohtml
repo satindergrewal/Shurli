@@ -173,18 +173,29 @@
                     <div class="card-header">
                       <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;">Order ID: {{.OrderID}} | <span class="timestamp" data-timestamp="{{.Timestamp}}"></span></div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;"></div>
                       </div>
                     </div>
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
                         <div class="row">
                           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <div class="row">
-                              <div class="col-6">
+                              <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                                 <small style="color: #8894a1">PRICE</small><br> {{.Price}} <span style="color: #8894a1">{{.Base}}</span>
                               </div>
-                              <div class="col-6">
+                              <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                                 <small style="color: #8894a1">MAX VOLUME</small><br> {{.MaxVolume}} <span style="color: #8894a1">{{.Rel}}</span>
+                              </div>
+                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <div class="row">
+                                  <div class="col-6">
+                                    <small style="color: #8894a1">ORDER ID</small><br> {{.OrderID}}
+                                    </div>
+                                  <div class="col-6">
+                                    <small style="color: #8894a1">EXPIRING IN</small><br>
+                                    <span class="timestamp" data-timestamp="{{.Timestamp}}"></span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
