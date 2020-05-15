@@ -142,7 +142,7 @@ body {
 
 button.btn.dropdown-toggle.btn-dark {
 	color: #f4f5f5;
-    background-color: #1d4165;
+    background-color: #1d416500;
     border-color: #184c8000;
 }
 
@@ -185,6 +185,18 @@ button.btn.dropdown-toggle.btn-dark {
 	background: #1e4164;
 	border-style: none;
 	color: aliceblue;
+}
+
+button.btn.dropdown-toggle.result-limit.btn-dark,
+button.btn.dropdown-toggle.result-limit.btn-dark:hover,
+button.btn.dropdown-toggle.result-limit.btn-dark:active,
+button.btn.dropdown-toggle.result-limit.btn-dark:focus,
+button.btn.dropdown-toggle.sort-by.btn-dark,
+button.btn.dropdown-toggle.sort-by.btn-dark:hover,
+button.btn.dropdown-toggle.sort-by.btn-dark:active,
+button.btn.dropdown-toggle.sort-by.btn-dark:focus {
+    color: #f4f5f5;
+    background-color: #1d4165;
 }
 
 .login-body {

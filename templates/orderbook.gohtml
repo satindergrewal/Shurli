@@ -29,8 +29,8 @@
         <div class="navbar-collapse collapse">
           <ul class="navbar-nav ml-auto">
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle dropdown-toggle-right" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="padding: 12px 20px;">
-                  <i class="fad fa-user-astronaut" style="font-size: 35px;"></i> <i class="far fa-angle-down" style="font-size: 25px; margin-left: 15px;"></i>
+                <a class="nav-link dropdown-toggle dropdown-toggle-right" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="padding: 16px 20px;">
+                  <i class="fad fa-user-astronaut" style="font-size: 25px;"></i> <i class="far fa-angle-down" style="font-size: 20px; margin-left: 15px;"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-user-astronaut topnav-icon"></i> Profile</a>
@@ -50,104 +50,105 @@
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
 
             {{template "bs-order-stepper"}}
+            
+            <div class="col-xl-10"> <!-- div for form start -->
+            <form action="/orderbook" id="orderbook-form" method="POST"> <!-- orderbook-form form start -->
+              <div class="form-row"> <!-- form-row start -->
+                
+                <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- trading pair div start -->
+                  <div class="card text-white bg-dark"> <!-- trading pair card start -->
+                    <div class="card-body" style="padding: 10px 0px 10px 10px;">
+                      <div class="row"> <!-- card-body row start -->
+                        <div class="col-12 text-center">
+                          <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_rel" name="coin_rel">
+                            <option>Choose...</option>
+                            <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
+                            <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
+                            <option value="VRSC" {{if eq .Rel "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>VRSC</span>"></option>
+                            <option value="zVRSC" {{if eq .Rel "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>zVRSC</span>"></option>
+                            <option value="HUSH3" {{if eq .Rel "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush3.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>HUSH3</span>"></option>
+                            <option value="zHUSH3" {{if eq .Rel "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush3.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>zHUSH3</span>"></option>
+                            <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Chips</span> <span style='color: #8894a1'>CHIPS</span>"></option>
+                            <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>DEX</span>"></option>
+                            <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>zDEX</span>"></option>
+                            <option value="MCL" {{if eq .Rel "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>MCL</span>"></option>
+                            <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
+                          </select>
+                        </div>
+                        <!--<div class="col-6">
+                          <input type="text" class="form-control"/>
+                        </div>-->
+                      </div> <!-- card-body row end -->
+                    </div>
+                  </div> <!-- trading pair card end -->
+                </div> <!-- trading pair div end -->
+                
+                <div class="form-group col-xl-2 col-lg-2 col-md-12 col-sm-12 text-center"> <!-- trading pair div start -->
+                  <button class="btn btn-lg text-white change-pair"><span class="fas fa-exchange-alt"></span></button>
+                </div> <!-- trading pair div end -->
 
-            <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- trading pair div start -->
-                <div class="card text-white bg-dark"> <!-- trading pair card start -->
-                    <div class="card-body" style="font-size: 18px;"> <!-- trading pair body start -->
-                        <form action="/orderbook" id="orderbook-form" method="POST">
-                          <div class="form-row">
-                            
-                            <table class="table table-borderless text-white text-center" style="margin-bottom: 0;">
-                              <tr>
-                                {{/* <td>PIRATE</td> */}}
-                                <td>
-                                  <div class="input-group">
-                                    <div class="input-group-append">
-                                      <label class="input-group-text" for="coin_rel">Selling/Rel</label>
-                                    </div>
-                                    <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_rel" name="coin_rel">
-                                      <option>Choose...</option>
-                                      <option value="KMD" {{if eq .Rel "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
-                                      <option value="PIRATE" {{if eq .Rel "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
-                                      <option value="VRSC" {{if eq .Rel "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>VRSC</span>"></option>
-                                      <option value="zVRSC" {{if eq .Rel "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>zVRSC</span>"></option>
-                                      <option value="HUSH3" {{if eq .Rel "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>HUSH3</span>"></option>
-                                      <option value="zHUSH3" {{if eq .Rel "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>zHUSH3</span>"></option>
-                                      <option value="CHIPS" {{if eq .Rel "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Chips</span> <span style='color: #8894a1'>CHIPS</span>"></option>
-                                      <option value="DEX" {{if eq .Rel "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>DEX</span>"></option>
-                                      <option value="zDEX" {{if eq .Rel "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>zDEX</span>"></option>
-                                      <option value="MCL" {{if eq .Rel "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>MCL</span>"></option>
-                                      <option value="zMCL" {{if eq .Rel "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
-                                    </select>
-                                  </div>
-                                </td>
-                                <td><button class="btn text-white change-pair"><span class="fas fa-exchange-alt"></span></button></td>
-                                <td>
-                                  <div class="input-group">
-                                    <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_base" name="coin_base">
-                                      <option>Choose...</option>
-                                      <option value="KMD" {{if eq .Base "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
-                                      <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
-                                      <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>VRSC</span>"></option>
-                                      <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>zVRSC</span>"></option>
-                                      <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>HUSH3</span>"></option>
-                                      <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>zHUSH3</span>"></option>
-                                      <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Chips</span> <span style='color: #8894a1'>CHIPS</span>"></option>
-                                      <option value="DEX" {{if eq .Base "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>DEX</span>"></option>
-                                      <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>zDEX</span>"></option>
-                                      <option value="MCL" {{if eq .Base "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>MCL</span>"></option>
-                                      <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
-                                    </select>
-                                    <div class="input-group-prepend">
-                                      <label class="input-group-text" for="coin_base">Buying/Base</label>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <div class="input-group">
-                                    <select class="selectpicker" data-style="btn-dark" id="result_limit" name="result_limit">
-                                      <option value="10" {{if eq .Results "10"}} selected {{end}}>10</option>
-                                      <option value="20" {{if eq .Results "20"}} selected {{end}}>20</option>
-                                      <option value="33" {{if eq .Results "33"}} selected {{end}}>33</option>
-                                      <option value="40" {{if eq .Results "40"}} selected {{end}}>40</option>
-                                      <option value="50" {{if eq .Results "50"}} selected {{end}}>50</option>
-                                      <option value="100" {{if eq .Results "100"}} selected {{end}}>100</option>
-                                      <option value="150" {{if eq .Results "150"}} selected {{end}}>150</option>
-                                      <option value="200" {{if eq .Results "200"}} selected {{end}}>200</option>
-                                      <option value="300" {{if eq .Results "300"}} selected {{end}}>300</option>
-                                    </select>
-                                    <div class="input-group-append">
-                                      <label class="input-group-text" for="result_limit">Results</label>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <div class="input-group">
-                                    <select class="selectpicker" data-style="btn-dark" id="sortby" name="sortby">
-                                      <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Expiring Soon</option>
-                                      <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Expiring Late</option>
-                                    </select>
-                                    {{/* <div class="input-group-append">
-                                      <label class="input-group-text" for="result_limit">Sort By</label>
-                                    </div> */}}
-                                  </div>
-                                </td>
-                                {{/* <td><button type="submit" class="btn btn-primary">List Orders</button></td> */}}
-                              </tr>
-                            </table>
+                <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- trading pair div start -->
+                  <div class="card text-white bg-dark"> <!-- trading pair card start -->
+                    <div class="card-body" style="padding: 10px 0px 10px 10px;">
+                      <div class="row"> <!-- card-body row start -->
+                        <div class="col-12 text-center">
+                          <select class="selectpicker" data-live-search="true" data-style="btn-dark" id="coin_base" name="coin_base">
+                            <option>Choose...</option>
+                            <option value="KMD" {{if eq .Base "KMD"}} selected {{end}} data-content="<img src='/assets/coins/kmd.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Komodo</span> <span style='color: #8894a1'>KMD</span>"></option>
+                            <option value="PIRATE" {{if eq .Base "PIRATE"}} selected {{end}} data-content="<img src='/assets/coins/arrr.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>PIRATE</span> <span style='color: #8894a1'>ARRR</span>"></option>
+                            <option value="VRSC" {{if eq .Base "VRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>VRSC</span>"></option>
+                            <option value="zVRSC" {{if eq .Base "zVRSC"}} selected {{end}} data-content="<img src='/assets/coins/vrsc.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>VerusCoin</span> <span style='color: #8894a1'>zVRSC</span>"></option>
+                            <option value="HUSH3" {{if eq .Base "HUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush3.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>HUSH3</span>"></option>
+                            <option value="zHUSH3" {{if eq .Base "zHUSH3"}} selected {{end}} data-content="<img src='/assets/coins/hush3.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Hush</span> <span style='color: #8894a1'>zHUSH3</span>"></option>
+                            <option value="CHIPS" {{if eq .Base "CHIPS"}} selected {{end}} data-content="<img src='/assets/coins/chips.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>Chips</span> <span style='color: #8894a1'>CHIPS</span>"></option>
+                            <option value="DEX" {{if eq .Base "DEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>DEX</span>"></option>
+                            <option value="zDEX" {{if eq .Base "zDEX"}} selected {{end}} data-content="<img src='/assets/coins/dex.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>DEX</span> <span style='color: #8894a1'>zDEX</span>"></option>
+                            <option value="MCL" {{if eq .Base "MCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>MCL</span>"></option>
+                            <option value="zMCL" {{if eq .Base "zMCL"}} selected {{end}} data-content="<img src='/assets/coins/mcl.png' class='option-kmd' style='width:25px;'/> <span style='color: #fff'>MarmaraChain</span> <span style='color: #8894a1'>zMCL</span>"></option>
+                          </select>
+                        </div>
+                        <!--<div class="col-6">
+                          <input type="text" class="form-control"/>
+                        </div>-->
+                      </div> <!-- card-body row end -->
+                    </div>
+                  </div> <!-- trading pair card end -->
+                </div> <!-- trading pair div end -->
 
-                          </div>
-                        </form>
-                    </div> <!-- trading pair body end -->
-                </div> <!-- trading pair card end -->
-            </div> <!-- trading pair div end -->
+                <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right pr-1"> <!-- trading pair div start -->
+                  <label for="result_limit">Results</label>
+                  <select class="selectpicker" data-width="90px" data-style="result-limit btn-dark" id="result_limit" name="result_limit">
+                    <option value="10" {{if eq .Results "10"}} selected {{end}}>10</option>
+                    <option value="20" {{if eq .Results "20"}} selected {{end}}>20</option>
+                    <option value="33" {{if eq .Results "33"}} selected {{end}}>33</option>
+                    <option value="40" {{if eq .Results "40"}} selected {{end}}>40</option>
+                    <option value="50" {{if eq .Results "50"}} selected {{end}}>50</option>
+                    <option value="100" {{if eq .Results "100"}} selected {{end}}>100</option>
+                    <option value="150" {{if eq .Results "150"}} selected {{end}}>150</option>
+                    <option value="200" {{if eq .Results "200"}} selected {{end}}>200</option>
+                    <option value="300" {{if eq .Results "300"}} selected {{end}}>300</option>
+                  </select>
+                </div> <!-- trading pair div end -->
+
+                <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left pl-1"> <!-- trading pair div start -->
+                  <select class="selectpicker" data-width="170px" data-style="sort-by btn-dark" id="sortby" name="sortby">
+                    <option value="soon" {{if eq .SortBy "soon"}} selected {{end}}>Expiring Soon</option>
+                    <option value="late" {{if eq .SortBy "late"}} selected {{end}}>Expiring Late</option>
+                  </select>
+                  <label for="sortby">Sort By</label>
+                </div> <!-- trading pair div end -->
+
+              </div> <!-- form-row end -->
+
+            </form> <!-- orderbook-form form end -->
+            </div> <!-- div for form end -->
         </div>
 
 
         <div class="row justify-content-md-center" style="margin-bottom: 1em; display: $LOGINDISPLAY;">
             {{if not .OrderList}} <div class="alert alert-info" role="alert">There doesn't seem to be any order available for this pair. Please select another trading pair or try again later.</div> {{end}}
             {{range .OrderList}}
-            <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12"> <!-- Order List div start -->
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"> <!-- Order List div start -->
                 <div class="card text-white bg-dark mb-2 card-order card-{{.OrderID}}" data-orderid="{{.OrderID}}"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
@@ -158,8 +159,14 @@
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
                         <div class="row">
                           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                            Price: {{.Price}} {{.Base}}<br>
-                            Max Volume: {{.MaxVolume}} {{.Rel}}
+                            <div class="row">
+                              <div class="col-6">
+                                <small style="color: #8894a1">PRICE</small><br> {{.Price}} <span style="color: #8894a1">{{.Base}}</span>
+                              </div>
+                              <div class="col-6">
+                                <small style="color: #8894a1">MAX VOLUME</small><br> {{.MaxVolume}} <span style="color: #8894a1">{{.Rel}}</span>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
                             <a class="btn btn-sm btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
