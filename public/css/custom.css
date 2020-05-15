@@ -1,6 +1,9 @@
 body {
 	background-color: #001625;
 	color: #fff;
+	font-family: 'Open Sans', sans-serif;
+	font-family: 'Comfortaa', cursive;
+	font-size: 80%;
 }
 
 .logo{
@@ -11,8 +14,16 @@ body {
 	background-color: #0e2842 !important;
 }
 
+.no-bg {
+	background-color: #0e284200;
+}
+
 .table-dark {
 	background-color: #0e2842;
+}
+
+.table-no-bg {
+    background-color: #0e284200;
 }
 
 .table-card {
@@ -21,6 +32,10 @@ body {
 
 .table-dark td, .table-dark th, .table-dark thead th {
 	border-color: #14263C;
+}
+
+.table-md td, .table-md th {
+    padding: .5rem;
 }
 
 .card {

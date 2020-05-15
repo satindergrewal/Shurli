@@ -53,29 +53,30 @@
 
         <div class="row" style="margin-bottom: 1em;">
         <div class="col-12" style="margin-bottom: 10px;"> <!-- GetPeerInfo div start -->
-            <div class="card text-white bg-dark"> <!-- GetPeerInfo card start -->
+            <h5 style="margin-left: 15px;">Available Assets</h5>
+            <div class="card text-white no-bg"> <!-- GetPeerInfo card start -->
               <div class="card-body" style="padding: 0;"> <!-- GetPeerInfo body start -->
-                <table class="table table-striped table-dark" style="margin-bottom: 0;">
+                <table class="table table-md table-striped table-dark table-no-bg" style="margin-bottom: 0; padding: ">
                   <thead>
                     <tr>
-                      <th scope="col">Ticker</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Balance</th>
-                      <th scope="col">Blocks</th>
-                      <th scope="col">Synced</th>
+                      <th scope="col" style="color: #8894a1">ASSETS</th>
+                      <th scope="col" style="color: #8894a1">STATUS</th>
+                      <th scope="col" style="color: #8894a1">BALANCE</th>
+                      <th scope="col" style="color: #8894a1">BLOCKS</th>
+                      <th scope="col" style="color: #8894a1">SYNCED</th>
                     </tr>
                   </thead>
                   <tbody>
                   {{range .}}
                     <tr>
-                      <td scope="col"><img src='/assets/coins/{{.Icon}}.png' style='width:25px;'/> {{.Name}}</td>
+                      <td scope="col"><img src='/assets/coins/{{.Icon}}.png' style='width:25px; margin: 0px 5px 0px 0px;'/> {{.Name}} <span style="color: #8894a1">{{.Ticker}}</span></td>
                       <td scope="col">
                         {{if eq .Status "Online"}} <i class="fas fa-signal" style="color: #01ce01;"></i> Online 
                         {{else if eq .Status "Offline"}} <i class="fas fa-signal" style="color: #a2a2a2;"></i> Offline 
                         {{else if eq .Status "Rescanning..."}} <i class="fad fa-spinner-third fa-spin" style="color: #00b7ff;"></i> Rescanning...
                         {{else if eq .Status "Loading..."}} <i class="fad fa-spinner-third fa-spin" style="color: #00b7ff;"></i> Loading... {{end}}
                       </td>
-                      <td scope="col">{{if not .Shielded}} {{.Balance}} {{.Ticker}} {{else}} {{if eq .Ticker "PIRATE"}} {{.ZBalance}} {{.Ticker}} {{else}} {{.Balance}} {{.Ticker}} <br> {{.ZBalance}} z{{.Ticker}} {{end}} {{end}}</td>
+                      <td scope="col">{{if not .Shielded}} {{.Balance}} <span style="color: #8894a1">{{.Ticker}}<span> {{else}} {{if eq .Ticker "PIRATE"}} {{.ZBalance}} <span style="color: #8894a1">{{.Ticker}}</span> {{else}} {{.Balance}} <span style="color: #8894a1">{{.Ticker}}</span> <br> {{.ZBalance}} <span style="color: #8894a1">z{{.Ticker}}</span> {{end}} {{end}}</td>
                       <td scope="col">{{.Blocks}}</td>
                       <td scope="col">
                         {{if .Synced}} <i class="fas fa-shield-check" style="color: #01cec6;"></i> Fully Synced
