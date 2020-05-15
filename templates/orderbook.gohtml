@@ -168,26 +168,30 @@
                 <div class="card text-white bg-dark mb-2 card-order card-{{.OrderID}}" data-orderid="{{.OrderID}}"> <!-- Order List card start -->
                     <div class="card-header">
                       <div class="row">
-                        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;"></div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: left; font-size: small;">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}} | {{.DexPubkey}}</div>
+                        {{/* <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="text-align: right; font-size: small;"></div> */}}
                       </div>
                     </div>
                     <div class="card-body" style="font-size: 18px;"> <!-- Order List body start -->
                         <div class="row">
-                          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <div class="row">
-                              <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                <small style="color: #8894a1">PRICE</small><br> {{.Price}} <small style="color: #8894a1">{{.Base}}</small>
-                              </div>
-                              <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                <small style="color: #8894a1">MAX VOLUME</small><br> {{.MaxVolume}} <small style="color: #8894a1">{{.Rel}}</small>
-                              </div>
-                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                              <div class="col-6">
                                 <div class="row">
-                                  <div class="col-6">
+                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <small style="color: #8894a1">PRICE</small><br> {{.Price}} <small style="color: #8894a1">{{.Base}}</small>
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <small style="color: #8894a1">MAX VOLUME</small><br> {{.MaxVolume}} <small style="color: #8894a1">{{.Rel}}</small>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <div class="row">
+                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <small style="color: #8894a1">ORDER ID</small><br> {{.OrderID}}
-                                    </div>
-                                  <div class="col-6">
+                                  </div>
+                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <small style="color: #8894a1">EXPIRING IN</small><br>
                                     <span class="timestamp" data-timestamp="{{.Timestamp}}"></span>
                                   </div>
@@ -195,8 +199,8 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center exchange-with">
-                            <a class="btn btn-sm btn-primary" style="width: 200px;" href="orderbook/{{.OrderID}}">
+                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center exchange-with">
+                            <a class="btn btn-sm btn-primary" style="padding: 5px; 15px;" href="orderbook/{{.OrderID}}">
                               <span style="font-size: 14px;">Exchange with</span><br>
                               <span style="font-size: 18px; font-weight: 700;">{{.Handle}} {{if .Authorized}} <i class="fas fa-badge-check" style="color: #81ff47;"></i>{{end}}</span>
                             </a>
