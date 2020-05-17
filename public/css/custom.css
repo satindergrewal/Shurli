@@ -22,8 +22,8 @@ body {
 	background-color: #0e2842;
 }
 
-.table-no-bg {
-    background-color: #0e284200;
+.table-no-bg, .card-no-bg {
+    background-color: #0e284200 !important;
 }
 
 .table-card {

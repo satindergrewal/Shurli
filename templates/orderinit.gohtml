@@ -52,59 +52,138 @@
 
         {{template "bs-order-stepper"}}
 
-        <div class="col-md-4">
+        <div class="col-xl-10"> <!-- div for form start -->
+          <div class="form-row"> <!-- form-row start -->
+            
+            <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- rel trading pair div start -->
+              <div class="card text-white bg-dark {{.OrderData.BaseIcon}}-color" style="border-radius: 12px;"> <!-- rel trading pair card start -->
+                <div class="card-header" style="padding: 2px 10px; border-radius: 12px 12px 0px 0px;"> <!-- rel trading pair header start -->
+                  <div class="row">
+                    <div class="col-3 text-left">
+                      <small>SEND</small>
+                    </div>
+                    <div class="col-9 text-right">
+                      <small>{{.BaseBal}} - CURRENT BALANCE</small>
+                    </div>
+                  </div>
+                </div> <!-- rel trading pair header end -->
+                <div class="card-body" style="padding: 8px 16px 8px 7px;">
+                  <div class="row"> <!-- card-body row start -->
+                    <div class="col-6 text-center vertical-center" style="padding: 3px;">
+                      <label for="coin_base"><img src='/assets/coins/{{.OrderData.BaseIcon}}.png' style='width:35px; {{if eq .OrderData.BaseIcon ""}} display: none; {{end}} padding: 0;'/></label>
+                      <span style="font-size: 20px; padding: 5px 20px; position: absolute;">{{.OrderData.Base}}</span>
+                    </div>
+                    <div class="col-6 text-right">
+                      <small style="color: #8894a1">SELLING</small><br><span style="font-size: 20px;">{{.Total}} {{.OrderData.Base}}</span>
+                    </div>
+                  </div> <!-- card-body row end -->
+                </div>
+                <div class="card-footer text-center orderid-footer">
+                  <small><i class="fad fa-info-circle"></i> Total {{.OrderData.Base}} it will cost to buy {{.OrderData.Rel}} amount.</small>
+                </div>
+              </div> <!-- rel trading pair card end -->
+            </div> <!-- rel trading pair div end -->
+            
+            <div class="form-group col-xl-2 col-lg-2 col-md-12 col-sm-12 text-center change-pair-center"> <!-- exchange button div start -->
+              <button class="btn btn-lg text-white change-pair" disabled style="opacity: 1;"><span class="fad fa-chevron-double-right"></span></button>
+            </div> <!-- exchange button div end -->
 
-          <div class="card text-white bg-dark mb-2">
-            <div class="card-header">
-              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Current Balance</div>
-            </div>
-            <div clas="card-body">
-              <table class="table table-dark table-striped table-card">
-                <tr>
-                  <td>{{.OrderData.Base}}</td>
-                  <td>{{if not .OrderData.ZBase}} {{if eq .OrderData.Base "PIRATE"}} {{.OrderData.ZBaseBal}} {{.OrderData.Base}} {{else}} {{.OrderData.BaseBal}} {{.OrderData.Base}} {{end}} {{else}} {{.OrderData.ZBaseBal}} {{.OrderData.Base}} {{end}}</td>
-                  {{/* <td>{{.OrderData.BaseBal}}</td> */}}
-                </tr>
-                <tr>
-                  <td>{{.OrderData.Rel}}</td>
-                  <td>{{if not .OrderData.ZRel}} {{if eq .OrderData.Rel "PIRATE"}} {{.OrderData.ZRelBal}} {{.OrderData.Rel}} {{else}} {{.OrderData.RelBal}} {{.OrderData.Rel}} {{end}} {{else}} {{.OrderData.ZRelBal}} {{.OrderData.Rel}} {{end}}</td>
-                  {{/* <td>{{.OrderData.RelBal}}</td> */}}
-                </tr>
-              </table>
-            </div>
-          </div>
+            <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- base trading pair div start -->
+              <div class="card text-white bg-dark {{.OrderData.RelIcon}}-color" style="border-radius: 12px;"> <!-- base trading pair card start -->
+                <div class="card-header" style="padding: 2px 10px; border-radius: 12px 12px 0px 0px;"> <!-- rel trading pair header start -->
+                  <div class="row">
+                    <div class="col-3 text-left">
+                      <small>RECEIVE</small>
+                    </div>
+                    <div class="col-9 text-right">
+                      <small>{{.RelBal}} - CURRENT BALANCE</small>
+                    </div>
+                  </div>
+                </div> <!-- rel trading pair header end -->
+                <div class="card-body" style="padding: 8px 16px 8px 7px;">
+                  <div class="row"> <!-- card-body row start -->
+                    <div class="col-6 text-center vertical-center" style="padding: 3px;">
+                      <label for="coin_rel"><img src='/assets/coins/{{.OrderData.RelIcon}}.png' style='width:35px; {{if eq .OrderData.RelIcon ""}} display: none; {{end}} padding: 0;'/></label>
+                      <span style="font-size: 20px; padding: 5px 20px; position: absolute;">{{.Rel}}</span>
+                    </div>
+                    <div class="col-6 text-right" >
+                      <small style="color: #8894a1">RECEIVING</small><br><span style="font-size: 20px;">{{.Amount}} {{.OrderData.Rel}}</span>
+                    </div>
+                  </div> <!-- card-body row end -->
+                </div>
+                <div class="card-footer text-center orderid-footer">
+                  <small><i class="fad fa-info-circle"></i> Max volume you can buy with this order: {{.OrderData.MaxVolume}} {{.OrderData.Rel}}</small>
+                </div>
+              </div> <!-- base trading pair card end -->
+            </div> <!-- base trading pair div end -->
 
-          <div class="card text-white bg-dark">
-            <div class="card-header">
-              <div class="font-weight-bold"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Order Info</div>
-            </div>
-            <div clas="card-body">
-              <table class="table table-dark table-striped table-card">
-                <tr>
-                  <td>Order ID</td>
-                  <td>{{.ID}}</td>
-                </tr>
-                <tr>
-                  <td>Selling</td>
-                  <td>{{.Total}} {{.OrderData.Base}}</td>
-                </tr>
-                <tr>
-                  <td>Buying</td>
-                  <td>{{.Amount}} {{.OrderData.Rel}}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
+          </div> <!-- form-row end -->
 
-          <div class="card text-white bg-dark">
-            <div clas="card-body">
+        </div> <!-- div for form end -->
+
+        <div class="col-md-4 mt-5">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="font-weight-bold text-center"><i class="far fa-wallet" style="color: #5fd9ff; font-size: 130%;"></i> Order Info</h5>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Your estimated rate: </span>
+                <span class="col-6 text-left">1 {{.OrderData.Base}} = <span class="estimated-rate"></span> {{.OrderData.Rel}} </span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Miner Fee: </span>
+                <span class="col-6 text-left">0.00001000 {{.OrderData.Rel}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Shurli's Subatomic Swap Fee (Exchange Fee): </span>
+                <span style="font-weight: bolder;" class="col-6 text-left vertical-center">0 = No Fee = Free! 🚀</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Buying From: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{if .OrderData.Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.OrderData.Handle}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Order ID: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.OrderData.OrderID}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Price: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.OrderData.Price}} {{.OrderData.Base}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Max Volume: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.OrderData.MaxVolume}} {{.OrderData.Rel}}</span>
+              </div>
+            </div>
+            <div class="col-12">
               <div class="time-elapsed text-center" style="font-size: 200%;"></div>
             </div>
+            <div class="col-xl-12 text-center mt-2">
+              <form action="/orderbook" method="POST">
+                <input type="hidden" name="coin_base" value="{{.Rel}}">
+                <input type="hidden" name="coin_rel" value="{{.Base}}">
+                <input type="hidden" name="result_limit" value="100">
+                <input type="hidden" name="sortby" value="soon">
+                <button type="submit" class="btn btn-sm btn-outline-secondary" style=""><i class="fad fa-backward"></i> back to order list</button>
+              </form>
+            </div>
           </div>
-
         </div>
 
-        <div class="col-md-6"> <!-- OrderStatus div start -->
+        <div class="col-md-6 mt-5"> <!-- OrderStatus div start -->
             <div class="card text-white bg-dark mb-2"> <!-- OrderStatus card start -->
                 <div class="card-header">
                   Order Status
@@ -114,16 +193,22 @@
                       <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                     </div>
                     <p class="swapstatus" style="text-align: center; font-size: 130%;"></p>
-                    <table class="table table-dark table-striped table-card">
-                      <tr>
-                        <td>{{.OrderData.Base}} Tx ID</td>
+                    <div class="row">
+                      <div class="col-2" style="color: #8894a1">
+                        {{.OrderData.Base}} Tx ID
+                      </div>
+                      <div class="col-10">
                         <td class="wrapword"><span class="base-txid"></span></td>
-                      </tr>
-                      <tr>
-                        <td>{{.OrderData.Rel}} Tx ID</td>
-                        <td class="wrapword"><span class="rel-txid"></span></td>
-                      </tr>
-                    </table>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-2" style="color: #8894a1">
+                        {{.OrderData.Rel}} Tx ID
+                      </div>
+                      <div class="col-10">
+                        <span class="rel-txid"></span>
+                      </div>
+                    </div>
                     <h4 class="mt-3 text-center swap-rawlogs-h" style="display: none;"><u>Raw order logs</u></h4>
                     <code class="swap-rawlogs" style="display: none;"></code>
                     <script>
@@ -285,13 +370,13 @@
                 <div class="card-footer">
                   <div class="row">
                     <div class="col-6" style="text-align: left;">
-                      <form action="/orderbook" method="POST">
+                      {{/* <form action="/orderbook" method="POST">
                         <input type="hidden" name="coin_base" value="{{.OrderData.Rel}}">
                         <input type="hidden" name="coin_rel" value="{{.OrderData.Base}}">
                         <input type="hidden" name="result_limit" value="100">
                         <input type="hidden" name="sortby" value="soon">
                         <button type="submit" class="btn btn-secondary">back</button>
-                      </form>
+                      </form> */}}
                     </div>
                     <div class="col-6" style="text-align: right;">
                       <div class="form-check pl-0">
@@ -311,6 +396,10 @@
   $( document ).ready(function() {
     var stepper = new Stepper($('.bs-stepper')[0])
     stepper.to(3)
+
+    // What 1 Base Unit will get Rel amount
+    let singleUnitWillGet = (1 / {{.OrderData.Price}}) - 0.00001000;
+    $('.estimated-rate').text(singleUnitWillGet.toFixed(8));
   });
 
   // Show hide raw logs elements
