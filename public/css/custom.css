@@ -199,7 +199,7 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
     background-color: #1d4165;
 }
 
-.change-pair-center, .exchange-with {
+.change-pair-center, .exchange-with, .vertical-center {
 	margin-top: auto;
 	margin-bottom: auto;
 }
@@ -275,9 +275,26 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
 	background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
+.ordid-input, .ordid-input:focus, .ordid-input:active {
+	background-color: #11111191;
+    border-color: #ffffff17;
+    color: #fff;
+    height: 50px;
+	border-radius: 7px;
+	box-shadow: none;
+	font-size: 22px;
+}
+
+.orderid-footer {
+	padding: 2px 10px;
+    border-radius: 0px 0px 12px 12px;
+    background-color: #00000029;
+    color: #ffffff9c;
+}
+
 .arrr-color {
 	background-color: #3e300c !important;
-    border-color: #bd993e;
+    border-color: #634f1c;
 }
 
 .vrsc-color {

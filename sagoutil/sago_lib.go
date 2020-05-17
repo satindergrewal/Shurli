@@ -327,6 +327,8 @@ type OrderData struct {
 	ZBaseBal     float64
 	RelBal       float64
 	ZRelBal      float64
+	BaseIcon     string
+	RelIcon      string
 }
 
 func IsLower(s string) bool {
@@ -509,6 +511,23 @@ func OrderID(id string) OrderData {
 	// fmt.Println(wallets[0].Balance)
 	// fmt.Println(wallets[1].Balance)
 
+	var relBalance, baseBalance float64
+	if strings.HasPrefix(orderid.Result.TagB, "z") {
+		baseBalance = wallets[0].ZBalance
+	} else if strings.HasPrefix(orderid.Result.TagB, "PIRATE") {
+		baseBalance = wallets[0].ZBalance
+	} else {
+		baseBalance = wallets[0].Balance
+	}
+
+	if strings.HasPrefix(orderid.Result.TagA, "z") {
+		relBalance = wallets[1].ZBalance
+	} else if strings.HasPrefix(orderid.Result.TagA, "PIRATE") {
+		relBalance = wallets[1].ZBalance
+	} else {
+		relBalance = wallets[1].Balance
+	}
+
 	orderData = OrderData{
 		Price:        fmt.Sprintf("%f", price),
 		MaxVolume:    orderid.Result.AmountA,
@@ -523,10 +542,10 @@ func OrderID(id string) OrderData {
 		Handle:       handle,
 		Pubkey:       pubkey,
 		Authorized:   auth,
-		BaseBal:      wallets[0].Balance,
-		ZBaseBal:     wallets[0].ZBalance,
-		RelBal:       wallets[1].Balance,
-		ZRelBal:      wallets[1].ZBalance,
+		BaseBal:      baseBalance,
+		RelBal:       relBalance,
+		BaseIcon:     wallets[0].Icon,
+		RelIcon:      wallets[1].Icon,
 	}
 
 	return orderData
