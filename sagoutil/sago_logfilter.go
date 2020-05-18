@@ -3,6 +3,7 @@ package sagoutil
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
@@ -12,19 +13,20 @@ import (
 
 // SwapStatus defines the data type to store filtered data and push to application in JSON format for UI side rendering.
 type SwapStatus struct {
-	State      string  `json:"state,omitempty"`
-	StateID    string  `json:"state_id,omitempty"`
-	Status     string  `json:"status,omitempty"`
-	StateHash  string  `json:"state_hash,omitempty"`
-	BaseTxID   string  `json:"base_txid,omitempty"`
-	RelTxID    string  `json:"rel_txid,omitempty"`
-	SwapID     string  `json:"swap_id,omitempty"`
-	SendToAddr string  `json:"sendtoaddr,omitempty"`
-	RecvAddr   string  `json:"recvaddr,omitempty"`
-	Base       string  `json:"base,omitempty"`
-	Rel        string  `json:"rel,omitempty"`
-	BaseAmount float64 `json:"base_amount,omitempty"`
-	RelAmount  float64 `json:"rel_amount,omitempty"`
+	State        string  `json:"state,omitempty"`
+	StateID      string  `json:"state_id,omitempty"`
+	Status       string  `json:"status,omitempty"`
+	StateHash    string  `json:"state_hash,omitempty"`
+	BaseTxID     string  `json:"base_txid,omitempty"`
+	RelTxID      string  `json:"rel_txid,omitempty"`
+	SwapID       string  `json:"swap_id,omitempty"`
+	SendToAddr   string  `json:"sendtoaddr,omitempty"`
+	RecvAddr     string  `json:"recvaddr,omitempty"`
+	Base         string  `json:"base,omitempty"`
+	Rel          string  `json:"rel,omitempty"`
+	BaseAmount   float64 `json:"base_amount,omitempty"`
+	RelAmount    float64 `json:"rel_amount,omitempty"`
+	SwapFullData string  `json:"swap_full_data,omitempty"`
 }
 
 //ZFrom to render the JSON data from "from." log entery coming from subatomic stdout
@@ -36,9 +38,18 @@ type ZFrom []struct {
 
 // SwapHistory type stores the single object from Swaps logs history
 type SwapHistory struct {
-	SwapID    string       `json:"swapid"`
-	TimeStamp string       `json:"timestamp"`
-	SwapLog   []SwapStatus `json:"swaplog"`
+	SwapID     string       `json:"swapid"`
+	TimeStamp  string       `json:"timestamp"`
+	Base       string       `json:"base"`
+	Rel        string       `json:"rel"`
+	BaseAmount float64      `json:"baseamount"`
+	RelAmount  float64      `json:"relamount"`
+	BaseTxID   string       `json:"basetxid"`
+	RelTxID    string       `json:"reltxid"`
+	Status     string       `json:"status"`
+	BobID      string       `json:"bobid"`
+	BobPubkey  string       `json:"bobpubkey"`
+	SwapLog    []SwapStatus `json:"swaplog"`
 }
 
 // SwapsHistory type is used as collection of SwapHistory objects
@@ -70,17 +81,33 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		}
 
 		logval, _ := SwapLogFilter(string(fileRead), "full")
-		// fmt.Println(logval)
+		// fmt.Println("logval", logval)
 		var _logval []SwapStatus
 		err = json.Unmarshal([]byte(logval), &_logval)
 		if err != nil {
 			log.Println(err)
 		}
 
+		fmt.Println(len(_logval))
+		fmt.Println(_logval[len(_logval)-1])
+
+		var base, rel string
+		if len(_logval) > 1 {
+			base = _logval[1].Base
+			rel = _logval[1].Rel
+		}
+
 		history = append(history, SwapHistory{
 			SwapID:    swapid,
 			TimeStamp: timestamp,
-			SwapLog:   _logval,
+			Base:      base,
+			Rel:       rel,
+			// BaseAmount: _logval[0].BaseAmount,
+			// RelAmount:  _logval[0].RelAmount,
+			// Status:     "",
+			// BobID:      "",
+			// BobPubkey:  "",
+			SwapLog: _logval,
 		})
 		// fmt.Println("\n", history)
 	}
@@ -596,6 +623,22 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	} //else {
 	// fmt.Printf("length of dPowBcastSf is lower: %d\n", len(dPowBcastSf))
 	//}
+
+	// fmt.Println(`----`)
+	var expSwapData = regexp.MustCompile(`(?-s).*subatomic_cmd.*(?s)`)
+	SwapData := expSwapData.FindString(logString)
+	// fmt.Println(SwapData)
+	stateDone := SwapStatus{
+		SwapFullData: SwapData,
+	}
+
+	stateDoneJSON, _ := json.Marshal(stateDone)
+	if answer == "single" {
+		return string(stateDoneJSON), nil
+	}
+	if answer == "full" {
+		statuses = append(statuses, stateDone)
+	}
 
 	statusesJSON, _ := json.Marshal(statuses)
 	// fmt.Println(statusesJSON)

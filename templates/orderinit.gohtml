@@ -217,7 +217,7 @@
                       console.log("{{.ID}}")
                       console.log("{{.Amount}}")
                       console.log("{{.Total}}") */}}
-                      tmpJson = ["{{.OrderData.Base}}","{{.ID}}", "{{.Total}}"]
+                      tmpJson = ["subatomic_cmd","{{.OrderData.Base}}","{{.ID}}", "{{.Total}}", "{{.Amount}}", {{.OrderDataJson}}, "{{.BaseExplorer}}", "{{.RelExplorer}}"]
                       console.log(tmpJson)
                       
                       ws.onopen = function(event) {
@@ -362,7 +362,9 @@
                                                   </div>`)
                         }
 
-                        document.querySelector("code").innerHTML += e.data + "<br>"
+                        if (swap_json.state !== null) {
+                          document.querySelector("code").innerHTML += e.data + "<br>"
+                        }
 
                       }
                     </script>

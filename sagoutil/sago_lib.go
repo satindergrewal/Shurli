@@ -310,25 +310,25 @@ func MatchedAuthorized(pubkey string) (bool, error) {
 
 // OrderData type is used to get formated data to display on Orderbook page
 type OrderData struct {
-	Price        string
-	MaxVolume    string
-	DexPubkey    string
-	Base         string
-	ZBase        bool
-	Rel          string
-	ZRel         bool
-	OrderID      int64
-	TimestampStr string
-	Timestamp    string
-	Handle       string
-	Pubkey       string
-	Authorized   bool
-	BaseBal      float64
-	ZBaseBal     float64
-	RelBal       float64
-	ZRelBal      float64
-	BaseIcon     string
-	RelIcon      string
+	Price        string  `json:"price"`
+	MaxVolume    string  `json:"max_volume"`
+	DexPubkey    string  `json:"dex_pubkey"`
+	Base         string  `json:"base"`
+	ZBase        bool    `json:"zbase"`
+	Rel          string  `json:"rel"`
+	ZRel         bool    `json:"zrel"`
+	OrderID      int64   `json:"orderid"`
+	TimestampStr string  `json:"timestampstr"`
+	Timestamp    string  `json:"timestamp"`
+	Handle       string  `json:"handle"`
+	Pubkey       string  `json:"pubkey"`
+	Authorized   bool    `json:"authorized"`
+	BaseBal      float64 `json:"basebal"`
+	ZBaseBal     float64 `json:"zbasebal"`
+	RelBal       float64 `json:"relbal"`
+	ZRelBal      float64 `json:"zrelbal"`
+	BaseIcon     string  `json:"baseicon"`
+	RelIcon      string  `json:"relicon"`
 }
 
 func IsLower(s string) bool {

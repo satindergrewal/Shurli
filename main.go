@@ -198,6 +198,9 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
 
+	orderDataJSON, _ := json.Marshal(orderData)
+	fmt.Println("orderData JSON:", string(orderDataJSON))
+
 	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	fmt.Println(cmdString)
 
@@ -210,13 +213,15 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 		BaseExplorer string
 		RelExplorer  string
 		sagoutil.OrderData
+		OrderDataJson string
 	}{
-		ID:           id,
-		Amount:       amount,
-		Total:        total,
-		OrderData:    orderData,
-		BaseExplorer: conf.Explorers[strings.ReplaceAll(orderData.Base, "z", "")],
-		RelExplorer:  conf.Explorers[strings.ReplaceAll(orderData.Rel, "z", "")],
+		ID:            id,
+		Amount:        amount,
+		Total:         total,
+		OrderData:     orderData,
+		OrderDataJson: string(orderDataJSON),
+		BaseExplorer:  conf.Explorers[strings.ReplaceAll(orderData.Base, "z", "")],
+		RelExplorer:   conf.Explorers[strings.ReplaceAll(orderData.Rel, "z", "")],
 	}
 
 	err := tpl.ExecuteTemplate(w, "orderinit.gohtml", data)
@@ -246,6 +251,9 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 	c.WriteMessage(1, []byte(`{"state":"Starting..."}`))
 
+	var filename string
+	newLine := "\n"
+
 	for {
 		mt, message, err := c.ReadMessage()
 		if err != nil {
@@ -274,9 +282,9 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		var parsed []string
 		err = json.Unmarshal([]byte(message), &parsed)
-		// fmt.Println("parsed", parsed)
+		fmt.Println("parsed", parsed)
 
-		if len(parsed) > 0 {
+		if len(parsed) > 0 && parsed[0] == "subatomic_cmd" {
 			// fmt.Println("parsed Rel:", parsed[0])
 			// fmt.Println("parsed ID:", parsed[1])
 			// fmt.Println("parsed Amount:", parsed[2])
@@ -287,7 +295,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 			// Create the command with our context
-			cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
+			cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[1], "", parsed[2], parsed[3])
 			cmd.Dir = conf.SubatomicDir
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
@@ -323,8 +331,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename := "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[1] + ".log"
-			fmt.Println(filename)
+			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[1] + ".log"
+			// fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
 			// If the file doesn't exist, create it, or append to the file
@@ -347,12 +355,16 @@ func echo(w http.ResponseWriter, r *http.Request) {
 				}
 
 				l := s.Bytes()
-				newLine := "\n"
 				l = append(l, newLine...)
 				_, err = w.Write(l)
 				check(err)
 				// fmt.Printf("wrote %d bytes\n", n4)
 			}
+
+			m := message
+			m = append(m, newLine...)
+			_, err = w.Write(m)
+			check(err)
 
 			w.Flush()
 
@@ -370,6 +382,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		// fmt.Println("filename", filename)
+
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
 	}
 }
@@ -385,4 +399,11 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(allhistory)
 	}
+
+	// err = tpl.ExecuteTemplate(w, "swaphistory.gohtml", allhistory)
+	// if err != nil {
+	// 	// log.Fatalf("some error")
+	// 	http.Error(w, err.Error(), 500)
+	// 	log.Fatalln(err)
+	// }
 }
