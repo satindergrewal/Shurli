@@ -23,6 +23,7 @@ import (
 type WInfo struct {
 	Name     string
 	Ticker   string
+	Icon     string
 	Status   string
 	Balance  float64
 	ZBalance float64
@@ -62,6 +63,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 		vWithoutZ := strings.ReplaceAll(string(v), "z", "")
 
 		coinConfInfo := GetCoinConfInfo(vWithoutZ)
+		// fmt.Println(strings.ToLower(coinConfInfo.Ticker))
+		tmpicon := strings.ToLower(coinConfInfo.Ticker)
 		// fmt.Println(coinConfInfo)
 		// if !!coinConfInfo.Shielded {
 		// 	fmt.Println(coinConfInfo.Shielded)
@@ -79,21 +82,21 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
 			if info.Error.Message == "Loading block index..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Loading...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Loading...", 0.0, 0, 0, false, false})
 			} else if info.Error.Message == "Rescanning..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Rescanning...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rescanning...", 0.0, 0, 0, false, false})
 			} else if info.Error.Message == "Rewinding blocks if needed..." {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
 			} else {
 				fmt.Println(v, "- Err happened:", err)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false})
 			}
 		} else {
 			if info.Error.Message == "connection refused" {
 				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, string(v), "Offline", 0.0, 0, 0, false, false})
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false})
 			} else {
 
 				// Check status of the blockchain sync
@@ -141,7 +144,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 					wallets = append(wallets, WInfo{
 						Name:     coinConfInfo.Name,
-						Ticker:   info.Result.Name,
+						Ticker:   coinConfInfo.Ticker,
+						Icon:     strings.ToLower(coinConfInfo.Ticker),
 						Status:   "Online",
 						ZBalance: zblc.Result,
 						Balance:  info.Result.Balance,
@@ -153,7 +157,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				} else {
 					wallets = append(wallets, WInfo{
 						Name:     coinConfInfo.Name,
-						Ticker:   info.Result.Name,
+						Ticker:   coinConfInfo.Ticker,
+						Icon:     strings.ToLower(coinConfInfo.Ticker),
 						Status:   "Online",
 						Balance:  info.Result.Balance,
 						Blocks:   info.Result.Blocks,
@@ -322,6 +327,8 @@ type OrderData struct {
 	ZBaseBal     float64
 	RelBal       float64
 	ZRelBal      float64
+	BaseIcon     string
+	RelIcon      string
 }
 
 func IsLower(s string) bool {
@@ -401,6 +408,10 @@ func OrderBookList(base, rel, maxentries, sortby string) []OrderData {
 		})
 	}
 
+	sort.Slice(orderList, func(i, j int) bool {
+		return orderList[i].Authorized
+	})
+
 	// Sort by the soon to expire orders
 	if sortby == "soon" {
 		sort.Slice(orderList, func(i, j int) bool {
@@ -413,6 +424,7 @@ func OrderBookList(base, rel, maxentries, sortby string) []OrderData {
 			return orderList[i].Timestamp > orderList[j].Timestamp
 		})
 	}
+
 	// TODO
 	// Sort by low/high price
 	// Sort by Maxvolume
@@ -499,6 +511,23 @@ func OrderID(id string) OrderData {
 	// fmt.Println(wallets[0].Balance)
 	// fmt.Println(wallets[1].Balance)
 
+	var relBalance, baseBalance float64
+	if strings.HasPrefix(orderid.Result.TagB, "z") {
+		baseBalance = wallets[0].ZBalance
+	} else if strings.HasPrefix(orderid.Result.TagB, "PIRATE") {
+		baseBalance = wallets[0].ZBalance
+	} else {
+		baseBalance = wallets[0].Balance
+	}
+
+	if strings.HasPrefix(orderid.Result.TagA, "z") {
+		relBalance = wallets[1].ZBalance
+	} else if strings.HasPrefix(orderid.Result.TagA, "PIRATE") {
+		relBalance = wallets[1].ZBalance
+	} else {
+		relBalance = wallets[1].Balance
+	}
+
 	orderData = OrderData{
 		Price:        fmt.Sprintf("%f", price),
 		MaxVolume:    orderid.Result.AmountA,
@@ -513,10 +542,10 @@ func OrderID(id string) OrderData {
 		Handle:       handle,
 		Pubkey:       pubkey,
 		Authorized:   auth,
-		BaseBal:      wallets[0].Balance,
-		ZBaseBal:     wallets[0].ZBalance,
-		RelBal:       wallets[1].Balance,
-		ZRelBal:      wallets[1].ZBalance,
+		BaseBal:      baseBalance,
+		RelBal:       relBalance,
+		BaseIcon:     wallets[0].Icon,
+		RelIcon:      wallets[1].Icon,
 	}
 
 	return orderData

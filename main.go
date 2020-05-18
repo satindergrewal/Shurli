@@ -16,6 +16,8 @@ import (
 	"time"
 
 	"github.com/Meshbits/shurli/sagoutil"
+	"github.com/satindergrewal/kmdgo"
+
 	// "shurli/sagoutil"
 
 	"github.com/gorilla/mux"
@@ -59,6 +61,7 @@ func main() {
 	r.HandleFunc("/orderbook", orderbook).Methods("GET", "POST")
 	r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 	r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
+	r.HandleFunc("/history", swaphistory)
 
 	r.HandleFunc("/echo", echo)
 
@@ -71,7 +74,7 @@ func main() {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "favicon.ico")
+	http.ServeFile(w, r, "favicon.png")
 }
 
 // idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
@@ -101,6 +104,10 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 		Rel       string `json:"coin_rel"`
 		Results   string `json:"results"`
 		SortBy    string `json:"sortby"`
+		BaseBal   float64
+		RelBal    float64
+		BaseIcon  string
+		RelIcon   string
 		OrderList []sagoutil.OrderData
 	}
 
@@ -112,11 +119,41 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 	var orderlist []sagoutil.OrderData
 	orderlist = sagoutil.OrderBookList(r.FormValue("coin_base"), r.FormValue("coin_rel"), r.FormValue("result_limit"), r.FormValue("sortby"))
 
+	var baseRelWallet = []kmdgo.AppType{kmdgo.AppType(r.FormValue("coin_base")), kmdgo.AppType(r.FormValue("coin_rel"))}
+
+	var wallets []sagoutil.WInfo
+	wallets = sagoutil.WalletInfo(baseRelWallet)
+	// fmt.Println(wallets[0].Balance)
+	// fmt.Println(wallets[0].ZBalance)
+	// fmt.Println(wallets[1].Balance)
+	// fmt.Println(wallets[1].ZBalance)
+
+	var relBalance, baseBalance float64
+	if strings.HasPrefix(r.FormValue("coin_base"), "z") {
+		baseBalance = wallets[0].ZBalance
+	} else if strings.HasPrefix(r.FormValue("coin_base"), "PIRATE") {
+		baseBalance = wallets[0].ZBalance
+	} else {
+		baseBalance = wallets[0].Balance
+	}
+
+	if strings.HasPrefix(r.FormValue("coin_rel"), "z") {
+		relBalance = wallets[1].ZBalance
+	} else if strings.HasPrefix(r.FormValue("coin_rel"), "PIRATE") {
+		relBalance = wallets[1].ZBalance
+	} else {
+		relBalance = wallets[1].Balance
+	}
+
 	data := OrderPost{
 		Base:      r.FormValue("coin_base"),
 		Rel:       r.FormValue("coin_rel"),
 		Results:   r.FormValue("result_limit"),
 		SortBy:    r.FormValue("sortby"),
+		BaseBal:   baseBalance,
+		RelBal:    relBalance,
+		BaseIcon:  wallets[0].Icon,
+		RelIcon:   wallets[1].Icon,
 		OrderList: orderlist,
 	}
 
@@ -334,5 +371,18 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
+	}
+}
+
+func swaphistory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var history sagoutil.SwapsHistory
+	allhistory, err := history.SwapsHistory()
+	// fmt.Println(allhistory)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		json.NewEncoder(w).Encode(allhistory)
 	}
 }
