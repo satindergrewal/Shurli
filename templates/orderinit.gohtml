@@ -217,7 +217,7 @@
                       console.log("{{.ID}}")
                       console.log("{{.Amount}}")
                       console.log("{{.Total}}") */}}
-                      tmpJson = ["subatomic_cmd","{{.OrderData.Base}}","{{.ID}}", "{{.Total}}", "{{.Amount}}", {{.OrderDataJson}}, "{{.BaseExplorer}}", "{{.RelExplorer}}"]
+                      tmpJson = ["subatomic_cmd","{{.OrderData.Base}}","{{.ID}}", "{{.Total}}", "{{.Amount}}", "{{.BaseExplorer}}", "{{.RelExplorer}}", {{.OrderDataJson}}]
                       console.log(tmpJson)
                       
                       ws.onopen = function(event) {
