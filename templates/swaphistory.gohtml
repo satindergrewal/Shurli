@@ -58,7 +58,9 @@
               <thead>
                 <tr>
                   <th><span style="color: #ffffff5c;">DATE</span></th>
-                  <th><span style="color: #ffffff5c;">AMOUNT</span></th>
+                  <th><span style="color: #ffffff5c;">SOLD</span></th>
+                  <th><span style="color: #ffffff5c;">TRADE PAIR</span></th>
+                  <th><span style="color: #ffffff5c;">BOUGHT</span></th>
                   <th><span style="color: #ffffff5c;">Bought From</span></th>
                   <th><span style="color: #ffffff5c;">STATUS</span></th>
                 </tr>
@@ -67,25 +69,21 @@
                 {{range .}}
                 <tr>
                   <td>{{.TimeStamp}}</td>
+                  <td>{{.BaseAmount}} <span style="color: #ffffff5c;">{{.Base}}</td>
                   <td>
                     <div class="row">
-                      <div class="col-2">
-                        {{.BaseAmount}} <span style="color: #ffffff5c;">{{.Base}}
-                      </div>
-                      <div class="col-1">
+                      <div>
                         </span> <a href="{{.BaseExplorer}}tx/{{.BaseTxID}}" target="_blank"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
                       </div>
-                      <div class="col-1">
+                      <div>
                         <i class="fas fa-arrow-right" style="color: #ffffff5c;"></i>
                       </div>
-                      <div class="col-1">
+                      <div>
                         <a href="{{.RelExplorer}}tx/{{.RelTxID}}" target="_blank"><img src='/assets/coins/{{.RelIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
-                      </div>
-                      <div class="col-2">
-                        {{.RelAmount}} <span style="color: #ffffff5c;">{{.Rel}}</span>
                       </div>
                     </div>
                   </td>
+                  <td>{{.RelAmount}} <span style="color: #ffffff5c;">{{.Rel}}</span></td>
                   <td><span style="font-weight: bolder;" class="col-6 text-left" data-toggle="tooltip" data-placement="top" title="{{.BobPubkey}}">{{if .BobAuthorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.BobID}}</span></td>
                   <td>{{if eq .Status "COMPLETE"}} <span class="text-success">{{.Status}}</span> {{else}} <span class="text-danger">{{.Status}}</span> {{end}}</td>
                 </tr>
