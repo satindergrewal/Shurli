@@ -35,7 +35,8 @@ body {
 }
 
 .table-md td, .table-md th {
-    padding: .5rem;
+	padding: .5rem;
+	vertical-align: middle;
 }
 
 .card {
