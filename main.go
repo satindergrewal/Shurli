@@ -389,21 +389,21 @@ func echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func swaphistory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	// w.Header().Set("Content-Type", "application/json")
 	var history sagoutil.SwapsHistory
 	allhistory, err := history.SwapsHistory()
 	// fmt.Println(allhistory)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(err.Error())
-	} else {
-		json.NewEncoder(w).Encode(allhistory)
-	}
-
-	// err = tpl.ExecuteTemplate(w, "swaphistory.gohtml", allhistory)
 	// if err != nil {
-	// 	// log.Fatalf("some error")
-	// 	http.Error(w, err.Error(), 500)
-	// 	log.Fatalln(err)
+	// 	json.NewEncoder(w).Encode(err.Error())
+	// } else {
+	// 	json.NewEncoder(w).Encode(allhistory)
 	// }
+
+	err = tpl.ExecuteTemplate(w, "swaphistory.gohtml", allhistory)
+	if err != nil {
+		// log.Fatalf("some error")
+		http.Error(w, err.Error(), 500)
+		log.Fatalln(err)
+	}
 }

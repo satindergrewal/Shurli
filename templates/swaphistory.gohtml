@@ -52,7 +52,26 @@
     <div class="container-fluid" style="margin-top: 75px;">
 
         <div class="row" style="margin-bottom: 1em;">
-        
+          <div class="col-12">
+            <table class="table table-md table-striped table-dark" data-toggle="table" data-search="true">
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .}}
+                <tr>
+                  <tD>{{.TimeStamp}}</tD>
+                  <tD>{{.BaseAmount}} {{.RelAmount}}</tD>
+                  <tD>{{.Status}}</tD>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
         </div>
     
     </div>

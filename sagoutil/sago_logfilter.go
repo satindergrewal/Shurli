@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // SwapStatus defines the data type to store filtered data and push to application in JSON format for UI side rendering.
@@ -83,7 +84,7 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		fnid := strings.Split(fn[1], ".")
 		timestamp := fn[0]
 		swapid := fnid[0]
-		fmt.Printf("\ntimestamp: %s\nswapid: %s\n", fn, fnid)
+		// fmt.Printf("\ntimestamp: %s\nswapid: %s\n", fn, fnid)
 
 		fileRead, err := ioutil.ReadFile("swaplogs/" + file.Name())
 		if err != nil {
@@ -101,7 +102,8 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		// fmt.Println(len(_logval))
 		// fmt.Println(_logval[6].RelTxID)
 
-		var reltxid, basetxid string
+		var reltxid, basetxid, swapstatus string
+		swapstatus = "Incomplete"
 		for _, v := range _logval {
 			// fmt.Println(v.State)
 			// fmt.Println(v.Status)
@@ -110,6 +112,9 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 			}
 			if v.BaseTxID != "" {
 				basetxid = v.BaseTxID
+			}
+			if v.State == "SWAP COMPLETE" {
+				swapstatus = "Completed"
 			}
 		}
 
@@ -131,9 +136,16 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		price, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["price"]), 64)
 		maxvolume, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["max_volume"]), 64)
 
+		timestampint, err := strconv.ParseInt(timestamp, 10, 64)
+		var unixTime int64 = timestampint
+		t := time.Unix(unixTime, 0)
+		// fmt.Println("t", t)
+		strDate := t.Format(time.UnixDate)
+		// fmt.Println(strDate)
+
 		history = append(history, SwapHistory{
 			SwapID:           swapid,
-			TimeStamp:        timestamp,
+			TimeStamp:        strDate,
 			Base:             fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["base"]),
 			Rel:              fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["rel"]),
 			BaseAmount:       baseAmount,
@@ -152,6 +164,7 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 			RelExplorer:      fmt.Sprintf("%v", orderIDInfo[6]),
 			ZBase:            zbase,
 			ZRel:             zrel,
+			Status:           swapstatus,
 			// SwapLog:    _logval,
 		})
 		// fmt.Println("\n", history)
