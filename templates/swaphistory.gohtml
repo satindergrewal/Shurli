@@ -56,17 +56,17 @@
             <table class="table table-md table-striped table-dark" data-toggle="table" data-search="true">
               <thead>
                 <tr>
-                  <th>DATE</th>
-                  <th>AMOUNT</th>
-                  <th>STATUS</th>
+                  <th><span style="color: #ffffff5c;">DATE</span></th>
+                  <th><span style="color: #ffffff5c;">AMOUNT</span></th>
+                  <th><span style="color: #ffffff5c;">STATUS</span></th>
                 </tr>
               </thead>
               <tbody>
                 {{range .}}
                 <tr>
-                  <tD>{{.TimeStamp}}</tD>
-                  <tD>{{.BaseAmount}} {{.RelAmount}}</tD>
-                  <tD>{{.Status}}</tD>
+                  <td>{{.TimeStamp}}</td>
+                  <td>{{.BaseAmount}} <img src='/assets/coins/{{.BaseIcon}}.png' style='width:25px; margin: 0px 5px 0px 0px;'/> <i class="fas fa-arrow-right" style="color: #ffffff5c;"></i> <img src='/assets/coins/{{.RelIcon}}.png' style='width:25px; margin: 0px 5px 0px 0px;'/> {{.RelAmount}}</td>
+                  <td>{{if eq .Status "COMPLETE"}} <span class="text-success">{{.Status}}</span> {{else}} <span class="text-danger">{{.Status}}</span> {{end}}</td>
                 </tr>
                 {{end}}
               </tbody>

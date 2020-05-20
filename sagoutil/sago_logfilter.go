@@ -103,7 +103,7 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		// fmt.Println(_logval[6].RelTxID)
 
 		var reltxid, basetxid, swapstatus string
-		swapstatus = "Incomplete"
+		swapstatus = "INCOMPLETE"
 		for _, v := range _logval {
 			// fmt.Println(v.State)
 			// fmt.Println(v.Status)
@@ -114,7 +114,7 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 				basetxid = v.BaseTxID
 			}
 			if v.State == "SWAP COMPLETE" {
-				swapstatus = "Completed"
+				swapstatus = "COMPLETE"
 			}
 		}
 
