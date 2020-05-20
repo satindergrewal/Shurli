@@ -331,7 +331,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[1] + ".log"
+			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
 			// fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
