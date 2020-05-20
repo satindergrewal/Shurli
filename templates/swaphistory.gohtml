@@ -59,6 +59,7 @@
                 <tr>
                   <th><span style="color: #ffffff5c;">DATE</span></th>
                   <th><span style="color: #ffffff5c;">AMOUNT</span></th>
+                  <th><span style="color: #ffffff5c;">Bought From</span></th>
                   <th><span style="color: #ffffff5c;">STATUS</span></th>
                 </tr>
               </thead>
@@ -67,6 +68,7 @@
                 <tr>
                   <td>{{.TimeStamp}}</td>
                   <td>{{.BaseAmount}} <span style="color: #ffffff5c;">{{.Base}}</span> <a href="{{.BaseExplorer}}tx/{{.BaseTxID}}" target="_blank"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a> <i class="fas fa-arrow-right" style="color: #ffffff5c;"></i> <a href="{{.RelExplorer}}tx/{{.RelTxID}}" target="_blank"><img src='/assets/coins/{{.RelIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a> {{.RelAmount}} <span style="color: #ffffff5c;">{{.Rel}}</span></td>
+                  <td><span style="font-weight: bolder;" class="col-6 text-left" data-toggle="tooltip" data-placement="top" title="{{.BobPubkey}}">{{if .BobAuthorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.BobID}}</span></td>
                   <td>{{if eq .Status "COMPLETE"}} <span class="text-success">{{.Status}}</span> {{else}} <span class="text-danger">{{.Status}}</span> {{end}}</td>
                 </tr>
                 {{end}}
