@@ -310,6 +310,27 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
     color: #ffffff9c;
 }
 
+.popover, .modal-content {
+	background-color: #234261;
+}
+
+.bs-popover-auto[x-placement^=right]>.arrow::after, .bs-popover-right>.arrow::after {
+	border-right-color: #234261;
+}
+
+.popover-header {
+	background-color: #234261;
+	border-bottom: 1px solid #ffffff4f;
+}
+
+.popover-body {
+	color: #ffffff;
+}
+
+.modal-footer {
+	border-top: 1px solid #ffffff4f;
+}
+
 .arrr-color {
 	background-color: #3e300c !important;
     border-color: #634f1c;
