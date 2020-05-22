@@ -16,3 +16,6 @@
 .DS_Store
 config.json
 swaplogs/*.log
+assets/osx/komodo-cli
+assets/osx/komodod
+assets/osx/subatomic
