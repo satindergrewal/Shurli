@@ -105,10 +105,10 @@ After:
 
 You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvtaddr` in your config.json file before starting Shurli application.
 
-    - `dex_recvtaddr`: is your KMD's public address. The address which starts with letter `R`.
-    - `dex_pubkey`: is pubkey of your KMD's public key. You can it from the your KMD wallet application.
-    - `dex_recvzaddr`: is the PIRATE's private address. The address which starts with letter `z`.
-    - `dex_handle`: it is very much like a unique username you want to use on Subatomic swaps. It will show to other traders when they will see your orders in orderbook. Your handle must with without space between letters.
+- `dex_recvtaddr`: is your KMD's public address. The address which starts with letter `R`.
+- `dex_pubkey`: is pubkey of your KMD's public key. You can it from the your KMD wallet application.
+- `dex_recvzaddr`: is the PIRATE's private address. The address which starts with letter `z`.
+- `dex_handle`: it is very much like a unique username you want to use on Subatomic swaps. It will show to other traders when they will see your orders in orderbook. Your handle must with without space between letters.
 
 ```json
     "dex_nSPV": "1",
