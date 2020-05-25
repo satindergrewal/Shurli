@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"kmdgo"
+
+	"github.com/satindergrewal/kmdgo"
 
 	"github.com/Meshbits/shurli/sagoutil"
 )
