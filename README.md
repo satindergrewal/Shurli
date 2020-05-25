@@ -193,3 +193,14 @@ To make Mac OS distributable build execute the following command:
 
 Smiliar to Linux build, for Mac OS you'll find `dist/dist_osx` in `$HOME/go/src/github.com/Meshbits/shurli/`.
 You can rename, move or archive the `dist_osx` and distribute.
+
+##### Clean build
+
+To clean all compiled files execute the following command:
+
+    ```shell
+    cd $HOME/go/src/github.com/Meshbits/shurli
+    make clean
+    ```
+
+It will delete all dist and binary files the build commands created.
