@@ -34,31 +34,31 @@ https://gist.github.com/himu007/add3181427bb53ab5dc5160537f0c238
 
 On Ubuntu can follow this guide: https://github.com/golang/go/wiki/Ubuntu
 
-    ```shell
-    sudo add-apt-repository ppa:longsleep/golang-backports
-    sudo apt update
-    sudo apt install golang-go
-    ```
+```shell
+sudo add-apt-repository ppa:longsleep/golang-backports
+sudo apt update
+sudo apt install golang-go
+```
 
 On Mac can install Go using `brew`.
 
-    ```shell
-    brew update
-    brew install go
-    ```
+```shell
+brew update
+brew install go
+```
 
 ### Installing Shurli App
 
 In Linux/Mac you must have a `go` directory under your `$HOME` directory in your OS.
 If you don't find this directory then create the following:
 
-    ```shell
-    mkdir -p $HOME/go/{bin,src,pkg}
-    ```
+```shell
+mkdir -p $HOME/go/{bin,src,pkg}
+```
 
-    ```
-    go get -u github.com/Meshbits/shurli
-    ```
+```
+go get -u github.com/Meshbits/shurli
+```
 
 #### Configure config.json with absolute path of subatomic binary
 
@@ -67,39 +67,39 @@ For example if you have compiled and installed `Komodo` and `subatomic` as per t
 
 Make a copy of `config.json` file from `config.json.sample` file:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    cp config.json.sample config.json
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+cp config.json.sample config.json
+```
 
 Open `config.json` in text editor and edit value of only `subatomic_dir` key.
 
 To get the full path of your `komodo` directory `cd` to `komodo` directory and issue `pwd` command to get full path. Example:
 
-    ```shell
-    cd $HOME/komodo/src
-    pwd
-    ```
+```shell
+cd $HOME/komodo/src
+pwd
+```
 
 It will give full path for example like this:
 
-    ```shell
-    /home/satinder/komodo/src
-    ```
+```shell
+/home/satinder/komodo/src
+```
 
 Replace the path you get from this output in `config.json` file.
 
 Before:
 
-    ```json
-    "subatomic_dir": "/Users/satinder/repositories/jl777/komodo/src"
-    ```
+```json
+"subatomic_dir": "/Users/satinder/repositories/jl777/komodo/src"
+```
 
 After:
 
-    ```json
-    "subatomic_dir": "/home/satinder/komodo/src"
-    ```
+```json
+"subatomic_dir": "/home/satinder/komodo/src"
+```
 
 #### Configure DEX blockchain's parameters in `config.json` file
 
@@ -110,30 +110,30 @@ You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvt
     - `dex_recvzaddr`: is the PIRATE's private address. The address which starts with letter `z`.
     - `dex_handle`: it is very much like a unique username you want to use on Subatomic swaps. It will show to other traders when they will see your orders in orderbook. Your handle must with without space between letters.
 
-    ```json
-        "dex_nSPV": "1",
-        "dex_addnode": "136.243.58.134",
-        "dex_pubkey": "03_YOUR_PUBKEY_FROM_DEX",
-        "dex_handle": "SET_YOUR_HANDLE_FOR_SUBATOMIC",
-        "dex_recvzaddr": "YOUR_PIRATE_PRIVATE_ADDRRESS",
-        "dex_recvtaddr": "YOUR_KMD_PUBLIC_ADDRRESS"
-    ```
+```json
+    "dex_nSPV": "1",
+    "dex_addnode": "136.243.58.134",
+    "dex_pubkey": "03_YOUR_PUBKEY_FROM_DEX",
+    "dex_handle": "SET_YOUR_HANDLE_FOR_SUBATOMIC",
+    "dex_recvzaddr": "YOUR_PIRATE_PRIVATE_ADDRRESS",
+    "dex_recvtaddr": "YOUR_KMD_PUBLIC_ADDRRESS"
+```
 
 #### Build Shurli application
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    make
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+make
+```
 
 #### Start Shurli App
 
 The build command will make a system executable binary named "shurli".
 To start Shurli execute the following command:
 
-    ```shell
-    ./shurli start
-    ```
+```shell
+./shurli start
+```
 
 It will start Shurli in daemon mode, leaving Shurli running in background.
 
@@ -145,10 +145,10 @@ To stop Shurli you have to execute the stop command.
 Otherwise it will keep running in background.
 Stop with following command:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    ./shurli stop
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+./shurli stop
+```
 
 #### Shurli logs
 
@@ -156,10 +156,10 @@ If starting Shurli as daemon using `./shurli start` command, it will not show an
 To view the logs you can check `shurli.log` file in Shurli directory.
 Following example command on Linux/OSX will show updated prints being pushed to `shurli.log` file:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    tail -f shurli.log
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+tail -f shurli.log
+```
 
 you can press CTRL+C to cancel `tail` command's output.
 
@@ -173,10 +173,10 @@ thanks to Go's cross-compilation capabilities.
 
 To make Linux distributable build execute the following command:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    make build-linux
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+make build-linux
+```
 
 After this command you'll find a directory `dist/dist_unix` in `$HOME/go/src/github.com/Meshbits/shurli/`.
 All the required files for Shurli would be in `dist/dist_unix`. You can renamed or moved `dist_unix` to anywhere on the machine.
@@ -186,10 +186,10 @@ Or make a zip or tar.gz archive of it to distribute.
 
 To make Mac OS distributable build execute the following command:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    make build-osx
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+make build-osx
+```
 
 Smiliar to Linux build, for Mac OS you'll find `dist/dist_osx` in `$HOME/go/src/github.com/Meshbits/shurli/`.
 You can rename, move or archive the `dist_osx` and distribute.
@@ -198,9 +198,9 @@ You can rename, move or archive the `dist_osx` and distribute.
 
 To clean all compiled files execute the following command:
 
-    ```shell
-    cd $HOME/go/src/github.com/Meshbits/shurli
-    make clean
-    ```
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+make clean
+```
 
 It will delete all dist and binary files the build commands created.
