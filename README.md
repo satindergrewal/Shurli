@@ -103,7 +103,7 @@ After:
 
 #### Configure DEX blockchain's parameters in `config.json` file
 
-You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvtaddr` in your config.json file before starting Shurli application.
+You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvtaddr` in your **config.json** file before starting Shurli application.
 
 - `dex_recvtaddr`: is your KMD's public address. The address which starts with letter `R`.
 - `dex_pubkey`: is pubkey of your KMD's public key. You can it from the your KMD wallet application.
