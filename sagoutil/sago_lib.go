@@ -42,8 +42,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 	stats, err := kmdgo.NewAppType("DEX").DEXStats()
 	if err != nil {
-		fmt.Printf("Code: %v\n", stats.Error.Code)
-		fmt.Printf("Message: %v\n\n", stats.Error.Message)
+		Log.Printf("Code: %v\n", stats.Error.Code)
+		Log.Printf("Message: %v\n\n", stats.Error.Message)
 		// log.Fatalln("Err happened", err)
 	}
 
@@ -83,21 +83,21 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			// fmt.Printf("Code: %v\n", info.Error.Code)
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
 			if info.Error.Message == "Loading block index..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
+				Log.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Loading...", 0.0, 0, 0, false, false, false, false})
 			} else if info.Error.Message == "Rescanning..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
+				Log.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rescanning...", 0.0, 0, 0, false, false, false, false})
 			} else if info.Error.Message == "Rewinding blocks if needed..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
+				Log.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rewinding blocks if needed...", 0.0, 0, 0, false, false, false, false})
 			} else {
-				fmt.Println(v, "- Err happened:", err)
+				Log.Println(v, "- Err happened:", err)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false, false, false})
 			}
 		} else {
 			if info.Error.Message == "connection refused" {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
+				Log.Println(v, "- Err happened:", info.Error.Message)
 				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false, false, false})
 			} else {
 
@@ -107,9 +107,9 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				var gb kmdgo.GetBlockchainInfo
 				gb, err := appName.GetBlockchainInfo()
 				if err != nil {
-					fmt.Printf("Code: %v\n", gb.Error.Code)
-					fmt.Printf("Message: %v\n\n", gb.Error.Message)
-					fmt.Println("Err happened", err)
+					Log.Printf("Code: %v\n", gb.Error.Code)
+					Log.Printf("Message: %v\n\n", gb.Error.Message)
+					Log.Println("Err happened", err)
 				}
 
 				// Validate Transaparent Address
@@ -117,8 +117,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				taddress := stats.Result.Recvaddr
 				vldadr, err = appName.ValidateAddress(taddress)
 				if err != nil {
-					fmt.Printf("Code: %v\n", vldadr.Error.Code)
-					fmt.Printf("Message: %v\n\n", vldadr.Error.Message)
+					Log.Printf("Code: %v\n", vldadr.Error.Code)
+					Log.Printf("Message: %v\n\n", vldadr.Error.Message)
 					log.Fatalln("Err happened", err)
 				}
 
@@ -148,16 +148,16 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					zaddress := stats.Result.RecvZaddr
 					zvldadr, err := appName.ZValidateAddress(zaddress)
 					if err != nil {
-						fmt.Printf("Code: %v\n", zvldadr.Error.Code)
-						fmt.Printf("Message: %v\n\n", zvldadr.Error.Message)
+						Log.Printf("Code: %v\n", zvldadr.Error.Code)
+						Log.Printf("Message: %v\n\n", zvldadr.Error.Message)
 						log.Fatalln("Err happened", err)
 					}
 
 					// Get balance of Shielded address
 					zblc, err = appName.ZGetBalance(args)
 					if err != nil {
-						fmt.Printf("Code: %v\n", zblc.Error.Code)
-						fmt.Printf("Message: %v\n\n", zblc.Error.Message)
+						Log.Printf("Code: %v\n", zblc.Error.Code)
+						Log.Printf("Message: %v\n\n", zblc.Error.Message)
 						// log.Fatalln("Err happened", err)
 					}
 
@@ -255,7 +255,7 @@ func DEXHandles() []DEXHandle {
 			// Checking if the found pubkey is authorized in subatomic.json pubkey list
 			authorized, err := MatchedAuthorized(v.Decrypted)
 			if err != nil {
-				log.Fatal(err)
+				Log.Fatal(err)
 			}
 			// fmt.Println(authorized)
 

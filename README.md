@@ -106,10 +106,38 @@ After:
 To start the app execute following command inside `shurli` directory:
 ```shell
 cd $HOME/go/src/github.com/Meshbits/shurli
-go run main.go
+go build
 ```
 
+The build command will make a system executable binary named "shurli".
+To start Shurli execute the following command:
+```shell
+./shurli start
+```
+
+It will start Shurli in daemon mode, leaving Shurli running in background.
+
 Now open http://localhost:8080
+
+#### Stop Shurli App
+To stop Shurli you have to execute the stop command.
+Otherwise it will keep running in background.
+Stop with following command:
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+./shurli stop
+```
+
+#### Shurli logs
+If starting Shurli as daemon using `./shurli start` command, it will not show any logs on cosole output.
+To view the logs you can check `shurli.log` file in Shurli directory.
+Following example command on Linux/OSX will show updated prints being pushed to `shurli.log` file:
+```shell
+cd $HOME/go/src/github.com/Meshbits/shurli
+tail -f shurli.log
+```
+
+you can press CTRL+C to cancel `tail` command's output.
 
 #### Making a release build
 You can also make static build of Shurli app using the following instructions:

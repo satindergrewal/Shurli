@@ -22,6 +22,12 @@ type SubAtomicConfig struct {
 	Chains       []ConfigCoins     `json:"chains,omitempty"`
 	SubatomicExe string            `json:"subatomic_exe"`
 	SubatomicDir string            `json:"subatomic_dir"`
+	DexNSPV      string            `json:"dex_nSPV"`
+	DexAddnode   string            `json:"dex_addnode"`
+	DexPubkey    string            `json:"dex_pubkey"`
+	DexHandle    string            `json:"dex_handle"`
+	DexRecvZAddr string            `json:"dex_recvzaddr"`
+	DexRecvTAddr string            `json:"dex_recvtaddr"`
 	Explorers    map[string]string `json:"explorers,omitempty"`
 }
 

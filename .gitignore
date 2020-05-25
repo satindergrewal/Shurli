@@ -19,3 +19,8 @@ swaplogs/*.log
 assets/osx/komodo-cli
 assets/osx/komodod
 assets/osx/subatomic
+DEX.log
+DEX_7776
+shurli.log
+shurli
+shurli.pid
