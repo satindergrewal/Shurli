@@ -1,20 +1,206 @@
 {{template "header"}}
 
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand"><img src="/assets/images/antara150x150.png" class="logo"/> Subatomic Go</a>
-        <form class="form-inline">
+    <nav class="navbar fixed-top navbar-expand navbar-dark topnav-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+            </li>
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/"><i class="fad fa-rocket-launch topnav-icon"></i> Dashboard <span class="sr-only">(current)</span></a>
+              </div>
+            </li>
+            <li class="nav-item active">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link topnav-active"></div>
+                <a class="nav-link" href="/orderbook"><i class="fad fa-exchange-alt topnav-icon"></i> Trade</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/history"><i class="fad fa-history topnav-icon"></i> Trade History</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle dropdown-toggle-right" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="padding: 16px 20px;">
+                  <i class="fad fa-user-astronaut" style="font-size: 25px;"></i> <i class="far fa-angle-down" style="font-size: 20px; margin-left: 15px;"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-user-astronaut topnav-icon"></i> Profile</a>
+                  <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-cog topnav-icon"></i> Settings</a>
+                  <a class="dropdown-item topnav-dropdown-item" href="https://github.com/Meshbits/Shurli/issues/new" target="_blank"><i class="fad fa-brackets-curly topnav-icon"></i> Request a Feature</a>
+                </div>
+              </li>
+          </ul>
+        </div>
+        {{/* <form class="form-inline">
             {{template "menu-button-array"}}
-        </form>
+        </form> */}}
     </nav>
 
-    <div class="container-fluid" style="margin-top: 15px;">
+    <div class="container-fluid" style="margin-top: 60px;">
     
 
       <div class="row justify-content-md-center" style="margin-bottom: 1em;">
 
         {{template "bs-order-stepper"}}
 
-        <div class="col-lg-4 col-md-4 mb-2">
+        <div class="col-xl-10"> <!-- div for form start -->
+          <div class="form-row"> <!-- form-row start -->
+            
+            <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- rel trading pair div start -->
+              <div class="card text-white bg-dark {{.BaseIcon}}-color" style="border-radius: 12px;"> <!-- rel trading pair card start -->
+                <div class="card-header" style="padding: 2px 10px; border-radius: 12px 12px 0px 0px;"> <!-- rel trading pair header start -->
+                  <div class="row">
+                    <div class="col-3 text-left">
+                      <small>SEND</small>
+                    </div>
+                    <div class="col-9 text-right">
+                      <small>{{.BaseBal}} - CURRENT BALANCE</small>
+                    </div>
+                  </div>
+                </div> <!-- rel trading pair header end -->
+                <div class="card-body" style="padding: 3px;">
+                  <div class="row"> <!-- card-body row start -->
+                    <div class="col-6 text-center vertical-center" style="padding: 3px;">
+                      <label for="coin_base"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:35px; {{if eq .BaseIcon ""}} display: none; {{end}} padding: 0;'/></label>
+                      <span style="font-size: 20px; padding: 5px 20px; position: absolute;">{{.Base}}</span>
+                    </div>
+                    <div class="col-6 text-right">
+                      <input type="number" step="0.000001000" min="0" max="{{.BaseBal}}" id="total" name="total" class="form-control ordid-input" autocomplete="off" required/>
+                    </div>
+                  </div> <!-- card-body row end -->
+                </div>
+                <div class="card-footer text-center orderid-footer">
+                  <small><i class="fad fa-info-circle"></i> Total {{.Base}} it will cost to buy {{.Rel}} amount.</small>
+                </div>
+              </div> <!-- rel trading pair card end -->
+            </div> <!-- rel trading pair div end -->
+            
+            <div class="form-group col-xl-2 col-lg-2 col-md-12 col-sm-12 text-center change-pair-center"> <!-- exchange button div start -->
+              <button class="btn btn-lg text-white change-pair" disabled style="opacity: 1;"><span class="fad fa-chevron-double-right"></span></button>
+            </div> <!-- exchange button div end -->
+
+            <div class="form-group col-xl-5 col-lg-5 col-md-12 col-sm-12"> <!-- base trading pair div start -->
+              <div class="card text-white bg-dark {{.RelIcon}}-color" style="border-radius: 12px;"> <!-- base trading pair card start -->
+                <div class="card-header" style="padding: 2px 10px; border-radius: 12px 12px 0px 0px;"> <!-- rel trading pair header start -->
+                  <div class="row">
+                    <div class="col-3 text-left">
+                      <small>RECEIVE</small>
+                    </div>
+                    <div class="col-9 text-right">
+                      <small>{{.RelBal}} - CURRENT BALANCE</small>
+                    </div>
+                  </div>
+                </div> <!-- rel trading pair header end -->
+                <div class="card-body" style="padding: 3px;">
+                  <div class="row"> <!-- card-body row start -->
+                    <div class="col-6 text-center vertical-center" style="padding: 3px;">
+                      <label for="coin_rel"><img src='/assets/coins/{{.RelIcon}}.png' style='width:35px; {{if eq .RelIcon ""}} display: none; {{end}} padding: 0;'/></label>
+                      <span style="font-size: 20px; padding: 5px 20px; position: absolute;">{{.Rel}}</span>
+                    </div>
+                    <div class="col-6 text-right" >
+                      <input type="number" step="0.000001000" min="0" max="{{.MaxVolume}}" id="amount" name="amount" class="form-control ordid-input" autocomplete="off" required/>
+                    </div>
+                  </div> <!-- card-body row end -->
+                </div>
+                <div class="card-footer text-center orderid-footer">
+                  <small><i class="fad fa-info-circle"></i> Max volume you can buy with this order: {{.MaxVolume}} {{.Rel}}</small>
+                </div>
+              </div> <!-- base trading pair card end -->
+            </div> <!-- base trading pair div end -->
+
+          </div> <!-- form-row end -->
+
+        </div> <!-- div for form end -->
+
+        <div class="col-xl-12 vertical-center text-center mt-5">
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+              <small style="color: #8894a1">Sending</small><br>
+              <span style="font-size: 35px;" class="sending_base mr-2"></span> <span style="font-size: 35px;">{{.Base}}</span>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left">
+              <small style="color: #8894a1">Receiving</small><br>
+              <span style="font-size: 35px;" class="sending_rel mr-2"></span> <span style="font-size: 35px;">{{.Rel}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
+              <form action="/orderbook/swap/" id="orderform" method="GET">
+                <button type="submit" class="btn btn-primary btn-buyorder" style="width: 300px;">Buy {{.Rel}}</button>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Expiring In: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left"><span class="timestamp" data-timestamp="{{.Timestamp}}"></span></span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Your estimated rate: </span>
+                <span class="col-6 text-left">1 {{.Base}} = <span class="estimated-rate"></span> {{.Rel}} </span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Miner Fee: </span>
+                <span class="col-6 text-left">0.00001000 {{.Rel}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Shurli's Subatomic Swap Fee (Exchange Fee): </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">0 = No Fee = Free! 🚀</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Buying From: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{if .Authorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.Handle}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Order ID: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.OrderID}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Price: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.Price}} {{.Base}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <div class="row">
+                <span style="color: #8894a1" class="col-6 text-right">Max Volume: </span>
+                <span style="font-weight: bolder;" class="col-6 text-left">{{.MaxVolume}} {{.Rel}}</span>
+              </div>
+            </div>
+            <div class="col-xl-12 mt-2">
+              <form action="/orderbook" method="POST">
+                <input type="hidden" name="coin_base" value="{{.Rel}}">
+                <input type="hidden" name="coin_rel" value="{{.Base}}">
+                <input type="hidden" name="result_limit" value="100">
+                <input type="hidden" name="sortby" value="soon">
+                <button type="submit" class="btn btn-sm btn-outline-secondary" style=""><i class="fad fa-backward"></i> back to order list</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {{/* <div class="col-lg-4 col-md-4 mb-2">
 
           <div class="card text-white bg-dark mb-2">
             <div class="card-header">
@@ -24,11 +210,11 @@
               <table class="table table-dark table-striped table-card">
                 <tr>
                   <td>{{.Base}}</td>
-                  <td>{{if not .ZBase}} {{if eq .Base "PIRATE"}} {{.ZBaseBal}} {{.Base}} {{else}} {{.BaseBal}} {{.Base}} {{end}} {{else}} {{.ZBaseBal}} {{.Base}} {{end}}</td>
+                  <td>{{.BaseBal}} {{.Base}}</td>
                 </tr>
                 <tr>
                   <td>{{.Rel}}</td>
-                  <td>{{if not .ZRel}} {{if eq .Rel "PIRATE"}} {{.ZRelBal}} {{.Rel}} {{else}} {{.RelBal}} {{.Rel}} {{end}} {{else}} {{.ZRelBal}} {{.Rel}} {{end}}</td>
+                  <td>{{.RelBal}} {{.Rel}}</td>
                 </tr>
               </table>
             </div>
@@ -116,7 +302,7 @@
                 </div>
             </div> <!-- OrderData card end -->
         </div> <!-- OrderData div end -->
-      </div>
+      </div> */}}
     
     </div>
 {{template "footer-scripts"}}
@@ -148,21 +334,28 @@
           //$(cardOrderClass).remove();
           $(timestamp_el).eq(i).html('<span class="badge badge-warning">ORDER EXPIRED</span>');
           $('.btn-buyorder').addClass('disabled');
+          $('.btn-buyorder').attr('disabled', true);
         }
       }
     }, interval);
+
+    // What 1 Base Unit will get Rel amount
+    let singleUnitWillGet = (1 / {{.Price}}) - 0.00001000;
+    $('.estimated-rate').text(singleUnitWillGet.toFixed(8));
 
   });
 
   $('#amount').on('input', function() {
       //console.log($("#amount").val())
       if ($("#amount").val() > {{.MaxVolume}}) {
-        //console.log("value can not be greater than: {{.MaxVolume}}");
+        console.log("Amount: value can not be greater than: {{.MaxVolume}}");
         $("#amount").val({{.MaxVolume}})
         $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/{{.MaxVolume}}'+ '/' + $("#total").val())
       }
       total = $("#amount").val() * {{.Price}}
       $('#total').val(parseFloat(total.toFixed(8)));
+      $('.sending_base').text(parseFloat(total.toFixed(8)));
+      $('.sending_rel').text($("#amount").val());
       $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val()+ '/' + $("#total").val())
   });
 
@@ -170,12 +363,14 @@
       //console.log($("#total").val())
       maxtotal = {{.MaxVolume}} * {{.Price}}
       if ($("#total").val() > maxtotal) {
-        $("#total").val(parseFloat(maxtotal.toFixed(8)))
-        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val() + '/' + $("#total").val())
-        //console.log("value can not be greater than:" + maxtotal);
+        $("#total").val(parseFloat(maxtotal.toFixed(8)));
+        $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + $("#amount").val() + '/' + $("#total").val());
+        console.log("Total: value can not be greater than:" + maxtotal);
       }
       amount = $("#total").val() / {{.Price}}
       $('#amount').val(parseFloat(amount.toFixed(8)));
+      $('.sending_rel').text(parseFloat(amount.toFixed(8)))
+      $('.sending_base').text($("#total").val());
       $('#orderform').attr('action', '/orderbook/swap/{{.OrderID}}/' + parseFloat(amount.toFixed(8)) + '/' + $("#total").val())
   });
 

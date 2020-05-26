@@ -1,0 +1,100 @@
+{{template "header"}}
+
+    <nav class="navbar fixed-top navbar-expand navbar-dark topnav-dark bg-dark">
+      <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            {{/* <li class="nav-item">
+                <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+            </li> */}}
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/"><i class="fad fa-rocket-launch topnav-icon"></i> Dashboard <span class="sr-only">(current)</span></a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link"></div>
+                <a class="nav-link" href="/orderbook"><i class="fad fa-exchange-alt topnav-icon"></i> Trade</a>
+              </div>
+            </li>
+            <li class="nav-item active">
+              <div class="topnav-item" style="position: relative;">
+                <div class="topnav-link topnav-active"></div>
+                <a class="nav-link" href="/history"><i class="fad fa-history topnav-icon"></i> Trade History</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle dropdown-toggle-right" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="padding: 16px 20px;">
+                  <i class="fad fa-user-astronaut" style="font-size: 25px;"></i> <i class="far fa-angle-down" style="font-size: 20px; margin-left: 15px;"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-user-astronaut topnav-icon"></i> Profile</a>
+                  <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-cog topnav-icon"></i> Settings</a>
+                  <a class="dropdown-item topnav-dropdown-item" href="https://github.com/Meshbits/Shurli/issues/new" target="_blank"><i class="fad fa-brackets-curly topnav-icon"></i> Request a Feature</a>
+                </div>
+              </li>
+          </ul>
+        </div>
+        {{/* <form class="form-inline">
+            {{template "menu-button-array"}}
+        </form> */}}
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 75px;">
+
+        <div class="row" style="margin-bottom: 1em;">
+          <div class="col-12">
+            {{/* <h5>Trade History</h5> */}}
+            <table class="table table-md table-striped table-dark table-no-bg table-borderless" data-toggle="table" data-search="true" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]">
+              <thead>
+                <tr>
+                  <th><span style="color: #ffffff5c;">DATE</span></th>
+                  <th><span style="color: #ffffff5c;">SOLD</span></th>
+                  <th><span style="color: #ffffff5c;">TRADE PAIR</span></th>
+                  <th><span style="color: #ffffff5c;">BOUGHT</span></th>
+                  <th><span style="color: #ffffff5c;">Bought From</span></th>
+                  <th><span style="color: #ffffff5c;">STATUS</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .}}
+                <tr>
+                  <td>{{.TimeStamp}}</td>
+                  <td>{{.BaseAmount}} <span style="color: #ffffff5c;">{{.Base}}</td>
+                  <td>
+                    <div class="row">
+                      <div>
+                        </span> <a href="{{.BaseExplorer}}tx/{{.BaseTxID}}" target="_blank"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
+                      </div>
+                      <div>
+                        <i class="fas fa-arrow-right" style="color: #ffffff5c;"></i>
+                      </div>
+                      <div>
+                        <a href="{{.RelExplorer}}tx/{{.RelTxID}}" target="_blank"><img src='/assets/coins/{{.RelIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{.RelAmount}} <span style="color: #ffffff5c;">{{.Rel}}</span></td>
+                  <td><span style="font-weight: bolder;" class="col-6 text-left" data-toggle="tooltip" data-placement="top" title="{{.BobPubkey}}">{{if .BobAuthorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.BobID}}</span></td>
+                  <td>{{if eq .Status "COMPLETE"}} <span class="text-success">{{.Status}}</span> {{else}} <span class="text-danger">{{.Status}}</span> {{end}}</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
+    </div>
+
+{{template "footer-scripts"}}
+{{template "footer"}}
+
