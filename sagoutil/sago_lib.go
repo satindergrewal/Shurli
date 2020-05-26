@@ -21,15 +21,17 @@ import (
 
 // WInfo type stores data to display on Wallet info screen
 type WInfo struct {
-	Name     string
-	Ticker   string
-	Icon     string
-	Status   string
-	Balance  float64
-	ZBalance float64
-	Blocks   int
-	Synced   bool
-	Shielded bool
+	Name       string
+	Ticker     string
+	Icon       string
+	Status     string
+	Balance    float64
+	ZBalance   float64
+	Blocks     int
+	Synced     bool
+	Shielded   bool
+	TValidAddr bool
+	ZValidAddr bool
 }
 
 // WalletInfo method returns processed data to display on Dashboard
@@ -40,8 +42,8 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 	stats, err := kmdgo.NewAppType("DEX").DEXStats()
 	if err != nil {
-		fmt.Printf("Code: %v\n", stats.Error.Code)
-		fmt.Printf("Message: %v\n\n", stats.Error.Message)
+		Log.Printf("Code: %v\n", stats.Error.Code)
+		Log.Printf("Message: %v\n\n", stats.Error.Message)
 		// log.Fatalln("Err happened", err)
 	}
 
@@ -81,22 +83,22 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 			// fmt.Printf("Code: %v\n", info.Error.Code)
 			// fmt.Printf("Message: %v\n\n", info.Error.Message)
 			if info.Error.Message == "Loading block index..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Loading...", 0.0, 0, 0, false, false})
+				Log.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Loading...", 0.0, 0, 0, false, false, false, false})
 			} else if info.Error.Message == "Rescanning..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rescanning...", 0.0, 0, 0, false, false})
+				Log.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rescanning...", 0.0, 0, 0, false, false, false, false})
 			} else if info.Error.Message == "Rewinding blocks if needed..." {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rewinding blocks if needed...", 0.0, 0, 0, false, false})
+				Log.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Rewinding blocks if needed...", 0.0, 0, 0, false, false, false, false})
 			} else {
-				fmt.Println(v, "- Err happened:", err)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false})
+				Log.Println(v, "- Err happened:", err)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false, false, false})
 			}
 		} else {
 			if info.Error.Message == "connection refused" {
-				fmt.Println(v, "- Err happened:", info.Error.Message)
-				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false})
+				Log.Println(v, "- Err happened:", info.Error.Message)
+				wallets = append(wallets, WInfo{coinConfInfo.Name, coinConfInfo.Ticker, tmpicon, "Offline", 0.0, 0, 0, false, false, false, false})
 			} else {
 
 				// Check status of the blockchain sync
@@ -105,9 +107,19 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				var gb kmdgo.GetBlockchainInfo
 				gb, err := appName.GetBlockchainInfo()
 				if err != nil {
-					fmt.Printf("Code: %v\n", gb.Error.Code)
-					fmt.Printf("Message: %v\n\n", gb.Error.Message)
-					fmt.Println("Err happened", err)
+					Log.Printf("Code: %v\n", gb.Error.Code)
+					Log.Printf("Message: %v\n\n", gb.Error.Message)
+					Log.Println("Err happened", err)
+				}
+
+				// Validate Transaparent Address
+				var vldadr kmdgo.ValidateAddress
+				taddress := stats.Result.Recvaddr
+				vldadr, err = appName.ValidateAddress(taddress)
+				if err != nil {
+					Log.Printf("Code: %v\n", vldadr.Error.Code)
+					Log.Printf("Message: %v\n\n", vldadr.Error.Message)
+					log.Fatalln("Err happened", err)
 				}
 
 				if math.Round(gb.Result.Verificationprogress) != 1 {
@@ -131,10 +143,21 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					//args[1] = 1
 					// fmt.Println(args)
 
-					zblc, err := appName.ZGetBalance(args)
+					// Validate if Shielded adddress is = ismine
+					var zvldadr kmdgo.ZValidateAddress
+					zaddress := stats.Result.RecvZaddr
+					zvldadr, err := appName.ZValidateAddress(zaddress)
 					if err != nil {
-						fmt.Printf("Code: %v\n", zblc.Error.Code)
-						fmt.Printf("Message: %v\n\n", zblc.Error.Message)
+						Log.Printf("Code: %v\n", zvldadr.Error.Code)
+						Log.Printf("Message: %v\n\n", zvldadr.Error.Message)
+						log.Fatalln("Err happened", err)
+					}
+
+					// Get balance of Shielded address
+					zblc, err = appName.ZGetBalance(args)
+					if err != nil {
+						Log.Printf("Code: %v\n", zblc.Error.Code)
+						Log.Printf("Message: %v\n\n", zblc.Error.Message)
 						// log.Fatalln("Err happened", err)
 					}
 
@@ -143,27 +166,30 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					// fmt.Printf("\n%0.8f\n", zblc.Result)
 
 					wallets = append(wallets, WInfo{
-						Name:     coinConfInfo.Name,
-						Ticker:   coinConfInfo.Ticker,
-						Icon:     strings.ToLower(coinConfInfo.Ticker),
-						Status:   "Online",
-						ZBalance: zblc.Result,
-						Balance:  info.Result.Balance,
-						Blocks:   info.Result.Blocks,
-						Synced:   tempSyncStatus,
-						Shielded: coinConfInfo.Shielded,
+						Name:       coinConfInfo.Name,
+						Ticker:     coinConfInfo.Ticker,
+						Icon:       strings.ToLower(coinConfInfo.Ticker),
+						Status:     "Online",
+						ZBalance:   zblc.Result,
+						Balance:    info.Result.Balance,
+						Blocks:     info.Result.Blocks,
+						Synced:     tempSyncStatus,
+						Shielded:   coinConfInfo.Shielded,
+						TValidAddr: vldadr.Result.Ismine,
+						ZValidAddr: zvldadr.Result.Ismine,
 					})
 
 				} else {
 					wallets = append(wallets, WInfo{
-						Name:     coinConfInfo.Name,
-						Ticker:   coinConfInfo.Ticker,
-						Icon:     strings.ToLower(coinConfInfo.Ticker),
-						Status:   "Online",
-						Balance:  info.Result.Balance,
-						Blocks:   info.Result.Blocks,
-						Synced:   tempSyncStatus,
-						Shielded: coinConfInfo.Shielded,
+						Name:       coinConfInfo.Name,
+						Ticker:     coinConfInfo.Ticker,
+						Icon:       strings.ToLower(coinConfInfo.Ticker),
+						Status:     "Online",
+						Balance:    info.Result.Balance,
+						Blocks:     info.Result.Blocks,
+						Synced:     tempSyncStatus,
+						Shielded:   coinConfInfo.Shielded,
+						TValidAddr: vldadr.Result.Ismine,
 					})
 				}
 
@@ -229,7 +255,7 @@ func DEXHandles() []DEXHandle {
 			// Checking if the found pubkey is authorized in subatomic.json pubkey list
 			authorized, err := MatchedAuthorized(v.Decrypted)
 			if err != nil {
-				log.Fatal(err)
+				Log.Fatal(err)
 			}
 			// fmt.Println(authorized)
 
@@ -310,25 +336,25 @@ func MatchedAuthorized(pubkey string) (bool, error) {
 
 // OrderData type is used to get formated data to display on Orderbook page
 type OrderData struct {
-	Price        string
-	MaxVolume    string
-	DexPubkey    string
-	Base         string
-	ZBase        bool
-	Rel          string
-	ZRel         bool
-	OrderID      int64
-	TimestampStr string
-	Timestamp    string
-	Handle       string
-	Pubkey       string
-	Authorized   bool
-	BaseBal      float64
-	ZBaseBal     float64
-	RelBal       float64
-	ZRelBal      float64
-	BaseIcon     string
-	RelIcon      string
+	Price        string  `json:"price"`
+	MaxVolume    string  `json:"max_volume"`
+	DexPubkey    string  `json:"dex_pubkey"`
+	Base         string  `json:"base"`
+	ZBase        bool    `json:"zbase"`
+	Rel          string  `json:"rel"`
+	ZRel         bool    `json:"zrel"`
+	OrderID      int64   `json:"orderid"`
+	TimestampStr string  `json:"timestampstr"`
+	Timestamp    string  `json:"timestamp"`
+	Handle       string  `json:"handle"`
+	Pubkey       string  `json:"pubkey"`
+	Authorized   bool    `json:"authorized"`
+	BaseBal      float64 `json:"basebal"`
+	ZBaseBal     float64 `json:"zbasebal"`
+	RelBal       float64 `json:"relbal"`
+	ZRelBal      float64 `json:"zrelbal"`
+	BaseIcon     string  `json:"baseicon"`
+	RelIcon      string  `json:"relicon"`
 }
 
 func IsLower(s string) bool {

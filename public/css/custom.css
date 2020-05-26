@@ -35,7 +35,25 @@ body {
 }
 
 .table-md td, .table-md th {
-    padding: .5rem;
+	padding: .5rem;
+	vertical-align: middle;
+}
+
+.page-link {
+	color: #ffffff;
+    background-color: #00162600;
+    border: 1px solid #ffffff33;
+}
+
+.page-link:hover {
+	color: #ffffff;
+    background-color: #ffffff14;
+    border-color: #ffffff33;
+}
+
+.page-item.active .page-link {
+	background-color: #0f4173;
+    border-color: #ffffff4a;
 }
 
 .card {
@@ -290,6 +308,27 @@ button.btn.dropdown-toggle.sort-by.btn-dark:focus {
     border-radius: 0px 0px 12px 12px;
     background-color: #00000029;
     color: #ffffff9c;
+}
+
+.popover, .modal-content {
+	background-color: #234261;
+}
+
+.bs-popover-auto[x-placement^=right]>.arrow::after, .bs-popover-right>.arrow::after {
+	border-right-color: #234261;
+}
+
+.popover-header {
+	background-color: #234261;
+	border-bottom: 1px solid #ffffff4f;
+}
+
+.popover-body {
+	color: #ffffff;
+}
+
+.modal-footer {
+	border-top: 1px solid #ffffff4f;
 }
 
 .arrr-color {

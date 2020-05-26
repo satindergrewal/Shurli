@@ -3,28 +3,31 @@ package sagoutil
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // SwapStatus defines the data type to store filtered data and push to application in JSON format for UI side rendering.
 type SwapStatus struct {
-	State      string  `json:"state,omitempty"`
-	StateID    string  `json:"state_id,omitempty"`
-	Status     string  `json:"status,omitempty"`
-	StateHash  string  `json:"state_hash,omitempty"`
-	BaseTxID   string  `json:"base_txid,omitempty"`
-	RelTxID    string  `json:"rel_txid,omitempty"`
-	SwapID     string  `json:"swap_id,omitempty"`
-	SendToAddr string  `json:"sendtoaddr,omitempty"`
-	RecvAddr   string  `json:"recvaddr,omitempty"`
-	Base       string  `json:"base,omitempty"`
-	Rel        string  `json:"rel,omitempty"`
-	BaseAmount float64 `json:"base_amount,omitempty"`
-	RelAmount  float64 `json:"rel_amount,omitempty"`
+	State        string  `json:"state,omitempty"`
+	StateID      string  `json:"state_id,omitempty"`
+	Status       string  `json:"status,omitempty"`
+	StateHash    string  `json:"state_hash,omitempty"`
+	BaseTxID     string  `json:"base_txid,omitempty"`
+	RelTxID      string  `json:"rel_txid,omitempty"`
+	SwapID       string  `json:"swap_id,omitempty"`
+	SendToAddr   string  `json:"sendtoaddr,omitempty"`
+	RecvAddr     string  `json:"recvaddr,omitempty"`
+	Base         string  `json:"base,omitempty"`
+	Rel          string  `json:"rel,omitempty"`
+	BaseAmount   float64 `json:"base_amount,omitempty"`
+	RelAmount    float64 `json:"rel_amount,omitempty"`
+	SwapFullData string  `json:"swap_full_data,omitempty"`
 }
 
 //ZFrom to render the JSON data from "from." log entery coming from subatomic stdout
@@ -36,9 +39,28 @@ type ZFrom []struct {
 
 // SwapHistory type stores the single object from Swaps logs history
 type SwapHistory struct {
-	SwapID    string       `json:"swapid"`
-	TimeStamp string       `json:"timestamp"`
-	SwapLog   []SwapStatus `json:"swaplog"`
+	SwapID           string       `json:"swapid"`
+	TimeStamp        string       `json:"timestamp"`
+	Base             string       `json:"base"`
+	Rel              string       `json:"rel"`
+	BaseAmount       float64      `json:"baseamount"`
+	RelAmount        float64      `json:"relamount"`
+	BaseTxID         string       `json:"basetxid"`
+	RelTxID          string       `json:"reltxid"`
+	Status           string       `json:"status"`
+	BobID            string       `json:"bobid"`
+	BobPubkey        string       `json:"bobpubkey"`
+	BobAuthorized    bool         `json:"bobauthorized"`
+	OrderIDTimeStamp string       `json:"orderidtimestamp"`
+	OrderPrice       float64      `json:"orderprice"`
+	OrderMaxVolume   float64      `json:"ordermaxvolume"`
+	BaseIcon         string       `json:"baseicon"`
+	RelIcon          string       `json:"relicon"`
+	BaseExplorer     string       `json:"baseexplorer"`
+	RelExplorer      string       `json:"relexplorer"`
+	ZBase            bool         `json:"zbase"`
+	ZRel             bool         `json:"zrel"`
+	SwapLog          []SwapStatus `json:"swaplog,omitempty"`
 }
 
 // SwapsHistory type is used as collection of SwapHistory objects
@@ -62,7 +84,7 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		fnid := strings.Split(fn[1], ".")
 		timestamp := fn[0]
 		swapid := fnid[0]
-		// fmt.Printf("\ntimestamp: %s\nswapid: %s\n", timestamp, swapid)
+		// fmt.Printf("\ntimestamp: %s\nswapid: %s\n", fn, fnid)
 
 		fileRead, err := ioutil.ReadFile("swaplogs/" + file.Name())
 		if err != nil {
@@ -70,25 +92,88 @@ func (history SwapsHistory) SwapsHistory() (SwapsHistory, error) {
 		}
 
 		logval, _ := SwapLogFilter(string(fileRead), "full")
-		// fmt.Println(logval)
+		// fmt.Println("logval", logval)
 		var _logval []SwapStatus
 		err = json.Unmarshal([]byte(logval), &_logval)
 		if err != nil {
 			log.Println(err)
 		}
 
+		// fmt.Println(len(_logval))
+		// fmt.Println(_logval[6].RelTxID)
+
+		var reltxid, basetxid, swapstatus string
+		swapstatus = "INCOMPLETE"
+		for _, v := range _logval {
+			// fmt.Println(v.State)
+			// fmt.Println(v.Status)
+			if v.RelTxID != "" {
+				reltxid = v.RelTxID
+			}
+			if v.BaseTxID != "" {
+				basetxid = v.BaseTxID
+			}
+			if v.State == "SWAP COMPLETE" {
+				swapstatus = "COMPLETE"
+			}
+		}
+
+		var orderIDInfo []interface{}
+		json.Unmarshal([]byte(_logval[len(_logval)-1].SwapFullData), &orderIDInfo)
+
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+
+		// fmt.Println(orderIDInfo[5])
+		// fmt.Println("authorized: ", orderIDInfo[7].(map[string]interface{})["authorized"])
+
+		baseAmount, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[3]), 64)
+		relAmount, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[4]), 64)
+		authorized, err := strconv.ParseBool(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["authorized"]))
+		zbase, err := strconv.ParseBool(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["zbase"]))
+		zrel, err := strconv.ParseBool(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["zrel"]))
+		price, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["price"]), 64)
+		maxvolume, err := strconv.ParseFloat(fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["max_volume"]), 64)
+
+		timestampint, err := strconv.ParseInt(timestamp, 10, 64)
+		var unixTime int64 = timestampint
+		t := time.Unix(unixTime, 0)
+		// fmt.Println("t", t)
+		strDate := t.Format(time.UnixDate)
+		// fmt.Println(strDate)
+
 		history = append(history, SwapHistory{
-			SwapID:    swapid,
-			TimeStamp: timestamp,
-			SwapLog:   _logval,
+			SwapID:           swapid,
+			TimeStamp:        strDate,
+			Base:             fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["base"]),
+			Rel:              fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["rel"]),
+			BaseAmount:       baseAmount,
+			RelAmount:        relAmount,
+			BaseTxID:         basetxid,
+			RelTxID:          reltxid,
+			BobID:            fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["handle"]),
+			BobPubkey:        fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["pubkey"]),
+			BobAuthorized:    authorized,
+			OrderIDTimeStamp: fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["timestamp"]),
+			OrderPrice:       price,
+			OrderMaxVolume:   maxvolume,
+			BaseIcon:         fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["baseicon"]),
+			RelIcon:          fmt.Sprintf("%v", orderIDInfo[7].(map[string]interface{})["relicon"]),
+			BaseExplorer:     fmt.Sprintf("%v", orderIDInfo[5]),
+			RelExplorer:      fmt.Sprintf("%v", orderIDInfo[6]),
+			ZBase:            zbase,
+			ZRel:             zrel,
+			Status:           swapstatus,
+			// SwapLog:    _logval,
 		})
 		// fmt.Println("\n", history)
 	}
 
-	// var historyJSON string
-	// historyJSON, _ := json.Marshal(history)
-	// fmt.Println(len(history))
-	// historyJSON, _ := json.MarshalIndent(history, "", "  ")
+	// var historyJSON []byte
+	// // historyJSON, _ = json.Marshal(history)
+	// // fmt.Println(len(history))
+	// historyJSON, _ = json.MarshalIndent(history, "", "  ")
 	// fmt.Println(string(historyJSON))
 	// return string(historyJSON)
 	return history, nil
@@ -596,6 +681,22 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	} //else {
 	// fmt.Printf("length of dPowBcastSf is lower: %d\n", len(dPowBcastSf))
 	//}
+
+	// fmt.Println(`----`)
+	var expSwapData = regexp.MustCompile(`(?-s).*subatomic_cmd.*(?s)`)
+	SwapData := expSwapData.FindString(logString)
+	// fmt.Println(SwapData)
+	stateDone := SwapStatus{
+		SwapFullData: SwapData,
+	}
+
+	stateDoneJSON, _ := json.Marshal(stateDone)
+	if answer == "single" {
+		return string(stateDoneJSON), nil
+	}
+	if answer == "full" {
+		statuses = append(statuses, stateDone)
+	}
 
 	statusesJSON, _ := json.Marshal(statuses)
 	// fmt.Println(statusesJSON)

@@ -69,7 +69,22 @@
                   <tbody>
                   {{range .}}
                     <tr>
-                      <td scope="col"><img src='/assets/coins/{{.Icon}}.png' style='width:25px; margin: 0px 5px 0px 0px;'/> {{.Name}} <span style="color: #8894a1">{{.Ticker}}</span></td>
+                      <td scope="col">
+                        <img src='/assets/coins/{{.Icon}}.png' style='width:25px; margin: 0px 5px 0px 0px;'/> {{.Name}} <span style="color: #8894a1">{{.Ticker}}</span>
+                        {{if eq .Status "Online"}}
+                          {{if not .TValidAddr}}
+                            {{if eq .Ticker "ARRR"}} {{else}}
+                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" data-toggle="modal" data-target="#tvalidaddr-model"><i class="fas fa-engine-warning"></i> Public Address</button>
+                            {{end}}
+                          {{end}}
+                          {{if not .ZValidAddr}}
+                            {{if eq .Ticker "KMD"}} {{else}}
+                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" data-toggle="modal" data-target="#zvalidaddr-model"><i class="fas fa-engine-warning"></i> Shielded Address</button>
+                            {{end}}
+                          {{end}}
+                          </small></td>
+                        {{end}}
+                      </td>
                       <td scope="col">
                         {{if eq .Status "Online"}} <i class="fas fa-signal" style="color: #01ce01;"></i> Online 
                         {{else if eq .Status "Offline"}} <i class="fas fa-signal" style="color: #a2a2a2;"></i> Offline 
@@ -86,6 +101,37 @@
                   {{end}}
                   </tbody>
                 </table>
+
+                <!-- tvalidaddr Modal start -->
+                <div class="modal fade" id="tvalidaddr-model" tabindex="-1" role="dialog" aria-labelledby="tvalidaddr-modelLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        Public Address doesn't seem to be imported. Please make sure that it's imported in both blockchains DEX and the one which you got this notification for.
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- tvalidaddr Modal end -->
+
+                <!-- zvalidaddr Modal start -->
+                <div class="modal fade" id="zvalidaddr-model" tabindex="-1" role="dialog" aria-labelledby="zvalidaddr-modelLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        Shielded Address doesn't seem to be imported. Please make sure that it's imported in both blockchains DEX and the one which you got this notification for.
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- zvalidaddr Modal end -->
+
               </div> <!-- GetPeerInfo body end -->
             </div> <!-- GetPeerInfo card end -->
         </div> <!-- GetPeerInfo div end -->
@@ -96,3 +142,8 @@
 {{template "footer-scripts"}}
 {{template "footer"}}
 
+{{/* <script>
+  $(document).ready(function () {
+    $('[data-toggle="popover"]').popover()
+  });
+</script> */}}
