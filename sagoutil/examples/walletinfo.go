@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"kmdgo"
 
-	"github.com/satindergrewal/shurli/sagoutil"
+	"github.com/satindergrewal/kmdgo"
+
+	"github.com/Meshbits/shurli/sagoutil"
 )
 
 func main() {
