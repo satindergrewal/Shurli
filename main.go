@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"golang-practice/kmdutil"
+	"github.com/satindergrewal/kmdgo/kmdutil"
 	"io"
 	"io/ioutil"
 	"log"
