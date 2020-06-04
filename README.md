@@ -194,6 +194,18 @@ make build-osx
 Smiliar to Linux build, for Mac OS you'll find `dist/dist_osx` in `$HOME/go/src/github.com/Meshbits/shurli/`.
 You can rename, move or archive the `dist_osx` and distribute.
 
+##### Windows build
+
+To make Windows distributable build execute the following command:
+
+```shell
+cd %USERPROFILE%\go\src\github.com\Meshbits\shurli
+make build-win
+```
+
+You'll find the windows build files in `dist/dist_win`.
+
+
 ##### Clean build
 
 To clean all compiled files execute the following command:
