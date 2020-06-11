@@ -447,8 +447,8 @@ var upgrader = websocket.Upgrader{
 func echo(w http.ResponseWriter, r *http.Request) {
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
-	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
-	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
+	sagoutil.Log.Println("SubatomicExe:", conf.SubatomicExe)
+	sagoutil.Log.Println("SubatomicDir:", conf.SubatomicDir)
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
