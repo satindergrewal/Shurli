@@ -56,7 +56,7 @@ build-osx: deps
 build-win: deps
 	$(GITCMD) checkout grewal
 	$(MKDIR_P) $(DIST_WIN_PATH)
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
 	$(CP_AV) $(DIST_FILES) $(DIST_WIN_PATH)
 # docker-build:
 # 	docker run --rm -it -v "$(GOPATH)":/go -w /go/src/github.com/Meshbits/shurli golang:latest go build -o "$(BINARY_UNIX)" -v

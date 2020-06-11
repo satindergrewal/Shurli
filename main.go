@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/satindergrewal/kmdgo/kmdutil"
 	"io"
 	"io/ioutil"
 	"log"
@@ -19,6 +18,8 @@ import (
 	"syscall"
 	"text/template"
 	"time"
+
+	"github.com/satindergrewal/kmdgo/kmdutil"
 
 	"github.com/Meshbits/shurli/sagoutil"
 	"github.com/satindergrewal/kmdgo"
@@ -225,7 +226,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("Code: %v\n", info.Error.Code)
 			fmt.Printf("Message: %v\n\n", info.Error.Message)
-			log.Fatalln("Err happened", err)
+			log.Println("Err happened", err)
 		}
 		// fmt.Println(info)
 		fmt.Println("[Shurli] ", info.Result)
@@ -446,8 +447,8 @@ var upgrader = websocket.Upgrader{
 func echo(w http.ResponseWriter, r *http.Request) {
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
-	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
-	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
+	sagoutil.Log.Println("SubatomicExe:", conf.SubatomicExe)
+	sagoutil.Log.Println("SubatomicDir:", conf.SubatomicDir)
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

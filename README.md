@@ -101,6 +101,14 @@ After:
 "subatomic_dir": "/home/satinder/komodo/src"
 ```
 
+For Windows, make sure to use the following format for setting up `subatomic_dir` path:
+```json
+"subatomic_dir": "C:/Users/satinder/kmdsub"
+```
+
+Note that it's not backslash `\` but forward slash `/` for the path.
+If the format of this path would be incorrect, Shurli will have issue locating the `subatomic` binary on your machine.
+
 #### Configure DEX blockchain's parameters in `config.json` file
 
 You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvtaddr` in your **config.json** file before starting Shurli application.
