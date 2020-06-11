@@ -169,7 +169,12 @@ cd $HOME/go/src/github.com/Meshbits/shurli
 tail -f shurli.log
 ```
 
-you can press CTRL+C to cancel `tail` command's output.
+And Windows users can use the following command in PowerShell to check live shurli logs:
+```shell
+Get-Content .\shurli.log -Wait
+```
+
+you can press CTRL+C to cancel `tail` or `Get-Content` command's output.
 
 #### Making a release build
 
