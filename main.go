@@ -148,7 +148,7 @@ func main() {
 
 		// check if daemon already running.
 		if _, err := os.Stat(PIDFile); err == nil {
-			fmt.Println("Already running or ./daemonize.pid file exist.")
+			fmt.Println("Already running or ./shirli.pid file exist.")
 			os.Exit(1)
 		}
 
