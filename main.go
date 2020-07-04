@@ -411,6 +411,7 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 
 	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
+	log.Println(cmdString)
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
