@@ -30,6 +30,12 @@
 Follow this instruction guide and install `Komodo` and `subatomic` binaries on your system:
 https://gist.github.com/himu007/add3181427bb53ab5dc5160537f0c238
 
+#### Windows Komodo and Subatomic binaries
+At this stage, the required subatomic related API is only available via jl777's copy of komodo source code. So, you can either cross-compile the windows binaries and use those on your windows machine or you can try the debug komodo binaries we used in our development environment, which are available here:
+https://github.com/Meshbits/komodo/releases/tag/debug_release
+
+**It's best to not use these binaries for big amount of funds. Just use the linked `komodod` to start `DEX` blockchain which provides the required DEXP2P API. You can use other GUI wallets as usual for other subatomic supported cryptocurrencies.**
+
 ### Install Go on your system
 
 On Ubuntu can follow this guide: https://github.com/golang/go/wiki/Ubuntu
@@ -101,6 +107,14 @@ After:
 "subatomic_dir": "/home/satinder/komodo/src"
 ```
 
+For Windows, make sure to use the following format for setting up `subatomic_dir` path:
+```json
+"subatomic_dir": "C:/Users/satinder/kmdsub"
+```
+
+Note that it's not backslash `\` but forward slash `/` for the path.
+If the format of this path would be incorrect, Shurli will have issue locating the `subatomic` binary on your machine.
+
 #### Configure DEX blockchain's parameters in `config.json` file
 
 You MUST update value of `dex_pubkey`, `dex_handle`, `dex_recvzaddr`, `dex_recvtaddr` in your **config.json** file before starting Shurli application.
@@ -161,7 +175,12 @@ cd $HOME/go/src/github.com/Meshbits/shurli
 tail -f shurli.log
 ```
 
-you can press CTRL+C to cancel `tail` command's output.
+And Windows users can use the following command in PowerShell to check live shurli logs:
+```shell
+Get-Content .\shurli.log -Wait
+```
+
+you can press CTRL+C to cancel `tail` or `Get-Content` command's output.
 
 #### Making a release build
 

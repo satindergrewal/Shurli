@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/satindergrewal/kmdgo/kmdutil"
 	"io"
 	"io/ioutil"
 	"log"
@@ -19,6 +18,8 @@ import (
 	"syscall"
 	"text/template"
 	"time"
+
+	"github.com/satindergrewal/kmdgo/kmdutil"
 
 	"github.com/Meshbits/shurli/sagoutil"
 	"github.com/satindergrewal/kmdgo"
@@ -147,7 +148,7 @@ func main() {
 
 		// check if daemon already running.
 		if _, err := os.Stat(PIDFile); err == nil {
-			fmt.Println("Already running or ./daemonize.pid file exist.")
+			fmt.Println("Already running or ./shirli.pid file exist.")
 			os.Exit(1)
 		}
 
@@ -225,7 +226,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("Code: %v\n", info.Error.Code)
 			fmt.Printf("Message: %v\n\n", info.Error.Message)
-			log.Fatalln("Err happened", err)
+			log.Println("Err happened", err)
 		}
 		// fmt.Println(info)
 		fmt.Println("[Shurli] ", info.Result)
@@ -408,8 +409,9 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	orderDataJSON, _ := json.Marshal(orderData)
 	sagoutil.Log.Println("orderData JSON:", string(orderDataJSON))
 
-	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
+	cmdString := `[subatomic] ./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
+	log.Println(cmdString)
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
@@ -446,8 +448,8 @@ var upgrader = websocket.Upgrader{
 func echo(w http.ResponseWriter, r *http.Request) {
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
-	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
-	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
+	sagoutil.Log.Println("SubatomicExe:", conf.SubatomicExe)
+	sagoutil.Log.Println("SubatomicDir:", conf.SubatomicDir)
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -550,7 +552,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			w := bufio.NewWriter(f)
 
 			for s.Scan() {
-				sagoutil.Log.Printf("CMD Bytes: %s", s.Bytes())
+				sagoutil.Log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
+				log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
 				// c.WriteMessage(1, s.Bytes())
 
 				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()), "single")
@@ -582,9 +585,11 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			// }
 
 			if err := cmd.Wait(); err != nil {
-				sagoutil.Log.Println(err)
+				sagoutil.Log.Println("[subatomic]", err)
+				log.Println("[subatomic]", err)
 				c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
-				sagoutil.Log.Println("Wait")
+				sagoutil.Log.Println("[subatomic] Wait")
+				log.Println("[subatomic] Wait")
 				return
 			}
 		}
