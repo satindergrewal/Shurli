@@ -31,7 +31,7 @@ Follow this instruction guide and install `Komodo` and `subatomic` binaries on y
 https://gist.github.com/himu007/add3181427bb53ab5dc5160537f0c238
 
 #### Windows Komodo and Subatomic binaries
-At this stage, the required subatomic related API is only available via jl777's copy of komodo source code. So, you can either cross-compile the windows binaries and use those on your windows machine or you can try the debug komodo binaries we used in your development environment, which are available here:
+At this stage, the required subatomic related API is only available via jl777's copy of komodo source code. So, you can either cross-compile the windows binaries and use those on your windows machine or you can try the debug komodo binaries we used in our development environment, which are available here:
 https://github.com/Meshbits/komodo/releases/tag/debug_release
 
 **It's best to not use these binaries for big amount of funds. Just use the linked `komodod` to start `DEX` blockchain which provides the required DEXP2P API. You can use other GUI wallets as usual for other subatomic supported cryptocurrencies.**
