@@ -552,6 +552,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			for s.Scan() {
 				sagoutil.Log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
+				log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
 				// c.WriteMessage(1, s.Bytes())
 
 				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()), "single")
@@ -584,8 +585,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			if err := cmd.Wait(); err != nil {
 				sagoutil.Log.Println("[subatomic]", err)
+				log.Println("[subatomic]", err)
 				c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
 				sagoutil.Log.Println("[subatomic] Wait")
+				log.Println("[subatomic] Wait")
 				return
 			}
 		}
