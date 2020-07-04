@@ -409,7 +409,7 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	orderDataJSON, _ := json.Marshal(orderData)
 	sagoutil.Log.Println("orderData JSON:", string(orderDataJSON))
 
-	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
+	cmdString := `[subatomic] ./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
 	log.Println(cmdString)
 
