@@ -19,6 +19,9 @@ import (
 	"github.com/satindergrewal/kmdgo"
 )
 
+// DexP2pChain which shurli queries for DEXP2P API
+var DexP2pChain string = "SHURLI0"
+
 // WInfo type stores data to display on Wallet info screen
 type WInfo struct {
 	Name       string
@@ -40,7 +43,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 
 	// fmt.Println(chains)
 
-	stats, err := kmdgo.NewAppType("DEX").DEXStats()
+	stats, err := kmdgo.NewAppType(kmdgo.AppType(DexP2pChain)).DEXStats()
 	if err != nil {
 		Log.Printf("Code: %v\n", stats.Error.Code)
 		Log.Printf("Message: %v\n\n", stats.Error.Message)
@@ -218,8 +221,7 @@ func DEXHandles() []DEXHandle {
 
 	// handles = append(handles, DEXHandle{"03732f8ef851ff234c74d0df575c2c5b159e2bab3faca4ec52b3f217d5cda5361d", "satinder", "01b5d5b1991152fd45e4ba7005a5a752c2018634a9a6cdeb06b633e731e7b5f46b"})
 
-	var appName kmdgo.AppType
-	appName = `DEX`
+	appName := kmdgo.AppType(DexP2pChain)
 
 	var list kmdgo.DEXList
 
@@ -370,8 +372,7 @@ func IsLower(s string) bool {
 func OrderBookList(base, rel, maxentries, sortby string) []OrderData {
 	var orderList []OrderData
 
-	var appName kmdgo.AppType
-	appName = `DEX`
+	appName := kmdgo.AppType(DexP2pChain)
 
 	var obook kmdgo.DEXOrderbook
 
@@ -483,8 +484,7 @@ func OrderID(id string) OrderData {
 
 	var orderData OrderData
 
-	var appName kmdgo.AppType
-	appName = `DEX`
+	appName := kmdgo.AppType(DexP2pChain)
 
 	var orderid kmdgo.DEXGet
 
