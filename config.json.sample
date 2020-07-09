@@ -2,7 +2,7 @@
     "subatomic_exe": "./subatomic",
     "subatomic_dir": "/Users/satinder/repositories/jl777/komodo/src",
     "dex_nSPV": "1",
-    "dex_addnode": "136.243.58.134",
+    "dex_addnode": "67.207.76.33",
     "dex_pubkey": "03_YOUR_PUBKEY_FROM_DEX",
     "dex_handle": "SET_YOUR_HANDLE_FOR_SUBATOMIC",
     "dex_recvzaddr": "YOUR_PIRATE_PRIVATE_ADDRRESS",
