@@ -2,6 +2,8 @@
 
  Shurli App - alpha version
 
+## :warning: IMPORTANT NOTE: Please use only small amounts of funds in your wallet while testing subatomic swaps
+
 ## :warning: This is in alpha phase right now so please expect breaking changes.
 
 
