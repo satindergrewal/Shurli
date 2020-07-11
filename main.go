@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -197,8 +198,22 @@ func main() {
 			dexhandle := "-handle=" + conf.DexHandle
 			dexrecvzaddr := "-recvZaddr=" + conf.DexRecvZAddr
 			dexrecvtaddr := "-recvTaddr=" + conf.DexRecvTAddr
-			dexcmd := exec.Command("komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
-			dexcmd.Start()
+			dexcmd := exec.Command("assets/komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			if runtime.GOOS == "windows" {
+				dexcmd = exec.Command("assets/komodod.exe", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			}
+			// fmt.Println(conf.SubatomicDir)
+			// dexcmd.Dir = conf.SubatomicDir
+			// out, err := dexcmd.Output()
+			// if err != nil {
+			// 	log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			// } else {
+			// 	fmt.Printf("%s", out)
+			// }
+			err := dexcmd.Start()
+			if err != nil {
+				log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			}
 			fmt.Println("[Shurli] Started "+DexP2pChain+" komodod. Process ID is : ", dexcmd.Process.Pid)
 			fmt.Println("[Shurli] " + DexP2pChain + " chain params: ")
 			// fmt.Println("\t" + DexP2pChain + " nSPV: ", conf.DexNSPV)
@@ -509,8 +524,20 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 			// Create the command with our context
-			cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[1], "", parsed[2], parsed[3])
-			cmd.Dir = conf.SubatomicDir
+			cmd := exec.CommandContext(ctx, "./subatomic", parsed[1], "", parsed[2], parsed[3])
+			if runtime.GOOS == "windows" {
+				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
+			}
+			// cmd.Dir = conf.SubatomicDir
+			dir, err := os.Getwd()
+			if err != nil {
+				log.Fatal(err)
+			}
+			sagoutil.Log.Println(dir)
+			exPath := filepath.Join(dir, "assets")
+			os.Chdir(exPath)
+			sagoutil.Log.Println(exPath)
+
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
 				sagoutil.Log.Println(err)
