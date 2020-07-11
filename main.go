@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -197,9 +198,22 @@ func main() {
 			dexhandle := "-handle=" + conf.DexHandle
 			dexrecvzaddr := "-recvZaddr=" + conf.DexRecvZAddr
 			dexrecvtaddr := "-recvTaddr=" + conf.DexRecvTAddr
-			dexcmd := exec.Command("komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
-			dexcmd.Dir = conf.SubatomicDir
-			dexcmd.Start()
+			dexcmd := exec.Command("assets/komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			if runtime.GOOS == "windows" {
+				dexcmd = exec.Command("assets/komodod.exe", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			}
+			// fmt.Println(conf.SubatomicDir)
+			// dexcmd.Dir = conf.SubatomicDir
+			// out, err := dexcmd.Output()
+			// if err != nil {
+			// 	log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			// } else {
+			// 	fmt.Printf("%s", out)
+			// }
+			err := dexcmd.Start()
+			if err != nil {
+				log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			}
 			fmt.Println("[Shurli] Started "+DexP2pChain+" komodod. Process ID is : ", dexcmd.Process.Pid)
 			fmt.Println("[Shurli] " + DexP2pChain + " chain params: ")
 			// fmt.Println("\t" + DexP2pChain + " nSPV: ", conf.DexNSPV)
