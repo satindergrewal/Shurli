@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/satindergrewal/kmdgo/kmdutil"
 	"io"
 	"io/ioutil"
 	"log"
@@ -14,11 +13,14 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
 	"text/template"
 	"time"
+
+	"github.com/satindergrewal/kmdgo/kmdutil"
 
 	"github.com/Meshbits/shurli/sagoutil"
 	"github.com/satindergrewal/kmdgo"
@@ -35,6 +37,9 @@ type ShurliInfo struct {
 	AppVersion string `json:"appversion"`
 	AppPhase   string `json:"appphase"`
 }
+
+// DexP2pChain which shurli queries for DEXP2P API
+var DexP2pChain string = "SHURLI0"
 
 // ShurliApp stores the information about applications
 var ShurliApp = ShurliInfo{
@@ -147,7 +152,7 @@ func main() {
 
 		// check if daemon already running.
 		if _, err := os.Stat(PIDFile); err == nil {
-			fmt.Println("Already running or ./daemonize.pid file exist.")
+			fmt.Println("Already running or ./shirli.pid file exist.")
 			os.Exit(1)
 		}
 
@@ -165,13 +170,13 @@ func main() {
 		// - "DEX" blockchain is already running
 		// - or the previous process did not delete the "komodo.pid" file before exiting due to some reason, i.e. daemon crash etc.
 		// 		- In this case, just delete the "komodo.pid" file and next time "shurli" should be able to start "DEX" blockchain.
-		appName := "DEX"
+		appName := DexP2pChain
 		dir := kmdutil.AppDataDir(appName, false)
 		// fmt.Println(dir)
 		// If "DEX" blockchain is running already, print notification
 		if _, err := os.Stat(dir + "/komodod.pid"); err == nil {
-			fmt.Println("[Shurli] DEX blockchain already running or DEX pid file exist.")
-			sagoutil.Log.Println("[Shurli] DEX blockchain already running or DEX pid file exist.")
+			fmt.Println("[Shurli] " + DexP2pChain + " blockchain already running or " + DexP2pChain + " pid file exist.")
+			sagoutil.Log.Println("[Shurli] " + DexP2pChain + " blockchain already running or " + DexP2pChain + " pid file exist.")
 			os.Exit(1)
 		} else {
 			// If "DEX" blockchain isn't found running already, start it in daemon mode.
@@ -182,31 +187,47 @@ func main() {
 			// fmt.Prinln("DexHandle: " conf.DexHandle)
 			// fmt.Prinln("DexRecvzaddr: " conf.DexRecvzaddr)
 			// fmt.Prinln("DexRecvtaddr: " conf.DexRecvtaddr)
-			dexnspv := "-nSPV=" + conf.DexNSPV
-			if conf.DexNSPV == "0" {
-				dexnspv = ""
-			}
+
+			// dexnspv := "-nSPV=" + conf.DexNSPV
+			// if conf.DexNSPV == "0" {
+			// 	dexnspv = ""
+			// }
+			acname := "-ac_name=" + DexP2pChain
 			dexaddnode := "-addnode=" + conf.DexAddnode
 			dexpubkey := "-pubkey=" + conf.DexPubkey
 			dexhandle := "-handle=" + conf.DexHandle
 			dexrecvzaddr := "-recvZaddr=" + conf.DexRecvZAddr
 			dexrecvtaddr := "-recvTaddr=" + conf.DexRecvTAddr
-			dexcmd := exec.Command("komodod", "-ac_name=DEX", "-daemon", dexnspv, "-server", "-ac_supply=999999", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
-			dexcmd.Start()
-			fmt.Println("[Shurli] Started DEX komodod. Process ID is : ", dexcmd.Process.Pid)
-			fmt.Println("[Shurli] DEX chain params: ")
-			fmt.Println("\tDEX nSPV: ", conf.DexNSPV)
-			sagoutil.Log.Println("\tDEX nSPV: ", conf.DexNSPV)
-			fmt.Println("\tDEX addnode: ", conf.DexAddnode)
-			sagoutil.Log.Println("\tDEX addnode: ", conf.DexAddnode)
-			fmt.Println("\tDEX pubkey: ", conf.DexPubkey)
-			sagoutil.Log.Println("\tDEX pubkey: ", conf.DexPubkey)
-			fmt.Println("\tDEX handle: ", conf.DexHandle)
-			sagoutil.Log.Println("\tDEX handle: ", conf.DexHandle)
-			fmt.Println("\tDEX recvZaddr: ", conf.DexRecvZAddr)
-			sagoutil.Log.Println("\tDEX recvZaddr: ", conf.DexRecvZAddr)
-			fmt.Println("\tDEX recvTaddr: ", conf.DexRecvTAddr)
-			sagoutil.Log.Println("\tDEX recvTaddr: ", conf.DexRecvTAddr)
+			dexcmd := exec.Command("assets/komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			if runtime.GOOS == "windows" {
+				dexcmd = exec.Command("assets/komodod.exe", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			}
+			// fmt.Println(conf.SubatomicDir)
+			// dexcmd.Dir = conf.SubatomicDir
+			// out, err := dexcmd.Output()
+			// if err != nil {
+			// 	log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			// } else {
+			// 	fmt.Printf("%s", out)
+			// }
+			err := dexcmd.Start()
+			if err != nil {
+				log.Fatalf("dexcmd.Start() failed with %s\n", err)
+			}
+			fmt.Println("[Shurli] Started "+DexP2pChain+" komodod. Process ID is : ", dexcmd.Process.Pid)
+			fmt.Println("[Shurli] " + DexP2pChain + " chain params: ")
+			// fmt.Println("\t" + DexP2pChain + " nSPV: ", conf.DexNSPV)
+			// sagoutil.Log.Println("\t" + DexP2pChain + " nSPV: ", conf.DexNSPV)
+			fmt.Println("\t"+DexP2pChain+" addnode: ", conf.DexAddnode)
+			sagoutil.Log.Println("\t"+DexP2pChain+" addnode: ", conf.DexAddnode)
+			fmt.Println("\t"+DexP2pChain+" pubkey: ", conf.DexPubkey)
+			sagoutil.Log.Println("\t"+DexP2pChain+" pubkey: ", conf.DexPubkey)
+			fmt.Println("\t"+DexP2pChain+" handle: ", conf.DexHandle)
+			sagoutil.Log.Println("\t"+DexP2pChain+" handle: ", conf.DexHandle)
+			fmt.Println("\t"+DexP2pChain+" recvZaddr: ", conf.DexRecvZAddr)
+			sagoutil.Log.Println("\t"+DexP2pChain+" recvZaddr: ", conf.DexRecvZAddr)
+			fmt.Println("\t"+DexP2pChain+" recvTaddr: ", conf.DexRecvTAddr)
+			sagoutil.Log.Println("\t"+DexP2pChain+" recvTaddr: ", conf.DexRecvTAddr)
 			sagoutil.Log.Println("[Shurli] Started DEX komodod. Process ID is : ", dexcmd.Process.Pid)
 			os.Exit(0)
 		}
@@ -219,13 +240,13 @@ func main() {
 
 	if strings.ToLower(os.Args[1]) == "stop" {
 
-		appName := kmdgo.NewAppType(`DEX`)
+		appName := kmdgo.NewAppType(kmdgo.AppType(DexP2pChain))
 		var info kmdgo.Stop
 		info, err := appName.Stop()
 		if err != nil {
 			fmt.Printf("Code: %v\n", info.Error.Code)
 			fmt.Printf("Message: %v\n\n", info.Error.Message)
-			log.Fatalln("Err happened", err)
+			log.Println("Err happened", err)
 		}
 		// fmt.Println(info)
 		fmt.Println("[Shurli] ", info.Result)
@@ -408,8 +429,9 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	orderDataJSON, _ := json.Marshal(orderData)
 	sagoutil.Log.Println("orderData JSON:", string(orderDataJSON))
 
-	cmdString := `./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
+	cmdString := `[subatomic] ./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
+	log.Println(cmdString)
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
@@ -446,8 +468,8 @@ var upgrader = websocket.Upgrader{
 func echo(w http.ResponseWriter, r *http.Request) {
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
-	// fmt.Println("SubatomicExe:", conf.SubatomicExe)
-	// fmt.Println("SubatomicDir:", conf.SubatomicDir)
+	sagoutil.Log.Println("SubatomicExe:", conf.SubatomicExe)
+	sagoutil.Log.Println("SubatomicDir:", conf.SubatomicDir)
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -502,8 +524,20 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 			// Create the command with our context
-			cmd := exec.CommandContext(ctx, conf.SubatomicExe, parsed[1], "", parsed[2], parsed[3])
-			cmd.Dir = conf.SubatomicDir
+			cmd := exec.CommandContext(ctx, "./subatomic", parsed[1], "", parsed[2], parsed[3])
+			if runtime.GOOS == "windows" {
+				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
+			}
+			// cmd.Dir = conf.SubatomicDir
+			dir, err := os.Getwd()
+			if err != nil {
+				log.Fatal(err)
+			}
+			sagoutil.Log.Println(dir)
+			exPath := filepath.Join(dir, "assets")
+			os.Chdir(exPath)
+			sagoutil.Log.Println(exPath)
+
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
 				sagoutil.Log.Println(err)
@@ -550,7 +584,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			w := bufio.NewWriter(f)
 
 			for s.Scan() {
-				sagoutil.Log.Printf("CMD Bytes: %s", s.Bytes())
+				sagoutil.Log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
+				log.Printf("[subatomic] CMD Bytes: %s", s.Bytes())
 				// c.WriteMessage(1, s.Bytes())
 
 				logstr, err := sagoutil.SwapLogFilter(string(s.Bytes()), "single")
@@ -582,9 +617,11 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			// }
 
 			if err := cmd.Wait(); err != nil {
-				sagoutil.Log.Println(err)
+				sagoutil.Log.Println("[subatomic]", err)
+				log.Println("[subatomic]", err)
 				c.WriteMessage(1, []byte(`{"state": "`+err.Error()+`"}`))
-				sagoutil.Log.Println("Wait")
+				sagoutil.Log.Println("[subatomic] Wait")
+				log.Println("[subatomic] Wait")
 				return
 			}
 		}
