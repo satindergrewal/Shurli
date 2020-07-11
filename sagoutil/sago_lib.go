@@ -22,6 +22,16 @@ import (
 // DexP2pChain which shurli queries for DEXP2P API
 var DexP2pChain string = "SHURLI0"
 
+// ShurliRootDir returns Shurli root directory path
+func ShurliRootDir() string {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	Log.Println(currentDir)
+	return currentDir
+}
+
 // WInfo type stores data to display on Wallet info screen
 type WInfo struct {
 	Name       string
@@ -122,7 +132,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				if err != nil {
 					Log.Printf("Code: %v\n", vldadr.Error.Code)
 					Log.Printf("Message: %v\n\n", vldadr.Error.Message)
-					log.Fatalln("Err happened", err)
+					Log.Println("Err happened", err)
 				}
 
 				if math.Round(gb.Result.Verificationprogress) != 1 {
@@ -153,7 +163,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					if err != nil {
 						Log.Printf("Code: %v\n", zvldadr.Error.Code)
 						Log.Printf("Message: %v\n\n", zvldadr.Error.Message)
-						log.Fatalln("Err happened", err)
+						Log.Println("Err happened", err)
 					}
 
 					// Get balance of Shielded address
@@ -592,7 +602,7 @@ func TxIDFromOpID(coin, opid string) (string, error) {
 	if err != nil {
 		fmt.Printf("Code: %v\n", oprst.Error.Code)
 		fmt.Printf("Message: %v\n\n", oprst.Error.Message)
-		log.Fatalln("Err happened", err)
+		Log.Println("Err happened", err)
 	}
 
 	for _, v := range oprst.Result {

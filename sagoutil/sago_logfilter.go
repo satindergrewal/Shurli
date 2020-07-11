@@ -376,9 +376,9 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	// fmt.Println(zFromSf)
 
 	if len(zFromSf) > 0 {
-		// fmt.Printf("length of zFromSf is greater: %d\n", len(zFromSf))
+		fmt.Printf("length of zFromSf is greater: %d\n", len(zFromSf))
 
-		// fmt.Println(zFromSf[0])
+		fmt.Println(zFromSf[0])
 		zFromSl := strings.Split(zFromSf[0], ".")
 		zFromAddr := strings.ReplaceAll(zFromSl[1], "(", "")
 		zFromAddr = strings.ReplaceAll(zFromAddr, ")", "")
@@ -392,6 +392,7 @@ func SwapLogFilter(logString, answer string) (string, error) {
 		if err != nil {
 			log.Println(err)
 		}
+		fmt.Println("zj:", zj)
 		// fmt.Println(zj[0].Address)
 		// fmt.Println(zj[0].Amount)
 		// fmt.Println(zj[0].Memo)

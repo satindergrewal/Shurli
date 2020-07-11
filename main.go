@@ -41,6 +41,9 @@ type ShurliInfo struct {
 // DexP2pChain which shurli queries for DEXP2P API
 var DexP2pChain string = "SHURLI0"
 
+// Change to SHurli's root directory path
+var rootDir string = sagoutil.ShurliRootDir()
+
 // ShurliApp stores the information about applications
 var ShurliApp = ShurliInfo{
 	AppVersion: "0.0.1",
@@ -327,6 +330,9 @@ func idx(w http.ResponseWriter, r *http.Request) {
 
 func orderbook(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	type OrderPost struct {
 		Base      string `json:"coin_base"`
 		Rel       string `json:"coin_rel"`
@@ -394,6 +400,9 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 
 func orderid(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -412,6 +421,9 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 }
 
 func orderinit(w http.ResponseWriter, r *http.Request) {
+
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
 
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -480,6 +492,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 	c.WriteMessage(1, []byte(`{"state":"Starting..."}`))
 
+	exPath := filepath.Join(rootDir, "assets")
+	os.Chdir(exPath)
+	sagoutil.Log.Println(exPath)
+
 	var filename string
 	newLine := "\n"
 
@@ -529,14 +545,6 @@ func echo(w http.ResponseWriter, r *http.Request) {
 				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
 			}
 			// cmd.Dir = conf.SubatomicDir
-			dir, err := os.Getwd()
-			if err != nil {
-				log.Fatal(err)
-			}
-			sagoutil.Log.Println(dir)
-			exPath := filepath.Join(dir, "assets")
-			os.Chdir(exPath)
-			sagoutil.Log.Println(exPath)
 
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
@@ -567,13 +575,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			s := bufio.NewScanner(io.MultiReader(stdout, stderr))
 
-			newpath := filepath.Join(".", "swaplogs")
+			newpath := filepath.Join(rootDir, "swaplogs")
 			err = os.MkdirAll(newpath, 0755)
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
-			// fmt.Println(filename)
+			filename = rootDir + "/swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
+			fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
 			// If the file doesn't exist, create it, or append to the file
@@ -627,6 +635,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// fmt.Println("filename", filename)
+
+		os.Chdir(rootDir)
 
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
 	}
