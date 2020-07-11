@@ -31,6 +31,12 @@
             "shielded": true
         },
         {
+            "coin": "SHURLI0",
+            "ticker": "SHURLI0",
+            "name": "SHURLI0",
+            "shielded": true
+        },
+        {
             "coin": "MCL",
             "ticker": "MCL",
             "name": "MarmaraChain",
