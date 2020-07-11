@@ -198,6 +198,7 @@ func main() {
 			dexrecvzaddr := "-recvZaddr=" + conf.DexRecvZAddr
 			dexrecvtaddr := "-recvTaddr=" + conf.DexRecvTAddr
 			dexcmd := exec.Command("komodod", acname, "-daemon", "-server", "-ac_supply=10", "-dexp2p=2", dexaddnode, dexpubkey, dexhandle, dexrecvzaddr, dexrecvtaddr)
+			dexcmd.Dir = conf.SubatomicDir
 			dexcmd.Start()
 			fmt.Println("[Shurli] Started "+DexP2pChain+" komodod. Process ID is : ", dexcmd.Process.Pid)
 			fmt.Println("[Shurli] " + DexP2pChain + " chain params: ")
