@@ -524,11 +524,20 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			// cmd := exec.Command(conf.SubatomicExe, parsed[0], "", parsed[1], parsed[2])
 			// Create the command with our context
-			cmd := exec.CommandContext(ctx, "assets/subatomic", parsed[1], "", parsed[2], parsed[3])
+			cmd := exec.CommandContext(ctx, "./subatomic", parsed[1], "", parsed[2], parsed[3])
 			if runtime.GOOS == "windows" {
-				cmd = exec.CommandContext(ctx, "assets/subatomic.exe", parsed[1], "", parsed[2], parsed[3])
+				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
 			}
-			cmd.Dir = conf.SubatomicDir
+			// cmd.Dir = conf.SubatomicDir
+			dir, err := os.Getwd()
+			if err != nil {
+				log.Fatal(err)
+			}
+			sagoutil.Log.Println(dir)
+			exPath := filepath.Join(dir, "assets")
+			os.Chdir(exPath)
+			sagoutil.Log.Println(exPath)
+
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
 				sagoutil.Log.Println(err)
