@@ -68,10 +68,35 @@ mkdir -p $HOME/go/{bin,src,pkg}
 go get -u github.com/Meshbits/shurli
 ```
 
-#### Configure config.json with absolute path of subatomic binary
+#### Copy or symlink Komodo and Subatomic binary to Shurli
 
-You must configure the `config.json` file with full path where `subatomic` file is located.
-For example if you have compiled and installed `Komodo` and `subatomic` as per the guide link provided earlier, you probably has the komodo compiled in your `$HOME/komodo` location.
+Once you have the `komodod`, `komodo-cli` and `subatomic` executables available (either by compilation or downloaded), you need to have these binaries accessible via Shurli's `assets` directory.
+You'll find `assets` directory within the Shurli files.
+
+The directory structure of the Shurli looks like this:
+
+```shell
+.
+├── assets
+│   └── subatomic.json
+├── chains.json
+├── config.json.sample
+├── favicon.png
+├── main.go
+├── public
+│   ├── coins
+│   ├── css
+│   ├── fapro
+│   ├── gfonts
+│   ├── images
+│   └── js
+├── sagoutil
+├── templates
+```
+
+Just copy (or symlink on Linux/Windows) the `komodod`, `komodo-cli` and `subatomic` binaries to the `assets/` directory where you see `subatomic.json` file located.
+
+#### Configure config.json
 
 Make a copy of `config.json` file from `config.json.sample` file:
 
@@ -80,6 +105,7 @@ cd $HOME/go/src/github.com/Meshbits/shurli
 cp config.json.sample config.json
 ```
 
+<!--
 Open `config.json` in text editor and edit value of only `subatomic_dir` key.
 
 To get the full path of your `komodo` directory `cd` to `komodo` directory and issue `pwd` command to get full path. Example:
@@ -116,6 +142,7 @@ For Windows, make sure to use the following format for setting up `subatomic_dir
 
 Note that it's not backslash `\` but forward slash `/` for the path.
 If the format of this path would be incorrect, Shurli will have issue locating the `subatomic` binary on your machine.
+-->
 
 #### Configure DEX blockchain's parameters in `config.json` file
 
