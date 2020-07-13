@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -135,10 +134,11 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					Log.Println("Err happened", err)
 				}
 
-				if math.Round(gb.Result.Verificationprogress) != 1 {
-					tempSyncStatus = false
-				} else {
+				// if math.Round(gb.Result.Verificationprogress) != 1 {
+				if gb.Result.Verificationprogress >= 0.9999995 {
 					tempSyncStatus = true
+				} else {
+					tempSyncStatus = false
 				}
 
 				// if info.Result.Longestchain != info.Result.Blocks {
