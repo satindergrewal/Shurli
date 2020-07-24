@@ -41,6 +41,9 @@ type ShurliInfo struct {
 // DexP2pChain which shurli queries for DEXP2P API
 var DexP2pChain string = "SHURLI0"
 
+// Change to SHurli's root directory path
+var rootDir string = sagoutil.ShurliRootDir()
+
 // ShurliApp stores the information about applications
 var ShurliApp = ShurliInfo{
 	AppVersion: "0.0.1",
@@ -55,6 +58,9 @@ func check(e error) {
 		// log.Println(e)
 	}
 }
+
+var getRandomFreePort int
+var shurliPort string
 
 // PIDFile file stores the process ID file for shurli process
 var PIDFile = "./shurli.pid"
@@ -83,6 +89,12 @@ func savePID(pid int) {
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
+
+	getRandomFreePort, err := sagoutil.GetFreePort()
+	if err != nil {
+		log.Fatal(err)
+	}
+	shurliPort = strconv.Itoa(getRandomFreePort)
 }
 
 func main() {
@@ -140,7 +152,10 @@ func main() {
 
 		// public assets files
 		r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
-		sagoutil.Log.Fatal(http.ListenAndServe(":8080", r))
+		openbrowser("http://localhost:" + shurliPort)
+		fmt.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Fatal(http.ListenAndServe(":"+shurliPort, r))
 	}
 
 	// using command "./shurli start" will show the daemon process info and exit stdout to terminal
@@ -327,6 +342,9 @@ func idx(w http.ResponseWriter, r *http.Request) {
 
 func orderbook(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	type OrderPost struct {
 		Base      string `json:"coin_base"`
 		Rel       string `json:"coin_rel"`
@@ -394,6 +412,9 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 
 func orderid(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -412,6 +433,9 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 }
 
 func orderinit(w http.ResponseWriter, r *http.Request) {
+
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
 
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -480,6 +504,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 	c.WriteMessage(1, []byte(`{"state":"Starting..."}`))
 
+	exPath := filepath.Join(rootDir, "assets")
+	os.Chdir(exPath)
+	sagoutil.Log.Println(exPath)
+
 	var filename string
 	newLine := "\n"
 
@@ -529,14 +557,6 @@ func echo(w http.ResponseWriter, r *http.Request) {
 				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
 			}
 			// cmd.Dir = conf.SubatomicDir
-			dir, err := os.Getwd()
-			if err != nil {
-				log.Fatal(err)
-			}
-			sagoutil.Log.Println(dir)
-			exPath := filepath.Join(dir, "assets")
-			os.Chdir(exPath)
-			sagoutil.Log.Println(exPath)
 
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
@@ -567,13 +587,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			s := bufio.NewScanner(io.MultiReader(stdout, stderr))
 
-			newpath := filepath.Join(".", "swaplogs")
+			newpath := filepath.Join(rootDir, "swaplogs")
 			err = os.MkdirAll(newpath, 0755)
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
-			// fmt.Println(filename)
+			filename = rootDir + "/swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
+			fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
 			// If the file doesn't exist, create it, or append to the file
@@ -628,6 +648,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		// fmt.Println("filename", filename)
 
+		os.Chdir(rootDir)
+
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
 	}
 }
@@ -649,5 +671,23 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 		// log.Fatalf("some error")
 		http.Error(w, err.Error(), 500)
 		sagoutil.Log.Fatalln(err)
+	}
+}
+
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
 	}
 }
