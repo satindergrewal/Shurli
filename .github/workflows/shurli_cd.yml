@@ -32,13 +32,15 @@ jobs:
           sudo apt-get update && \
           sudo ACCEPT_EULA=Y apt-get upgrade -y && \
           sudo apt-get install -q \
-                 curl && \
+                 curl \
+                 git && \
           mkdir -p $HOME/go/{bin,src,pkg} && \
-          ls -lhaR $HOME
-          go version
+          go get -u github.com/Meshbits/shurli && \
+          cd $HOME/go/src/github.com/Meshbits/shurli && \
+          make build-linux
 
-      # - name: Upload shurli-linux.zip as artifact
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: shurli-linux
-      #     path: ./shurli-linux.zip
+      - name: Upload shurli-linux.zip as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: shurli-linux
+          path: $HOME/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
