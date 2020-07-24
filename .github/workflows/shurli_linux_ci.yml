@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.14.1' # The Go version to download (if necessary) and use.
-        run: go version
       
       - name: Checkout code
         uses: actions/checkout@v2
@@ -36,6 +35,7 @@ jobs:
                  curl && \
           mkdir -p $HOME/go/{bin,src,pkg} && \
           ls -lhaR $HOME
+          go version
 
       # - name: Upload shurli-linux.zip as artifact
       #   uses: actions/upload-artifact@v1
