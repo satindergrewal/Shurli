@@ -45,7 +45,6 @@ jobs:
         run: |
           cd $HOME/go/src/github.com/Meshbits/shurli && \
           make build-win
-          zip --junk-paths komodo-macOS src/komodod src/komodo-cli
 
       - name: Upload shurli-linux.zip as artifact
         uses: actions/upload-artifact@v1
