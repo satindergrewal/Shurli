@@ -1,4 +1,4 @@
-name: Shurli Linux CI
+name: Shurli CI
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
 
 jobs:
 
-  linux-build:
-    name: linux-build
+  all-builds:
+    name: all-builds
     runs-on: ubuntu-latest
 
     steps:
@@ -62,4 +62,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: shurli_win
-          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.tar.gz
