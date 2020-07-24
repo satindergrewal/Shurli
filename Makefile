@@ -64,7 +64,7 @@ build-linux: deps
 	$(CURL_DL) $(SUBATOMIC_UNIX_URL)
 	$(UNZIP) -o subatomic_linux.zip -d $(DIST_UNIX_PATH)/assets
 	$(RM_RFV) komodo_linux.zip subatomic_linux.zip
-	cd $(DIST_UNIX_PATH); zip -r ../shurli_linux.zip *
+	cd $(DIST_UNIX_PATH); zip -r ../shurli_linux.zip *; ls -lha ../; pwd
 	$(RM_RFV) $(DIST_UNIX_PATH)
 	cd $(ROOT_DIR)
 build-osx: deps
