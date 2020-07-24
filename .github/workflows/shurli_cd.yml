@@ -43,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: shurli-linux
-          path: $HOME/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
+          path: ./dist/shurli_linux.tar.gz
