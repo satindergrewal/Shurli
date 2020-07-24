@@ -1,0 +1,44 @@
+name: Shurli Linux CI
+
+on:
+  push:
+    branches:
+    - grewal
+  # schedule:
+    # Run at 00:00 UTC on Monday
+    # - cron:  "0 0 * * 1"
+
+jobs:
+
+  linux-build:
+    name: linux-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go 1.14+
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14.1' # The Go version to download (if necessary) and use.
+        run: go version
+      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Shurli (Linux)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt update && \
+          sudo apt-get remove php5.6-fpm php7.0-fpm php7.1-fpm php7.2-fpm php7.3-fpm php7.3-common php7.4-fpm msodbcsql17 mysql-server* && \
+          sudo apt-get update && \
+          sudo ACCEPT_EULA=Y apt-get upgrade -y && \
+          sudo apt-get install -q \
+                 curl && \
+          mkdir -p $HOME/go/{bin,src,pkg} && \
+          ls -lhaR $HOME
+
+      # - name: Upload shurli-linux.zip as artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: shurli-linux
+      #     path: ./shurli-linux.zip
