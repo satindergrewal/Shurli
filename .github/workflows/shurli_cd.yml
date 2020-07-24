@@ -45,21 +45,104 @@ jobs:
         run: |
           cd $HOME/go/src/github.com/Meshbits/shurli && \
           make build-win
+          zip --junk-paths komodo-macOS src/komodod src/komodo-cli
 
-      - name: Upload shurli-linux.tar.gz as artifact
+      - name: Upload shurli-linux.zip as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: shurli_linux.tar.gz
-          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
+          name: shurli_linux.zip
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.zip
       
-      - name: Upload shurli_macos.tar.gz as artifact
+      - name: Upload shurli_macos.zip as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: shurli_macos.tar.gz
-          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.tar.gz
+          name: shurli_macos.zip
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
         
-      - name: Upload shurli_win.tar.gz as artifact
+      - name: Upload shurli_win.zip as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: shurli_win.tar.gz
-          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.tar.gz
+          name: shurli_win.zip
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.zip
+
+
+  publish-release:
+      name: Publishing CD releases
+      runs-on: ubuntu-latest
+      needs: [all-builds]
+
+      steps:
+        - name: Download shurli_linux.zip
+          uses: actions/download-artifact@v1
+          with:
+            name: shurli_linux
+
+        - name: Download shurli_macos.zip
+          uses: actions/download-artifact@v1
+          with:
+            name: shurli_macos
+
+        - name: Download shurli_win.zip
+          uses: actions/download-artifact@v1
+          with:
+            name: shurli_win
+
+        - name: Extract branch name
+          shell: bash
+          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          id: extract_branch
+
+        - name: Shortify commit sha
+          shell: bash
+          run: echo "##[set-output name=sha_short;]$(echo ${GITHUB_SHA::7})"
+          id: shortify_commit
+
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@latest
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: release_v0.${{ github.run_number }}
+            release_name: release_v0.${{ github.run_number }}
+            body: |
+              CD Release
+              Github SHA: ${{ github.sha }}
+              Branch: ${{ steps.extract_branch.outputs.branch }}
+              Build number: ${{ github.run_number }}
+              version: v0.${{ github.run_number }}
+            draft: false
+            prerelease: false
+
+        - name: Upload Linux Release Asset
+          id: upload-linux-release-asset
+          uses: actions/upload-release-asset@latest
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+            asset_path: shurli_linux/shurli_linux.zip
+            asset_name: shurli_linux_v0.${{ github.run_number }}.zip
+            asset_content_type: application/zip
+
+        - name: Upload macOS Release Asset
+          id: upload-macOS-release-asset
+          uses: actions/upload-release-asset@latest
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+            asset_path: shurli_macos/shurli_macos.zip
+            asset_name: shurli_macos_v0.${{ github.run_number }}.zip
+            asset_content_type: application/zip
+
+        - name: Upload Windows Release Asset
+          id: upload-windows-release-asset
+          uses: actions/upload-release-asset@latest
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+            asset_path: shurli_win/shurli_win.zip
+            asset_name: shurli_win_v0.${{ github.run_number }}.zip
+            asset_content_type: application/zip
