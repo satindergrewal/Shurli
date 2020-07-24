@@ -61,5 +61,5 @@ jobs:
       - name: Upload shurli_win.tar.gz as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: shurli_win
+          name: shurli_win.tar.gz
           path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.tar.gz
