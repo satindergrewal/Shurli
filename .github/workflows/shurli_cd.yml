@@ -27,13 +27,6 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt update && \
-          sudo apt-get remove php5.6-fpm php7.0-fpm php7.1-fpm php7.2-fpm php7.3-fpm php7.3-common php7.4-fpm msodbcsql17 mysql-server* && \
-          sudo apt-get update && \
-          sudo ACCEPT_EULA=Y apt-get upgrade -y && \
-          sudo apt-get install -q \
-                 curl \
-                 git && \
           mkdir -p $HOME/go/{bin,src,pkg} && \
           go get -u github.com/Meshbits/shurli && \
           cd $HOME/go/src/github.com/Meshbits/shurli && \
@@ -43,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: shurli-linux
-          path: ./dist/shurli_linux.tar.gz
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
