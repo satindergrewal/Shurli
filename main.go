@@ -59,6 +59,9 @@ func check(e error) {
 	}
 }
 
+var getRandomFreePort int
+var shurliPort string
+
 // PIDFile file stores the process ID file for shurli process
 var PIDFile = "./shurli.pid"
 
@@ -86,6 +89,12 @@ func savePID(pid int) {
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
+
+	getRandomFreePort, err := sagoutil.GetFreePort()
+	if err != nil {
+		log.Fatal(err)
+	}
+	shurliPort = strconv.Itoa(getRandomFreePort)
 }
 
 func main() {
@@ -143,7 +152,10 @@ func main() {
 
 		// public assets files
 		r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
-		sagoutil.Log.Fatal(http.ListenAndServe(":8080", r))
+		openbrowser("http://localhost:" + shurliPort)
+		fmt.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Fatal(http.ListenAndServe(":"+shurliPort, r))
 	}
 
 	// using command "./shurli start" will show the daemon process info and exit stdout to terminal
@@ -659,5 +671,23 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 		// log.Fatalf("some error")
 		http.Error(w, err.Error(), 500)
 		sagoutil.Log.Fatalln(err)
+	}
+}
+
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
 	}
 }

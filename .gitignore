@@ -26,3 +26,6 @@ shurli
 shurli.pid
 dist/
 SHURLI0_7776
+assets/subatomic
+assets/komodod
+assets/komodo-cli
