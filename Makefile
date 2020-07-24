@@ -12,11 +12,11 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 BINARY_OSX=$(BINARY_NAME)_osx
 BINARY_WIN=$(BINARY_NAME).exe
 DIST_DIR=dist
-DIST_OSX=$(DIST_DIR)_osx
+DIST_OSX=shurli_osx
 DIST_OSX_PATH=$(DIST_DIR)/$(DIST_OSX)
-DIST_UNIX=$(DIST_DIR)_unix
+DIST_UNIX=shurli_unix
 DIST_UNIX_PATH=$(DIST_DIR)/$(DIST_UNIX)
-DIST_WIN=$(DIST_DIR)_win
+DIST_WIN=shurli_win
 DIST_WIN_PATH=$(DIST_DIR)/$(DIST_WIN)
 DIST_FILES=chains.json config.json.sample favicon.png LICENSE README.md assets public sagoutil templates
 CP_AV=cp -av
@@ -64,7 +64,7 @@ build-linux: deps
 	$(CURL_DL) $(SUBATOMIC_UNIX_URL)
 	$(UNZIP) -o subatomic_linux.zip -d $(DIST_UNIX_PATH)/assets
 	$(RM_RFV) komodo_linux.zip subatomic_linux.zip
-	cd $(DIST_UNIX_PATH); tar -czvf ../shurli_linux.tar.gz *
+	cd $(DIST_UNIX_PATH); zip -r ../shurli_linux.zip *; ls -lha ../; pwd
 	$(RM_RFV) $(DIST_UNIX_PATH)
 	cd $(ROOT_DIR)
 build-osx: deps
@@ -77,7 +77,7 @@ build-osx: deps
 	$(CURL_DL) $(SUBATOMIC_OSX_URL)
 	$(UNZIP) -o subatomic_macos.zip -d $(DIST_OSX_PATH)/assets
 	$(RM_RFV) komodo_macos.zip subatomic_macos.zip
-	cd $(DIST_OSX_PATH); tar -czvf ../shurli_macos.tar.gz *
+	cd $(DIST_OSX_PATH); zip -r ../shurli_macos.zip *
 	$(RM_RFV) $(DIST_OSX_PATH)
 	cd $(ROOT_DIR)
 build-win: deps
@@ -88,7 +88,7 @@ build-win: deps
 	$(CURL_DL) $(KMD_SUBATOMIC_WIN_URL)
 	$(UNZIP) -o subatomic_kmd_win.zip -d $(DIST_WIN_PATH)/assets
 	$(RM_RFV) subatomic_kmd_win.zip
-	cd $(DIST_WIN_PATH); tar -czvf ../shurli_win.tar.gz *
+	cd $(DIST_WIN_PATH); zip -r ../shurli_win.zip *
 	$(RM_RFV) $(DIST_WIN_PATH)
 	cd $(ROOT_DIR)
 # docker-build:
