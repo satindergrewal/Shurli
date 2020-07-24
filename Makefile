@@ -77,7 +77,7 @@ build-osx: deps
 	$(CURL_DL) $(SUBATOMIC_OSX_URL)
 	$(UNZIP) -o subatomic_macos.zip -d $(DIST_OSX_PATH)/assets
 	$(RM_RFV) komodo_macos.zip subatomic_macos.zip
-	cd $(DIST_OSX_PATH); tar -czvf ../shurli_macOS.tar.gz *
+	cd $(DIST_OSX_PATH); tar -czvf ../shurli_macos.tar.gz *
 	$(RM_RFV) $(DIST_OSX_PATH)
 	cd $(ROOT_DIR)
 build-win: deps
@@ -86,7 +86,10 @@ build-win: deps
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
 	$(CP_AV) $(DIST_FILES) $(DIST_WIN_PATH)
 	$(CURL_DL) $(KMD_SUBATOMIC_WIN_URL)
-	$(UNZIP) subatomic_kmd_win.zip
-	$(CP_AV) komodod komodo-cli subatomic $(DIST_OSX_PATH)/assets
+	$(UNZIP) -o subatomic_kmd_win.zip -d $(DIST_WIN_PATH)/assets
+	$(RM_RFV) subatomic_kmd_win.zip
+	cd $(DIST_WIN_PATH); tar -czvf ../shurli_win.tar.gz *
+	$(RM_RFV) $(DIST_WIN_PATH)
+	cd $(ROOT_DIR)
 # docker-build:
 # 	docker run --rm -it -v "$(GOPATH)":/go -w /go/src/github.com/Meshbits/shurli golang:latest go build -o "$(BINARY_UNIX)" -v
