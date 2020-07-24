@@ -91,5 +91,3 @@ build-win: deps
 	cd $(DIST_WIN_PATH); zip -r ../shurli_win.zip *
 	$(RM_RFV) $(DIST_WIN_PATH)
 	cd $(ROOT_DIR)
-# docker-build:
-# 	docker run --rm -it -v "$(GOPATH)":/go -w /go/src/github.com/Meshbits/shurli golang:latest go build -o "$(BINARY_UNIX)" -v
