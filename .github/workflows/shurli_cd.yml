@@ -31,9 +31,35 @@ jobs:
           go get -u github.com/Meshbits/shurli && \
           cd $HOME/go/src/github.com/Meshbits/shurli && \
           make build-linux
+      
+      - name: Build Shurli (MacOS)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          cd $HOME/go/src/github.com/Meshbits/shurli && \
+          make build-osx
 
-      - name: Upload shurli-linux.zip as artifact
+      - name: Build Shurli (Winblows)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          cd $HOME/go/src/github.com/Meshbits/shurli && \
+          make build-win
+
+      - name: Upload shurli-linux.tar.gz as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: shurli-linux
+          name: shurli_linux.tar.gz
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
+      
+      - name: Upload shurli_macos.tar.gz as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: shurli_macos.tar.gz
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.tar.gz
+        
+      - name: Upload shurli_win.tar.gz as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: shurli_win
           path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.tar.gz
