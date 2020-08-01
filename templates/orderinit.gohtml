@@ -212,7 +212,11 @@
                     <h4 class="mt-3 text-center swap-rawlogs-h" style="display: none;"><u>Raw order logs</u></h4>
                     <code class="swap-rawlogs" style="display: none;"></code>
                     <script>
-                      var ws = new WebSocket("ws://localhost:8080/echo")
+                      var url = window.location.href
+                      var arr = url.split("/");
+                      var wsport = arr[2].split(":")
+                      var wsaddr = "ws://localhost:" + port[1] + "/echo"
+                      var ws = new WebSocket(wsaddr)
                       {{/* console.log("{{.OrderData.Base}}")
                       console.log("{{.ID}}")
                       console.log("{{.Amount}}")
