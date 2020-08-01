@@ -215,7 +215,7 @@
                       var url = window.location.href
                       var arr = url.split("/");
                       var wsport = arr[2].split(":")
-                      var wsaddr = "ws://localhost:" + port[1] + "/echo"
+                      var wsaddr = "ws://localhost:" + wsport[1] + "/echo"
                       var ws = new WebSocket(wsaddr)
                       {{/* console.log("{{.OrderData.Base}}")
                       console.log("{{.ID}}")
