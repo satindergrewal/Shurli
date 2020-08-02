@@ -29,6 +29,17 @@
 - Independent (shurli has its own blockchain)
 - Open-source
 
+### What the success from this project will look like
+
+- increase in subatomic swap users
+  - users in poor countries will be able to make smaller transactions
+- increase in pirate and kmd transactions
+- increase in privacy (_because being able to swap between pirate and others etc_)
+
+### What success for this project will look like
+
+
+
 ### Code of conduct
 
 * While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/Meshbits/shurli/issues).
