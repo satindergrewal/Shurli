@@ -17,6 +17,11 @@
 * Komodo-ocean-qt
 * Verus-desktop
 
+### Why
+
+- No current UI application for subatomic swaps
+- No current way (atomic or subatomic) of swapping pirate
+
 ### Principles
 
 - No centralisation
