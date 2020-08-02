@@ -17,6 +17,13 @@
 * Komodo-ocean-qt
 * Verus-desktop
 
+### Principles
+
+- No centralisation
+- Implicit Security (financial aspect)
+- Independent (shurli has its own blockchain)
+- Open-source
+
 ### Code of conduct
 
 * While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/Meshbits/shurli/issues).
