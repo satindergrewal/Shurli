@@ -41,6 +41,10 @@
 - usable product
 - motivates other projects to solve these problems better, adding to the richness of the ecosystem
 
+### Current feature set we are working on
+
+![Alice Feature Set](images/alice_feature_view.png)
+
 ### Code of conduct
 
 * While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/Meshbits/shurli/issues).
