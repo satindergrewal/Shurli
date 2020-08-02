@@ -38,7 +38,8 @@
 
 ### What success for this project will look like
 
-
+- usable product
+- motivates other projects adding to the richness of the ecosystem
 
 ### Code of conduct
 
