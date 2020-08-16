@@ -19,6 +19,12 @@
             "shielded": true
         },
         {
+            "coin": "CHIPS",
+            "ticker": "CHIPS",
+            "name": "Chips",
+            "shielded": false
+        },
+        {
             "coin": "HUSH3",
             "ticker": "HUSH3",
             "name": "Hush",
