@@ -84,6 +84,8 @@ build-win: deps
 	$(GITCMD) checkout grewal
 	$(MKDIR_P) $(DIST_WIN_PATH)
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
+	@echo ".\shurli.exe start" > $(DIST_WIN_PATH)/start_shurli.cmd
+	@echo ".\shurli.exe stop" > $(DIST_WIN_PATH)/stop_shurli.cmd
 	$(CP_AV) $(DIST_FILES) $(DIST_WIN_PATH)
 	$(CURL_DL) $(KMD_SUBATOMIC_WIN_URL)
 	$(UNZIP) -o subatomic_kmd_win.zip -d $(DIST_WIN_PATH)/assets
