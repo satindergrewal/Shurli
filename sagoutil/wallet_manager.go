@@ -11,8 +11,11 @@ import (
 	"github.com/Meshbits/shurli-server/sagoutil"
 )
 
-// StartWallet will launch Komodo-Ocean-QT with the specified Wallet
+// StartWallet launches Komodo-Ocean-QT with the specified Wallet
 func StartWallet(chain string, cmdParams []string) error {
+
+	//TODO: Add the capability to start 3rd party wallets, other than Komodo Assetchains
+
 	// fmt.Println(chain)
 
 	// fmt.Println(sagoutil.ShurliRootDir())
@@ -47,7 +50,38 @@ func StartWallet(chain string, cmdParams []string) error {
 	return nil
 }
 
-// GenerateDEXP2PAccount will generate the transaparent address and shielded address
+// BackupConfigJSON take backup of existing config.json file and store it with filename + timestamp
+func BackupConfigJSON() {
+}
+
+// GenerateDEXP2PAccount generate the transaparent address and shielded address
 func GenerateDEXP2PAccount() {
+	//Generate Transparent Address
+	//Generate Shielded Address
+	//Get Transparent Address, Shielded Address and public key of newly generated address. Create new if doesn't exists, or store/Update config.json file.
+}
+
+// ImportTAddrPrivKey import private key of DEXP2P transparent address to specified wallet
+func ImportTAddrPrivKey() {
+
+}
+
+// ImportZAddrPrivKey import private key of DEXP2P shielded address to specified wallet
+func ImportZAddrPrivKey() {
+
+}
+
+// UpdateDEXP2PAccount allow users to update config.json file with user specified DEXP2P params details
+func UpdateDEXP2PAccount() {
+
+}
+
+// DlBootstrap download, extract and replace/update bootstrap blockchain files for a specified wallet
+func DlBootstrap() {
+
+}
+
+// BackupWallet allows taking a dump or backup of the wallet.dat file
+func BackupWallet() {
 
 }
