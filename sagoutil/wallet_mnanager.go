@@ -12,7 +12,7 @@ import (
 )
 
 // StartWallet will launch Komodo-Ocean-QT with the specified Wallet
-func StartWallet(chain, pubkey string) error {
+func StartWallet(chain, cmdParams string) error {
 	fmt.Println(chain)
 
 	// Check if provided blockchain is already running on system.
@@ -29,7 +29,6 @@ func StartWallet(chain, pubkey string) error {
 		sagoutil.Log.Println("[Shurli] " + chain + " blockchain already running or " + chain + " pid file exist.")
 		os.Exit(1)
 	} else {
-		cmdParams := "-pubkey" + pubkey
 		// If provided blockchain isn't found running already, start it.
 		cmd := exec.Command("./komodo-qt-mac", cmdParams)
 		if runtime.GOOS == "windows" {
@@ -41,7 +40,7 @@ func StartWallet(chain, pubkey string) error {
 		if err != nil {
 			log.Fatalf("cmd.Run() failed with %s\n", err)
 		}
-		log.Printf("Started %s, with public key %s in background with process ID: %d", chain, pubkey, cmd.Process.Pid)
+		log.Printf("Started %s, with chain daemon params in background\n\t %s \nwith process ID: %d\n\n", chain, cmdParams, cmd.Process.Pid)
 	}
 
 	return nil
