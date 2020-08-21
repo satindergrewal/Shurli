@@ -27,7 +27,7 @@ func StartWallet(chain string, cmdParams []string) error {
 		return errors.New("wallet already running or it's process ID file exist")
 	} else {
 		// If provided blockchain isn't found running already, start it.
-		cmd := exec.Command("./komodo-qt-ma", cmdParams...)
+		cmd := exec.Command("./komodo-qt-mac", cmdParams...)
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("./komodo-qt-mac.exe", cmdParams...)
 		}
