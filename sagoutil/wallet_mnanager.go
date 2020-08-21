@@ -8,11 +8,15 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/Meshbits/shurli-server/sagoutil"
 )
 
 // StartWallet will launch Komodo-Ocean-QT with the specified Wallet
 func StartWallet(chain string, cmdParams []string) error {
 	fmt.Println(chain)
+
+	fmt.Println(sagoutil.ShurliRootDir())
 
 	// Check if provided blockchain is already running on system.
 	// If chain's pid (ie. "komodo.pid") is present in that chain's data directory, it means
@@ -27,9 +31,9 @@ func StartWallet(chain string, cmdParams []string) error {
 		return errors.New("wallet already running or it's process ID file exist")
 	} else {
 		// If provided blockchain isn't found running already, start it.
-		cmd := exec.Command("./komodo-qt-mac", cmdParams...)
+		cmd := exec.Command(sagoutil.ShurliRootDir()+"/assets/komodo-qt", cmdParams...)
 		if runtime.GOOS == "windows" {
-			cmd = exec.Command("./komodo-qt-mac.exe", cmdParams...)
+			cmd = exec.Command(sagoutil.ShurliRootDir()+"/assets/komodo-qt.exe", cmdParams...)
 		}
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
