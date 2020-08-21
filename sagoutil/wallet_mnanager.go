@@ -1,18 +1,17 @@
 package sagoutil
 
 import (
+	"errors"
 	"fmt"
 	"golang-practice/kmdutil"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
-
-	"github.com/Meshbits/shurli-server/sagoutil"
 )
 
 // StartWallet will launch Komodo-Ocean-QT with the specified Wallet
-func StartWallet(chain, cmdParams string) error {
+func StartWallet(chain string, cmdParams []string) error {
 	fmt.Println(chain)
 
 	// Check if provided blockchain is already running on system.
@@ -25,23 +24,27 @@ func StartWallet(chain, cmdParams string) error {
 	fmt.Println(dir)
 	// If "chain" blockchain is running already, print notification
 	if _, err := os.Stat(dir + "/komodod.pid"); err == nil {
-		fmt.Println("[Shurli] " + chain + " blockchain already running or " + chain + " pid file exist.")
-		sagoutil.Log.Println("[Shurli] " + chain + " blockchain already running or " + chain + " pid file exist.")
-		os.Exit(1)
+		return errors.New("wallet already running or it's process ID file exist")
 	} else {
 		// If provided blockchain isn't found running already, start it.
-		cmd := exec.Command("./komodo-qt-mac", cmdParams)
+		cmd := exec.Command("./komodo-qt-ma", cmdParams...)
 		if runtime.GOOS == "windows" {
-			cmd = exec.Command("./komodo-qt-mac.exe", cmdParams)
+			cmd = exec.Command("./komodo-qt-mac.exe", cmdParams...)
 		}
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		err := cmd.Start()
 		if err != nil {
-			log.Fatalf("cmd.Run() failed with %s\n", err)
+			// log.Printf("cmd.Start() failed with %s\n", err)
+			return err
 		}
 		log.Printf("Started %s, with chain daemon params in background\n\t %s \nwith process ID: %d\n\n", chain, cmdParams, cmd.Process.Pid)
 	}
 
 	return nil
+}
+
+// GenerateDEXP2PAccount will generate the transaparent address and shielded address
+func GenerateDEXP2PAccount() {
+
 }
