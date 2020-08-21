@@ -2,7 +2,6 @@ package sagoutil
 
 import (
 	"errors"
-	"fmt"
 	"golang-practice/kmdutil"
 	"log"
 	"os"
@@ -14,9 +13,9 @@ import (
 
 // StartWallet will launch Komodo-Ocean-QT with the specified Wallet
 func StartWallet(chain string, cmdParams []string) error {
-	fmt.Println(chain)
+	// fmt.Println(chain)
 
-	fmt.Println(sagoutil.ShurliRootDir())
+	// fmt.Println(sagoutil.ShurliRootDir())
 
 	// Check if provided blockchain is already running on system.
 	// If chain's pid (ie. "komodo.pid") is present in that chain's data directory, it means
@@ -25,7 +24,7 @@ func StartWallet(chain string, cmdParams []string) error {
 	// 		- In this case, just delete the "komodo.pid" file and next time "shurli" should be able to start that blockchain.
 	appName := chain
 	dir := kmdutil.AppDataDir(appName, false)
-	fmt.Println(dir)
+	// fmt.Println(dir)
 	// If "chain" blockchain is running already, print notification
 	if _, err := os.Stat(dir + "/komodod.pid"); err == nil {
 		return errors.New("wallet already running or it's process ID file exist")
