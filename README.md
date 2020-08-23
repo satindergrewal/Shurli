@@ -17,6 +17,34 @@
 * Komodo-ocean-qt
 * Verus-desktop
 
+### Why
+
+- No current UI application for subatomic swaps
+- No current way (atomic or subatomic) of swapping pirate
+
+### Principles
+
+- No centralisation
+- Implicit Security (financial aspect)
+- Independent (shurli has its own blockchain)
+- Open-source
+
+### What the success from this project will look like
+
+- increase in subatomic swap users
+  - users in poor countries will be able to make smaller transactions
+- increase in pirate and kmd transactions
+- increase in privacy (_because being able to swap between pirate and others etc_)
+
+### What success for this project will look like
+
+- usable product
+- motivates other projects to solve these problems better, adding to the richness of the ecosystem
+
+### Current feature set we are working on
+
+![Alice Feature Set](images/alice_feature_view.png)
+
 ### Code of conduct
 
 * While reporting issues, please report all the debug data at [Shurli Issues](https://github.com/Meshbits/shurli/issues).
@@ -25,7 +53,7 @@
 
     - Go v1.14+
     - Git
-    - Komodo Daemon (dev branch compiled from http://github.com/jl777/komodo.git)
+    - Komodo Daemon (dev branch compiled from https://github.com/jl777/komodo)
 
 ### Install Git, Komodo and Subatomic binaries
 
