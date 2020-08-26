@@ -1,14 +1,21 @@
 package sagoutil
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"golang-practice/kmdutil"
+	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
+	"unicode/utf8"
 
 	"github.com/Meshbits/shurli-server/sagoutil"
+	"github.com/satindergrewal/kmdgo"
 )
 
 // StartWallet launches Komodo-Ocean-QT with the specified Wallet
@@ -51,14 +58,136 @@ func StartWallet(chain string, cmdParams []string) error {
 }
 
 // BackupConfigJSON take backup of existing config.json file and store it with filename + timestamp
-func BackupConfigJSON() {
+func BackupConfigJSON(confPath string) {
+	// Get current time in unixtime format
+	currentUnixTimestamp := sagoutil.IntToString(int32(time.Now().Unix()))
+	// fmt.Println(currentUnixTimestamp)
+
+	// create directory if it does't alredy exists
+	if _, err := os.Stat(confPath + "/backups"); os.IsNotExist(err) {
+		os.Mkdir(confPath+"/backups", 0755)
+	}
+
+	// read contents of existing config.json file
+	from, err := os.Open(confPath + "/config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer from.Close()
+
+	// set copy file path to copy contents of config.json to
+	to, err := os.OpenFile(confPath+"/backups/config_"+currentUnixTimestamp+".json", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer to.Close()
+
+	// copy contents from config.json to backups/config_<unix time stamp>.json file
+	_, err = io.Copy(to, from)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // GenerateDEXP2PAccount generate the transaparent address and shielded address
-func GenerateDEXP2PAccount() {
+func GenerateDEXP2PAccount() error {
+	// set DEXP2P2 chain's name to get RPC details
+	appName := kmdgo.NewAppType(kmdgo.AppType(DexP2pChain))
+
 	//Generate Transparent Address
+	var DexP2PTransparentAddr kmdgo.GetNewAddress
+
+	DexP2PTransparentAddr, err := appName.GetNewAddress()
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PTransparentAddr.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PTransparentAddr.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return errors.New(err.Error())
+	}
+
+	// fmt.Println(DexP2PTransparentAddr.Result)
+
 	//Generate Shielded Address
-	//Get Transparent Address, Shielded Address and public key of newly generated address. Create new if doesn't exists, or store/Update config.json file.
+	var DexP2PShieldedAddr kmdgo.ZGetNewAddress
+
+	zAddrType := `sapling`
+
+	DexP2PShieldedAddr, err = appName.ZGetNewAddress(zAddrType)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PShieldedAddr.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PShieldedAddr.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return errors.New(err.Error())
+	}
+
+	// fmt.Println(DexP2PShieldedAddr.Result)
+
+	// Get Transparent Address, Shielded Address and public key of newly generated address. Create new if doesn't exists, or store/Update config.json file.
+	/// Get Transparent Address's public key
+	var DexP2PPubkey kmdgo.ValidateAddress
+
+	_DexP2PTAddr := DexP2PTransparentAddr.Result
+
+	DexP2PPubkey, err = appName.ValidateAddress(_DexP2PTAddr)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PPubkey.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PPubkey.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return errors.New(err.Error())
+	}
+
+	// fmt.Println("Pubkey: ", DexP2PPubkey.Result.Pubkey)
+
+	// Generate a temporary random Handle based on pubkey
+	_, i := utf8.DecodeRuneInString(DexP2PPubkey.Result.Pubkey)
+	_tempHandle := "Anon" + DexP2PPubkey.Result.Pubkey[i:7]
+
+	// Get contents of config.json sample file
+	var conf SubAtomicConfig
+	confJSONContent, err := ioutil.ReadFile("config.json.sample")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(confJSONContent, &conf)
+
+	// Generate new contents for config.json file and store newly generated address info to it
+	var newConf sagoutil.SubAtomicConfig
+	newConf.SubatomicExe = conf.SubatomicExe
+	newConf.SubatomicDir = conf.SubatomicDir
+	newConf.DexNSPV = conf.DexNSPV
+	newConf.DexAddnode = conf.DexAddnode
+	newConf.DexPubkey = DexP2PPubkey.Result.Pubkey      // Store public key of newly generated transparent address
+	newConf.DexHandle = _tempHandle                     // A temporary handle generated based on public key's first 6 characters
+	newConf.DexRecvTAddr = DexP2PTransparentAddr.Result // Store newly generated transparent address
+	newConf.DexRecvZAddr = DexP2PShieldedAddr.Result    // Store newly generated shielded address
+
+	// get indented JSON output of nelwy generated config.json
+	var confJSON []byte
+	confJSON, err = json.MarshalIndent(newConf, "", "	")
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(confJSON))
+
+	// Check if config.json already exists.
+	// Take backup if exists before write new config.json file.
+	// If doesn't, then create a new one
+	_, err = os.Stat("config.json")
+	if os.IsNotExist(err) {
+		fmt.Println("config.json file does not exists. Creating a new one")
+	} else {
+		fmt.Println("config.json file already exists. Taking backup of it to backups/ directory")
+		backupDir := sagoutil.ShurliRootDir()
+		BackupConfigJSON(backupDir)
+	}
+
+	// Write newly genrated config.json to file
+	err = ioutil.WriteFile("config.json", confJSON, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ImportTAddrPrivKey import private key of DEXP2P transparent address to specified wallet
