@@ -191,13 +191,85 @@ func GenerateDEXP2PAccount() error {
 }
 
 // ImportTAddrPrivKey import private key of DEXP2P transparent address to specified wallet
-func ImportTAddrPrivKey() {
+func ImportTAddrPrivKey(toChain string) error {
+	// Get contents of config.json file
+	var conf SubAtomicConfig
+	confJSONContent, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(confJSONContent, &conf)
 
+	// Get DEXP2P transparent address' private key using dumpprivkey
+	var DexP2PDumpTPrivKey kmdgo.DumpPrivKey
+	DexP2PDumpTPrivKey, err = kmdgo.NewAppType(kmdgo.AppType(DexP2pChain)).DumpPrivKey(conf.DexRecvTAddr)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PDumpTPrivKey.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PDumpTPrivKey.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return err
+	}
+	// fmt.Println(DexP2PDumpTPrivKey.Result)
+
+	// Import privkey to the target chain
+	var DexP2PImpTPrivkey kmdgo.ImportPrivKey
+	args := make(kmdgo.APIParams, 3)
+	args[0] = DexP2PDumpTPrivKey.Result
+	args[1] = `shurli`
+	args[2] = false
+	// fmt.Println(args)
+
+	DexP2PImpTPrivkey, err = kmdgo.NewAppType(kmdgo.AppType(toChain)).ImportPrivKey(args)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PImpTPrivkey.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PImpTPrivkey.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return err
+	}
+	// fmt.Println(DexP2PImpTPrivkey.Result)
+
+	return nil
 }
 
 // ImportZAddrPrivKey import private key of DEXP2P shielded address to specified wallet
-func ImportZAddrPrivKey() {
+func ImportZAddrPrivKey(toChain string) error {
+	// Get contents of config.json file
+	var conf SubAtomicConfig
+	confJSONContent, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(confJSONContent, &conf)
 
+	// Get DEXP2P shielded address' private key using z_exportkey
+	var DexP2PExportZPrivKey kmdgo.ZExportKey
+	DexP2PExportZPrivKey, err = kmdgo.NewAppType(kmdgo.AppType(DexP2pChain)).ZExportKey(conf.DexRecvZAddr)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PExportZPrivKey.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PExportZPrivKey.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return err
+	}
+	// fmt.Println(DexP2PExportZPrivKey.Result)
+
+	// Import shielded address' privkey to the target chain
+	var DexP2PImpZPrivkey kmdgo.ZImportKey
+	args := make(kmdgo.APIParams, 3)
+	args[0] = DexP2PExportZPrivKey.Result
+	args[1] = `no`
+	args[2] = 0
+	// fmt.Println(args)
+
+	DexP2PImpZPrivkey, err = kmdgo.NewAppType(kmdgo.AppType(toChain)).ZImportKey(args)
+	if err != nil {
+		fmt.Printf("Code: %v\n", DexP2PImpZPrivkey.Error.Code)
+		fmt.Printf("Message: %v\n\n", DexP2PImpZPrivkey.Error.Message)
+		// log.Fatalln("Err happened", err)
+		return err
+	}
+	// fmt.Println(DexP2PImpZPrivkey.Result)
+
+	return nil
 }
 
 // UpdateDEXP2PAccount allow users to update config.json file with user specified DEXP2P params details
