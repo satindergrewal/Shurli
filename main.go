@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strconv"
 	"strings"
@@ -90,12 +91,11 @@ func savePID(pid int) {
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 
-	// getRandomFreePort, err := sagoutil.GetFreePort()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// shurliPort = strconv.Itoa(getRandomFreePort)
-	shurliPort = "8080"
+	getRandomFreePort, err := sagoutil.GetFreePort()
+	if err != nil {
+		log.Fatal(err)
+	}
+	shurliPort = strconv.Itoa(getRandomFreePort)
 
 }
 
@@ -146,6 +146,7 @@ func main() {
 		r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
 		r.HandleFunc("/history", swaphistory)
 		r.HandleFunc("/settings", settings).Methods("GET", "POST")
+		r.HandleFunc("/wallet/importkey/{addrtype}/{asset}/{rescan}", importkey).Methods("GET")
 
 		// Gorilla WebSockets echo example used to do give subatomic trade data updates to orderinit
 		r.HandleFunc("/echo", echo)
@@ -677,22 +678,47 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
+// settings is a Settings page and shows shurli specific settings, example config.json data
 func settings(w http.ResponseWriter, r *http.Request) {
 
 	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
 
+	var _tmpConf sagoutil.SubAtomicConfig
+	_tmpConf = conf
+
 	if len(r.FormValue("dex_handle")) != 0 {
-		fmt.Println(r.FormValue("dex_handle"))
+		// fmt.Println(r.FormValue("dex_handle"))
+		conf.DexHandle = r.FormValue("dex_handle")
 	}
 	if len(r.FormValue("dex_pubkey")) != 0 {
-		fmt.Println(r.FormValue("dex_pubkey"))
+		// fmt.Println(r.FormValue("dex_pubkey"))
+		conf.DexPubkey = r.FormValue("dex_pubkey")
 	}
 	if len(r.FormValue("dex_recvtaddr")) != 0 {
-		fmt.Println(r.FormValue("dex_recvtaddr"))
+		// fmt.Println(r.FormValue("dex_recvtaddr"))
+		conf.DexRecvTAddr = r.FormValue("dex_recvtaddr")
 	}
 	if len(r.FormValue("dex_recvzaddr")) != 0 {
-		fmt.Println(r.FormValue("dex_recvzaddr"))
+		// fmt.Println(r.FormValue("dex_recvzaddr"))
+		conf.DexRecvZAddr = r.FormValue("dex_recvzaddr")
+	}
+
+	if !reflect.DeepEqual(_tmpConf, conf) {
+		conf.Chains = nil
+		conf.Explorers = nil
+		// get indented JSON output of nelwy generated config.json
+		var confJSON []byte
+		confJSON, err := json.MarshalIndent(conf, "", "	")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(string(confJSON))
+
+		// Write newly genrated config.json to file
+		err = ioutil.WriteFile("config.json", confJSON, 0644)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	err := tpl.ExecuteTemplate(w, "settings.gohtml", conf)
@@ -701,6 +727,31 @@ func settings(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		sagoutil.Log.Fatalln(err)
 	}
+}
+
+//importkey is used to import private key from DEXP2P configured address to the selected wallet/asset blockchain
+func importkey(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	addrType := vars["addrtype"]
+	asset := vars["asset"]
+	rescan := vars["rescan"]
+	fmt.Println(rescan)
+	// fmt.Printf("%T\n", rescan)
+
+	switch addrType {
+	case "public":
+		fmt.Println("importing public address to", asset)
+		sagoutil.ImportTAddrPrivKey(asset)
+	case "shielded":
+		fmt.Println("importing shielded address to", asset)
+		sagoutil.ImportZAddrPrivKey(asset)
+	}
+
+	payload := []byte(`{"result": "done"}`)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(payload)
 }
 
 // Open brower with the URL determined by the shurli and it's specific port
