@@ -90,11 +90,13 @@ func savePID(pid int) {
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 
-	getRandomFreePort, err := sagoutil.GetFreePort()
-	if err != nil {
-		log.Fatal(err)
-	}
-	shurliPort = strconv.Itoa(getRandomFreePort)
+	// getRandomFreePort, err := sagoutil.GetFreePort()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// shurliPort = strconv.Itoa(getRandomFreePort)
+	shurliPort = "8080"
+
 }
 
 func main() {
@@ -143,6 +145,7 @@ func main() {
 		r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 		r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
 		r.HandleFunc("/history", swaphistory)
+		r.HandleFunc("/settings", settings).Methods("GET", "POST")
 
 		// Gorilla WebSockets echo example used to do give subatomic trade data updates to orderinit
 		r.HandleFunc("/echo", echo)
@@ -674,6 +677,33 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// idx is a Index/Dashboard page and shows all wallet which are supported by this Subatomic Go Web App
+func settings(w http.ResponseWriter, r *http.Request) {
+
+	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
+
+	if len(r.FormValue("dex_handle")) != 0 {
+		fmt.Println(r.FormValue("dex_handle"))
+	}
+	if len(r.FormValue("dex_pubkey")) != 0 {
+		fmt.Println(r.FormValue("dex_pubkey"))
+	}
+	if len(r.FormValue("dex_recvtaddr")) != 0 {
+		fmt.Println(r.FormValue("dex_recvtaddr"))
+	}
+	if len(r.FormValue("dex_recvzaddr")) != 0 {
+		fmt.Println(r.FormValue("dex_recvzaddr"))
+	}
+
+	err := tpl.ExecuteTemplate(w, "settings.gohtml", conf)
+	if err != nil {
+		// log.Fatalf("some error")
+		http.Error(w, err.Error(), 500)
+		sagoutil.Log.Fatalln(err)
+	}
+}
+
+// Open brower with the URL determined by the shurli and it's specific port
 func openbrowser(url string) {
 	var err error
 

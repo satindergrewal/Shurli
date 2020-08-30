@@ -10,9 +10,9 @@
             {{/* <li class="nav-item">
                 <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
             </li> */}}
-            <li class="nav-item">
+            <li class="nav-item active">
               <div class="topnav-item" style="position: relative;">
-                <div class="topnav-link"></div>
+                <div class="topnav-link topnav-active"></div>
                 <a class="nav-link" href="/"><i class="fad fa-rocket-launch topnav-icon"></i> Dashboard <span class="sr-only">(current)</span></a>
               </div>
             </li>
@@ -22,9 +22,9 @@
                 <a class="nav-link" href="/orderbook"><i class="fad fa-exchange-alt topnav-icon"></i> Trade</a>
               </div>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <div class="topnav-item" style="position: relative;">
-                <div class="topnav-link topnav-active"></div>
+                <div class="topnav-link"></div>
                 <a class="nav-link" href="/history"><i class="fad fa-history topnav-icon"></i> Trade History</a>
               </div>
             </li>
@@ -52,49 +52,50 @@
     <div class="container-fluid" style="margin-top: 75px;">
 
         <div class="row" style="margin-bottom: 1em;">
-          <div class="col-12">
-            {{/* <h5>Trade History</h5> */}}
-            <table class="table table-md table-striped table-dark table-no-bg table-borderless" data-toggle="table" data-search="true" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]">
-              <thead>
-                <tr>
-                  <th><span style="color: #ffffff5c;">DATE</span></th>
-                  <th><span style="color: #ffffff5c;">SOLD</span></th>
-                  <th><span style="color: #ffffff5c;">TRADE PAIR</span></th>
-                  <th><span style="color: #ffffff5c;">BOUGHT</span></th>
-                  <th><span style="color: #ffffff5c;">Bought From</span></th>
-                  <th><span style="color: #ffffff5c;">STATUS</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                {{range .}}
-                <tr>
-                  <td>{{.TimeStamp}}</td>
-                  <td>{{.BaseAmount}} <span style="color: #ffffff5c;">{{.Base}}</td>
-                  <td>
-                    <div class="row">
-                      <div>
-                        </span> <a href="{{.BaseExplorer}}tx/{{.BaseTxID}}" target="_blank"><img src='/assets/coins/{{.BaseIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
-                      </div>
-                      <div>
-                        <i class="fas fa-arrow-right" style="color: #ffffff5c;"></i>
-                      </div>
-                      <div>
-                        <a href="{{.RelExplorer}}tx/{{.RelTxID}}" target="_blank"><img src='/assets/coins/{{.RelIcon}}.png' style='width:25px; margin: 0px 15px 0px 15px;'/></a>
-                      </div>
+        <div class="col-12" style="margin-bottom: 10px;"> <!-- Settings div start -->
+            <h5 style="margin-left: 15px;">Settings</h5>
+            <div class="card text-white no-bg"> <!-- Settings card start -->
+              <div class="card-body" style="padding: 0;"> <!-- Settings body start -->
+
+                <form action="/settings" id="settings-form" method="POST">
+                  <div class="form-group row">
+                    <label for="dex_handle" class="col-sm-2 col-form-label">Handle</label>
+                    <div class="col-sm-10">
+                      <input type="dex_handle" class="form-control" id="dex_handle" name="dex_handle" value="{{.DexHandle}}">
                     </div>
-                  </td>
-                  <td>{{.RelAmount}} <span style="color: #ffffff5c;">{{.Rel}}</span></td>
-                  <td><span style="font-weight: bolder;" class="col-6 text-left" data-toggle="tooltip" data-placement="top" title="{{.BobPubkey}}">{{if .BobAuthorized}} <i class="fas fa-badge-check" style="color: #82c91e;"></i>{{end}} {{.BobID}}</span></td>
-                  <td>{{if eq .Status "COMPLETE"}} <span class="text-success">{{.Status}}</span> {{else}} <span class="text-danger">{{.Status}}</span> {{end}}</td>
-                </tr>
-                {{end}}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="dex_pubkey" class="col-sm-2 col-form-label">Pubkey</label>
+                    <div class="col-sm-10">
+                      <input type="dex_pubkey" class="form-control" id="dex_pubkey" name="dex_pubkey" value="{{.DexPubkey}}">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="dex_recvtaddr" class="col-sm-2 col-form-label">Transparent Recieve Address</label>
+                    <div class="col-sm-10">
+                      <input type="dex_recvtaddr" class="form-control" id="dex_recvtaddr" name="dex_recvtaddr" value="{{.DexRecvTAddr}}">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="dex_recvzaddr" class="col-sm-2 col-form-label">Shielded Recieve Address</label>
+                    <div class="col-sm-10">
+                      <input type="dex_recvzaddr" class="form-control" id="dex_recvzaddr" name="dex_recvzaddr" value="{{.DexRecvZAddr}}">
+                    </div>
+                  </div>
+                  
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div> <!-- Settings body end -->
+            </div> <!-- Settings card end -->
+        </div> <!-- Settings div end -->
+      </div>
     
     </div>
 
 {{template "footer-scripts"}}
 {{template "footer"}}
-
