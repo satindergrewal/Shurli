@@ -273,8 +273,60 @@ func ImportZAddrPrivKey(toChain string) error {
 }
 
 // UpdateDEXP2PAccount allow users to update config.json file with user specified DEXP2P params details
-func UpdateDEXP2PAccount() {
+func UpdateDEXP2PAccount(data SubAtomicConfig) error {
+	//Debug print of checking what data we are getting
+	// fmt.Println(data)
+	// fmt.Println(len(data.DexHandle))
 
+	// Get contents of config.json file
+	var conf SubAtomicConfig
+	confJSONContent, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(confJSONContent, &conf)
+
+	if len(data.DexNSPV) != 0 {
+		conf.DexNSPV = data.DexNSPV
+	}
+	if len(data.DexAddnode) != 0 {
+		conf.DexAddnode = data.DexAddnode
+	}
+	if len(data.DexPubkey) != 0 {
+		conf.DexPubkey = data.DexPubkey
+	}
+	if len(data.DexHandle) != 0 {
+		conf.DexHandle = data.DexHandle
+	}
+	if len(data.DexRecvTAddr) != 0 {
+		conf.DexRecvTAddr = data.DexRecvTAddr
+	}
+	if len(data.DexRecvZAddr) != 0 {
+		conf.DexRecvZAddr = data.DexRecvZAddr
+	}
+
+	// fmt.Println(conf.DexNSPV)
+	// fmt.Println(conf.DexAddnode)
+	// fmt.Println(conf.DexPubkey)
+	// fmt.Println(conf.DexHandle)
+	// fmt.Println(conf.DexRecvTAddr)
+	// fmt.Println(conf.DexRecvZAddr)
+
+	// get indented JSON output of nelwy generated config.json
+	var confJSON []byte
+	confJSON, err = json.MarshalIndent(conf, "", "	")
+	if err != nil {
+		return err
+	}
+	// fmt.Println(string(confJSON))
+
+	// Write newly genrated config.json to file
+	err = ioutil.WriteFile("config.json", confJSON, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // DlBootstrap download, extract and replace/update bootstrap blockchain files for a specified wallet
