@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Meshbits/shurli/sagoutil"
+	"github.com/satindergrewal/kmdgo/kmdutil"
 )
 
 func main() {
@@ -22,11 +23,18 @@ func main() {
 	// sagoutil.ImportZAddrPrivKey(`PIRATE`)
 
 	// Testing DexP2P Account update function
-	var accountData sagoutil.SubAtomicConfig
-	accountData.DexHandle = "Satinder"
+	// var accountData sagoutil.SubAtomicConfig
+	// accountData.DexHandle = "Satinder"
 
-	err := sagoutil.UpdateDEXP2PAccount(accountData)
+	// err := sagoutil.UpdateDEXP2PAccount(accountData)
+	// if err != nil {
+	// 	fmt.Printf("%s", err)
+	// }
+
+	var wallet kmdutil.IguanaWallet
+	wallet, err := sagoutil.GenerateDEXP2PWallet()
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
+	fmt.Println(wallet)
 }

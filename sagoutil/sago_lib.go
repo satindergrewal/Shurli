@@ -303,10 +303,8 @@ func DLSubJSONData() error {
 	if res.Status == "200 OK" {
 		ioutil.WriteFile("assets/subatomic.json", subJSONData, 0644)
 		return nil
-	} else {
-		// fmt.Println(res.Status)
-		return errors.New(res.Status)
 	}
+	return errors.New(res.Status)
 }
 
 // MatchedAuthorized checks the pubkey against the subatomic.json file's authorized pubkey list.
@@ -369,6 +367,7 @@ type OrderData struct {
 	RelIcon      string  `json:"relicon"`
 }
 
+// IsLower returns true if supplied string is lower case, false if upper case
 func IsLower(s string) bool {
 	for _, r := range s {
 		if !unicode.IsLower(r) && unicode.IsLetter(r) {

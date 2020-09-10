@@ -42,6 +42,7 @@ func SubAtomicConfInfo() SubAtomicConfig {
 	var conf SubAtomicConfig
 	confJSONContent, err := ioutil.ReadFile("config.json")
 	if err != nil {
+		fmt.Println("config.json file not found")
 		log.Fatal(err)
 	}
 	err = json.Unmarshal(confJSONContent, &conf)

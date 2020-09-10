@@ -95,7 +95,15 @@
                       <td scope="col">{{.Blocks}}</td>
                       <td scope="col">
                         {{if .Synced}} <i class="fas fa-shield-check" style="color: #01cec6;"></i> Fully Synced
-                        {{else}} <i class="fad fa-stop" style="color: #ff8300;"></i> Not Synced {{end}}
+                        {{else}} 
+                          {{if eq .Status "Offline"}}
+                            {{if eq .Ticker "ARRR"}} {{else}}
+                              <button class="btn btn-xs btn-info start-wallet" style="padding: 5px; font-size: 85%;" data-asset="{{.Ticker}}"><i class="fas fa-wallet"></i> Start Wallet</button>
+                            {{end}}
+                          {{else}}
+                            <i class="fad fa-stop" style="color: #ff8300;"></i> Not Synced
+                          {{end}}
+                        {{end}}
                       </td>
                     </tr>
                   {{end}}
@@ -189,6 +197,11 @@
         .done(function () { console.log('Request done!'); })
         .fail(function (jqxhr,settings,ex) { alert('failed, '+ ex); });
       });
+  });
+
+  //trigger when start wallet button is pressed
+  $(".start-wallet").click(function(){
+    console.log($(this).data('asset'));
   });
 
 </script>

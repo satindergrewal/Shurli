@@ -97,6 +97,17 @@ func init() {
 	}
 	shurliPort = strconv.Itoa(getRandomFreePort)
 
+	// Check if config.json already exists.
+	// If doesn't, then create a new one
+	_, err = os.Stat("config.json")
+	if os.IsNotExist(err) {
+		// fmt.Println("config.json file does not exists. Creating a new one")
+		_, err := sagoutil.GenerateDEXP2PWallet()
+		if err != nil {
+			fmt.Printf("%s", err)
+		}
+		// sagoutil.ImportTAddrPrivKey(DexP2pChain)
+	}
 }
 
 func main() {
@@ -454,8 +465,8 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
 
-	orderDataJSON, _ := json.Marshal(orderData)
-	sagoutil.Log.Println("orderData JSON:", string(orderDataJSON))
+	_orderDataJSON, _ := json.Marshal(orderData)
+	sagoutil.Log.Println("orderData JSON:", string(_orderDataJSON))
 
 	cmdString := `[subatomic] ./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
@@ -470,13 +481,13 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 		BaseExplorer string
 		RelExplorer  string
 		sagoutil.OrderData
-		OrderDataJson string
+		OrderDataJSON string
 	}{
 		ID:            id,
 		Amount:        amount,
 		Total:         total,
 		OrderData:     orderData,
-		OrderDataJson: string(orderDataJSON),
+		OrderDataJSON: string(_orderDataJSON),
 		BaseExplorer:  conf.Explorers[strings.ReplaceAll(orderData.Base, "z", "")],
 		RelExplorer:   conf.Explorers[strings.ReplaceAll(orderData.Rel, "z", "")],
 	}
@@ -525,11 +536,11 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		err = c.WriteMessage(mt, message)
 
-		type opIdMsg struct {
+		type opIDMsg struct {
 			Opid string `json:"opid"`
 			Coin string `json:"coin"`
 		}
-		var opidmsg opIdMsg
+		var opidmsg opIDMsg
 		err = json.Unmarshal([]byte(message), &opidmsg)
 		// fmt.Println(opidmsg.Opid)
 		// fmt.Println(opidmsg.Coin)
