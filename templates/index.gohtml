@@ -1,14 +1,14 @@
 {{template "header"}}
 
     <nav class="navbar fixed-top navbar-expand navbar-dark topnav-dark bg-dark">
-      <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+      {{template "navlogo"}}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             {{/* <li class="nav-item">
-                <a class="navbar-brand" href="#"><img src="/assets/images/spacemesh_logo.png" class="logo"/></a>
+                <a class="navbar-brand" href="#"><img src="/assets/images/shurli_logo.png" class="logo"/></a>
             </li> */}}
             <li class="nav-item active">
               <div class="topnav-item" style="position: relative;">
@@ -38,7 +38,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-user-astronaut topnav-icon"></i> Profile</a>
-                  <a class="dropdown-item topnav-dropdown-item" href="#"><i class="fad fa-cog topnav-icon"></i> Settings</a>
+                  <a class="dropdown-item topnav-dropdown-item" href="/settings"><i class="fad fa-cog topnav-icon"></i> Settings</a>
                   <a class="dropdown-item topnav-dropdown-item" href="https://github.com/Meshbits/Shurli/issues/new" target="_blank"><i class="fad fa-brackets-curly topnav-icon"></i> Request a Feature</a>
                 </div>
               </li>
@@ -74,12 +74,12 @@
                         {{if eq .Status "Online"}}
                           {{if not .TValidAddr}}
                             {{if eq .Ticker "ARRR"}} {{else}}
-                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" data-toggle="modal" data-target="#tvalidaddr-model"><i class="fas fa-engine-warning"></i> Public Address</button>
+                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" {{if eq .Ticker "KMD"}} data-asset="Komodo" {{else}} data-asset="{{.Ticker}}" {{end}} data-toggle="modal" data-target="#tvalidaddr-model"><i class="fas fa-engine-warning"></i> Public Address</button>
                             {{end}}
                           {{end}}
                           {{if not .ZValidAddr}}
                             {{if eq .Ticker "KMD"}} {{else}}
-                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" data-toggle="modal" data-target="#zvalidaddr-model"><i class="fas fa-engine-warning"></i> Shielded Address</button>
+                              <button class="btn btn-xs btn-danger" style="padding: 5px; font-size: 85%;" {{if eq .Ticker "ARRR"}} data-asset="PIRATE" {{else}} data-asset="{{.Ticker}}" {{end}} data-toggle="modal" data-target="#zvalidaddr-model"><i class="fas fa-engine-warning"></i> Shielded Address</button>
                             {{end}}
                           {{end}}
                           </small></td>
@@ -95,7 +95,15 @@
                       <td scope="col">{{.Blocks}}</td>
                       <td scope="col">
                         {{if .Synced}} <i class="fas fa-shield-check" style="color: #01cec6;"></i> Fully Synced
-                        {{else}} <i class="fad fa-stop" style="color: #ff8300;"></i> Not Synced {{end}}
+                        {{else}} 
+                          {{/* {{if eq .Status "Offline"}}
+                            {{if eq .Ticker "ARRR"}} {{else}}
+                              <button class="btn btn-xs btn-info start-wallet" style="padding: 5px; font-size: 85%;" data-asset="{{.Ticker}}"><i class="fas fa-wallet"></i> Start Wallet</button>
+                            {{end}}
+                          {{else}} */}}
+                            <i class="fad fa-stop" style="color: #ff8300;"></i> Not Synced
+                          {{/* {{end}} */}}
+                        {{end}}
                       </td>
                     </tr>
                   {{end}}
@@ -107,7 +115,18 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-body">
-                        Public Address doesn't seem to be imported. Please make sure that it's imported in both blockchains DEX and the one which you got this notification for.
+                        <div class="alert alert-danger" role="alert">Public Address doesn't seem to be imported in <span class="asset_name"></span>.</div>
+                        To fix the issue, you can chose to import the configured addresses with DEXP2P network to your wallet<br>
+                        <div class="text-center mt-2"><button class="btn btn-info" name="fixissue" id="fixissue" data-asset="">Fix issue</button></div>
+                        <div class="form-check">
+                          <input class="form-check-input rescan_asset" type="checkbox" value="" name="rescan_asset" id="rescan_asset">
+                          <label class="form-check-label" for="rescan_asset">
+                            Rescan Blockchain
+                          </label>
+                          <small id="rescanHelpBlock" class="form-text text-muted">
+                            Select rescan option if have any funds in the addresses you are importing to selected wallet. It may take few minutes to hour(s) to complete this process if you select this option.
+                          </small>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -122,7 +141,18 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-body">
-                        Shielded Address doesn't seem to be imported. Please make sure that it's imported in both blockchains DEX and the one which you got this notification for.
+                        <div class="alert alert-danger" role="alert">Shielded Address doesn't seem to be imported in <span class="asset_name"></span>.</div>
+                        To fix the issue, you can chose to import the configured addresses with DEXP2P network to your wallet<br>
+                        <div class="text-center mt-2"><button class="btn btn-info" name="fixissue" id="fixissue" data-asset="">Fix issue</button></div>
+                        <div class="form-check">
+                          <input class="form-check-input rescan_asset" type="checkbox" value="" name="rescan_asset" id="rescan_asset">
+                          <label class="form-check-label" for="rescan_asset">
+                            Rescan Blockchain
+                          </label>
+                          <small id="rescanHelpBlock" class="form-text text-muted">
+                            Select rescan option if have any funds in the addresses you are importing to selected wallet. It may take few minutes to hour(s) to complete this process if you select this option.
+                          </small>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -142,8 +172,85 @@
 {{template "footer-scripts"}}
 {{template "footer"}}
 
-{{/* <script>
-  $(document).ready(function () {
-    $('[data-toggle="popover"]').popover()
+<script>
+  //triggered when modal is about to be shown
+  $('#zvalidaddr-model').on('show.bs.modal', function(e) {
+      console.log("model clicked")
+      //get data-asset attribute of the clicked element
+      var asset = $(e.relatedTarget).data('asset');
+      //populate the html element
+      $(e.currentTarget).find('span[class="asset_name"]').html(asset);
+      $(e.currentTarget).find('button[id="fixissue"]').attr("data-asset", asset);
+      
+      rescan_checkbox = $(e.currentTarget).find('input[name="rescan_asset"]')
+
+      var rescan = rescan_checkbox.is(":checked");
+
+      rescan_checkbox.change(function() {
+          if($(this).is(":checked")) {
+            $(this).attr("checked", true);
+          } else {
+            $(this).attr("checked", false);
+          }
+          rescan = rescan_checkbox.is(":checked");
+      });
+      
+      $(e.currentTarget).find('button[id="fixissue"]').click(function(){
+        // console.log("fixissue clicked");
+        // console.log(rescan);
+        // console.log('/wallet/importkey/shielded/'+asset+'/'+rescan);
+
+        // execute the importkey method for selected wallet
+        $.getJSON('/wallet/importkey/shielded/'+asset+'/'+rescan, {}, function (data, textStatus, jqXHR) {
+          // console.log(data.result)
+          $('#zvalidaddr-model').modal('hide');
+          location.reload();
+        })
+        .done(function () { console.log('Request done!'); })
+        .fail(function (jqxhr,settings,ex) { alert('failed, '+ ex); });
+      });
   });
-</script> */}}
+
+  $('#tvalidaddr-model').on('show.bs.modal', function(e) {
+      console.log("model clicked")
+      //get data-asset attribute of the clicked element
+      var asset = $(e.relatedTarget).data('asset');
+      //populate the html element
+      $(e.currentTarget).find('span[class="asset_name"]').html(asset);
+      $(e.currentTarget).find('button[id="fixissue"]').attr("data-asset", asset);
+      
+      rescan_checkbox = $(e.currentTarget).find('input[name="rescan_asset"]')
+
+      var rescan = rescan_checkbox.is(":checked");
+
+      rescan_checkbox.change(function() {
+          if($(this).is(":checked")) {
+            $(this).attr("checked", true);
+          } else {
+            $(this).attr("checked", false);
+          }
+          rescan = rescan_checkbox.is(":checked");
+      });
+      
+      $(e.currentTarget).find('button[id="fixissue"]').click(function(){
+        // console.log("fixissue clicked");
+        // console.log(rescan);
+        // console.log('/wallet/importkey/public/'+asset+'/'+rescan);
+
+        // execute the importkey method for selected wallet
+        $.getJSON('/wallet/importkey/public/'+asset+'/'+rescan, {}, function (data, textStatus, jqXHR) {
+          // console.log(data.result)
+          $('#tvalidaddr-model').modal('hide');
+          location.reload();
+        })
+        .done(function () { console.log('Request done!'); })
+        .fail(function (jqxhr,settings,ex) { alert('failed, '+ ex); });
+      });
+  });
+
+  //trigger when start wallet button is pressed
+  $(".start-wallet").click(function(){
+    console.log($(this).data('asset'));
+  });
+
+</script>

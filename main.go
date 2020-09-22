@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strconv"
 	"strings"
@@ -41,9 +42,12 @@ type ShurliInfo struct {
 // DexP2pChain which shurli queries for DEXP2P API
 var DexP2pChain string = "SHURLI0"
 
+// Change to SHurli's root directory path
+var rootDir string = sagoutil.ShurliRootDir()
+
 // ShurliApp stores the information about applications
 var ShurliApp = ShurliInfo{
-	AppVersion: "0.0.1",
+	AppVersion: "0.0.2",
 	AppPhase:   "alpha",
 }
 
@@ -55,6 +59,9 @@ func check(e error) {
 		// log.Println(e)
 	}
 }
+
+var getRandomFreePort int
+var shurliPort string
 
 // PIDFile file stores the process ID file for shurli process
 var PIDFile = "./shurli.pid"
@@ -83,6 +90,24 @@ func savePID(pid int) {
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
+
+	getRandomFreePort, err := sagoutil.GetFreePort()
+	if err != nil {
+		log.Fatal(err)
+	}
+	shurliPort = strconv.Itoa(getRandomFreePort)
+
+	// Check if config.json already exists.
+	// If doesn't, then create a new one
+	_, err = os.Stat("config.json")
+	if os.IsNotExist(err) {
+		// fmt.Println("config.json file does not exists. Creating a new one")
+		_, err := sagoutil.GenerateDEXP2PWallet()
+		if err != nil {
+			fmt.Printf("%s", err)
+		}
+		// sagoutil.ImportTAddrPrivKey(DexP2pChain)
+	}
 }
 
 func main() {
@@ -131,6 +156,8 @@ func main() {
 		r.HandleFunc("/orderbook/{id}", orderid).Methods("GET")
 		r.HandleFunc("/orderbook/swap/{id}/{amount}/{total}", orderinit).Methods("GET")
 		r.HandleFunc("/history", swaphistory)
+		r.HandleFunc("/settings", settings).Methods("GET", "POST")
+		r.HandleFunc("/wallet/importkey/{addrtype}/{asset}/{rescan}", importkey).Methods("GET")
 
 		// Gorilla WebSockets echo example used to do give subatomic trade data updates to orderinit
 		r.HandleFunc("/echo", echo)
@@ -140,7 +167,10 @@ func main() {
 
 		// public assets files
 		r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./public/"))))
-		sagoutil.Log.Fatal(http.ListenAndServe(":8080", r))
+		openbrowser("http://localhost:" + shurliPort)
+		fmt.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Printf("Shurli accessible on http://localhost:%v\n", shurliPort)
+		sagoutil.Log.Fatal(http.ListenAndServe(":"+shurliPort, r))
 	}
 
 	// using command "./shurli start" will show the daemon process info and exit stdout to terminal
@@ -327,6 +357,9 @@ func idx(w http.ResponseWriter, r *http.Request) {
 
 func orderbook(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	type OrderPost struct {
 		Base      string `json:"coin_base"`
 		Rel       string `json:"coin_rel"`
@@ -394,6 +427,9 @@ func orderbook(w http.ResponseWriter, r *http.Request) {
 
 func orderid(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -413,6 +449,9 @@ func orderid(w http.ResponseWriter, r *http.Request) {
 
 func orderinit(w http.ResponseWriter, r *http.Request) {
 
+	// Change to SHurli's root directory path
+	os.Chdir(rootDir)
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 	amount := vars["amount"]
@@ -426,8 +465,8 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 	var orderData sagoutil.OrderData
 	orderData = sagoutil.OrderID(id)
 
-	orderDataJSON, _ := json.Marshal(orderData)
-	sagoutil.Log.Println("orderData JSON:", string(orderDataJSON))
+	_orderDataJSON, _ := json.Marshal(orderData)
+	sagoutil.Log.Println("orderData JSON:", string(_orderDataJSON))
 
 	cmdString := `[subatomic] ./subatomic ` + orderData.Base + ` "" ` + id + ` ` + total
 	sagoutil.Log.Println(cmdString)
@@ -442,13 +481,13 @@ func orderinit(w http.ResponseWriter, r *http.Request) {
 		BaseExplorer string
 		RelExplorer  string
 		sagoutil.OrderData
-		OrderDataJson string
+		OrderDataJSON string
 	}{
 		ID:            id,
 		Amount:        amount,
 		Total:         total,
 		OrderData:     orderData,
-		OrderDataJson: string(orderDataJSON),
+		OrderDataJSON: string(_orderDataJSON),
 		BaseExplorer:  conf.Explorers[strings.ReplaceAll(orderData.Base, "z", "")],
 		RelExplorer:   conf.Explorers[strings.ReplaceAll(orderData.Rel, "z", "")],
 	}
@@ -480,6 +519,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 	c.WriteMessage(1, []byte(`{"state":"Starting..."}`))
 
+	exPath := filepath.Join(rootDir, "assets")
+	os.Chdir(exPath)
+	sagoutil.Log.Println(exPath)
+
 	var filename string
 	newLine := "\n"
 
@@ -493,11 +536,11 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		err = c.WriteMessage(mt, message)
 
-		type opIdMsg struct {
+		type opIDMsg struct {
 			Opid string `json:"opid"`
 			Coin string `json:"coin"`
 		}
-		var opidmsg opIdMsg
+		var opidmsg opIDMsg
 		err = json.Unmarshal([]byte(message), &opidmsg)
 		// fmt.Println(opidmsg.Opid)
 		// fmt.Println(opidmsg.Coin)
@@ -529,14 +572,6 @@ func echo(w http.ResponseWriter, r *http.Request) {
 				cmd = exec.CommandContext(ctx, "./subatomic.exe", parsed[1], "", parsed[2], parsed[3])
 			}
 			// cmd.Dir = conf.SubatomicDir
-			dir, err := os.Getwd()
-			if err != nil {
-				log.Fatal(err)
-			}
-			sagoutil.Log.Println(dir)
-			exPath := filepath.Join(dir, "assets")
-			os.Chdir(exPath)
-			sagoutil.Log.Println(exPath)
 
 			stdout, err := cmd.StdoutPipe()
 			if err != nil {
@@ -567,13 +602,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 			s := bufio.NewScanner(io.MultiReader(stdout, stderr))
 
-			newpath := filepath.Join(".", "swaplogs")
+			newpath := filepath.Join(rootDir, "swaplogs")
 			err = os.MkdirAll(newpath, 0755)
 			check(err)
 
 			currentUnixTimestamp := int32(time.Now().Unix())
-			filename = "./swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
-			// fmt.Println(filename)
+			filename = rootDir + "/swaplogs/" + sagoutil.IntToString(currentUnixTimestamp) + "_" + parsed[2] + ".log"
+			fmt.Println(filename)
 			// fmt.Println(String(currentUnixTimestamp))
 
 			// If the file doesn't exist, create it, or append to the file
@@ -628,6 +663,8 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 		// fmt.Println("filename", filename)
 
+		os.Chdir(rootDir)
+
 		c.WriteMessage(1, []byte(`{"state":"Finished"}`))
 	}
 }
@@ -649,5 +686,100 @@ func swaphistory(w http.ResponseWriter, r *http.Request) {
 		// log.Fatalf("some error")
 		http.Error(w, err.Error(), 500)
 		sagoutil.Log.Fatalln(err)
+	}
+}
+
+// settings is a Settings page and shows shurli specific settings, example config.json data
+func settings(w http.ResponseWriter, r *http.Request) {
+
+	var conf sagoutil.SubAtomicConfig = sagoutil.SubAtomicConfInfo()
+
+	var _tmpConf sagoutil.SubAtomicConfig
+	_tmpConf = conf
+
+	if len(r.FormValue("dex_handle")) != 0 {
+		// fmt.Println(r.FormValue("dex_handle"))
+		conf.DexHandle = r.FormValue("dex_handle")
+	}
+	if len(r.FormValue("dex_pubkey")) != 0 {
+		// fmt.Println(r.FormValue("dex_pubkey"))
+		conf.DexPubkey = r.FormValue("dex_pubkey")
+	}
+	if len(r.FormValue("dex_recvtaddr")) != 0 {
+		// fmt.Println(r.FormValue("dex_recvtaddr"))
+		conf.DexRecvTAddr = r.FormValue("dex_recvtaddr")
+	}
+	if len(r.FormValue("dex_recvzaddr")) != 0 {
+		// fmt.Println(r.FormValue("dex_recvzaddr"))
+		conf.DexRecvZAddr = r.FormValue("dex_recvzaddr")
+	}
+
+	if !reflect.DeepEqual(_tmpConf, conf) {
+		conf.Chains = nil
+		conf.Explorers = nil
+		// get indented JSON output of nelwy generated config.json
+		var confJSON []byte
+		confJSON, err := json.MarshalIndent(conf, "", "	")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(string(confJSON))
+
+		// Write newly genrated config.json to file
+		err = ioutil.WriteFile("config.json", confJSON, 0644)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	err := tpl.ExecuteTemplate(w, "settings.gohtml", conf)
+	if err != nil {
+		// log.Fatalf("some error")
+		http.Error(w, err.Error(), 500)
+		sagoutil.Log.Fatalln(err)
+	}
+}
+
+//importkey is used to import private key from DEXP2P configured address to the selected wallet/asset blockchain
+func importkey(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	addrType := vars["addrtype"]
+	asset := vars["asset"]
+	rescan := vars["rescan"]
+	fmt.Println(rescan)
+	// fmt.Printf("%T\n", rescan)
+
+	switch addrType {
+	case "public":
+		fmt.Println("importing public address to", asset)
+		sagoutil.ImportTAddrPrivKey(asset)
+	case "shielded":
+		fmt.Println("importing shielded address to", asset)
+		sagoutil.ImportZAddrPrivKey(asset)
+	}
+
+	payload := []byte(`{"result": "done"}`)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(payload)
+}
+
+// Open brower with the URL determined by the shurli and it's specific port
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
 	}
 }

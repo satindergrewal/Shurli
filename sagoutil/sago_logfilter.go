@@ -371,30 +371,35 @@ func SwapLogFilter(logString, answer string) (string, error) {
 	// fmt.Println(`----`)
 	var expZFrom = regexp.MustCompile(`(?m)from..+$`)
 	zFrom := expZFrom.FindString(logString)
-	// fmt.Println(zFrom)
+	// fmt.Println("\tzFrom:", zFrom)
 	zFromSf := strings.Fields(zFrom)
-	// fmt.Println(zFromSf)
+	// fmt.Println("\tzFromSf:", zFromSf)
 
 	if len(zFromSf) > 0 {
-		// fmt.Printf("length of zFromSf is greater: %d\n", len(zFromSf))
+		fmt.Printf("length of zFromSf is greater: %d\n", len(zFromSf))
 
-		// fmt.Println(zFromSf[0])
+		fmt.Println(zFromSf[0])
 		zFromSl := strings.Split(zFromSf[0], ".")
 		zFromAddr := strings.ReplaceAll(zFromSl[1], "(", "")
 		zFromAddr = strings.ReplaceAll(zFromAddr, ")", "")
-		// fmt.Println(zFromAddr)
-		// fmt.Println(zFromSf[2])
+		// fmt.Println("\tzFromAddr: ", zFromAddr)
+		// fmt.Println("\tzFromSf[2]: ", zFromSf[2])
 		zFromJSON := strings.ReplaceAll(zFromSf[2], "'", "")
 		zFromJSON = strings.ReplaceAll(zFromJSON, "'", "")
-		// fmt.Printf("%s\n", zFromJSON)
+		zFromJSON = strings.ReplaceAll(zFromJSON, "[\"", "[")
+		zFromJSON = strings.ReplaceAll(zFromJSON, "]\"", "]")
+		zFromJSON = strings.ReplaceAll(zFromJSON, "\\", "")
+		// fmt.Printf("\tzFromJSON: %s\n", zFromJSON)
 		var zj ZFrom
 		err := json.Unmarshal([]byte(zFromJSON), &zj)
 		if err != nil {
 			log.Println(err)
+			// log.Fatalln(err)
 		}
-		// fmt.Println(zj[0].Address)
-		// fmt.Println(zj[0].Amount)
-		// fmt.Println(zj[0].Memo)
+		// fmt.Println("\tzj: ", zj)
+		// fmt.Println("\tzj[0].Address: ", zj[0].Address)
+		// fmt.Println("\tzj[0].Amount: ", zj[0].Amount)
+		// fmt.Println("\tzj[0].Memo: ", zj[0].Memo)
 
 		state3 := SwapStatus{
 			State:      "Sending Z Transaction",
@@ -403,10 +408,10 @@ func SwapLogFilter(logString, answer string) (string, error) {
 			BaseAmount: zj[0].Amount,
 		}
 
-		// fmt.Println("state 1:", state3)
+		// fmt.Println("\tstate 1: ", state3)
 		state3JSON, _ := json.Marshal(state3)
-		// fmt.Println("Sending Z tx")
-		// fmt.Println("state3 JSON:", string(state3JSON))
+		// fmt.Println("\tSending Z tx")
+		// fmt.Println("\tstate3 JSON: ", string(state3JSON))
 		if answer == "single" {
 			return string(state3JSON), nil
 		}

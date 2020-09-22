@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,6 +20,16 @@ import (
 
 // DexP2pChain which shurli queries for DEXP2P API
 var DexP2pChain string = "SHURLI0"
+
+// ShurliRootDir returns Shurli root directory path
+func ShurliRootDir() string {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	Log.Println(currentDir)
+	return currentDir
+}
 
 // WInfo type stores data to display on Wallet info screen
 type WInfo struct {
@@ -122,13 +131,14 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 				if err != nil {
 					Log.Printf("Code: %v\n", vldadr.Error.Code)
 					Log.Printf("Message: %v\n\n", vldadr.Error.Message)
-					log.Fatalln("Err happened", err)
+					Log.Println("Err happened", err)
 				}
 
-				if math.Round(gb.Result.Verificationprogress) != 1 {
-					tempSyncStatus = false
-				} else {
+				// if math.Round(gb.Result.Verificationprogress) != 1 {
+				if gb.Result.Verificationprogress >= 0.9999995 {
 					tempSyncStatus = true
+				} else {
+					tempSyncStatus = false
 				}
 
 				// if info.Result.Longestchain != info.Result.Blocks {
@@ -153,7 +163,7 @@ func WalletInfo(chains []kmdgo.AppType) []WInfo {
 					if err != nil {
 						Log.Printf("Code: %v\n", zvldadr.Error.Code)
 						Log.Printf("Message: %v\n\n", zvldadr.Error.Message)
-						log.Fatalln("Err happened", err)
+						Log.Println("Err happened", err)
 					}
 
 					// Get balance of Shielded address
@@ -293,10 +303,8 @@ func DLSubJSONData() error {
 	if res.Status == "200 OK" {
 		ioutil.WriteFile("assets/subatomic.json", subJSONData, 0644)
 		return nil
-	} else {
-		// fmt.Println(res.Status)
-		return errors.New(res.Status)
 	}
+	return errors.New(res.Status)
 }
 
 // MatchedAuthorized checks the pubkey against the subatomic.json file's authorized pubkey list.
@@ -359,6 +367,7 @@ type OrderData struct {
 	RelIcon      string  `json:"relicon"`
 }
 
+// IsLower returns true if supplied string is lower case, false if upper case
 func IsLower(s string) bool {
 	for _, r := range s {
 		if !unicode.IsLower(r) && unicode.IsLetter(r) {
@@ -592,7 +601,7 @@ func TxIDFromOpID(coin, opid string) (string, error) {
 	if err != nil {
 		fmt.Printf("Code: %v\n", oprst.Error.Code)
 		fmt.Printf("Message: %v\n\n", oprst.Error.Message)
-		log.Fatalln("Err happened", err)
+		Log.Println("Err happened", err)
 	}
 
 	for _, v := range oprst.Result {

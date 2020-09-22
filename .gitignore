@@ -25,4 +25,12 @@ shurli.log
 shurli
 shurli.pid
 dist/
+backups/
 SHURLI0_7776
+assets/subatomic
+assets/komodod
+assets/komodo-cli
+assets/komodo-qt-mac
+sagoutil/examples/komodo-qt-mac
+assets/komodo-qt
+wallet.json
