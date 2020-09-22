@@ -4,6 +4,11 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 #GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
+CGO_CFLAGS=$(shell env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/")
+CGO_LDFLAGS_DARWIN=$(shell env CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security")
+CGO_LDFLAGS_WIN="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv"
+CGO_LDFLAGS_LINUX="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm"
+CGO_CC_WIN="x86_64-w64-mingw32-gcc"
 MKDIR_P=mkdir -p
 GITCMD=git
 ROOT_DIR=$(shell pwd)
@@ -30,9 +35,15 @@ RM_RFV=rm -rfv
 UNZIP=unzip
 TAR_GZ=tar -cvzf
 
+# OS condition reference link: https://gist.github.com/sighingnow/deee806603ec9274fd47
+UNAME_S=$(shell uname -s)
+
+all:
+	@echo $(OSFLAG)
+
 all: build
-build: deps
-	$(GITCMD) checkout grewal
+build:
+	$(GITCMD) checkout dev
 	$(GOBUILD) -o $(BINARY_NAME) -v
 # test: 
 #	$(GOTEST) -v ./...
@@ -42,22 +53,35 @@ clean:
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
 	rm -f $(BINARY_OSX)
-run: deps
-	$(GITCMD) checkout grewal
+run:
+	$(GITCMD) checkout dev
 	$(GOBUILD) -o $(BINARY_NAME) -v 
 	./$(BINARY_NAME) start
-deps:
-	$(GOGET) -u github.com/satindergrewal/kmdgo
-	$(GOGET) -u github.com/Meshbits/shurli
-	$(GOGET) -u github.com/gorilla/mux
-	$(GOGET) -u github.com/gorilla/websocket
+deps-linux:
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" $(GOGET) -u github.com/satindergrewal/kmdgo
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" $(GOGET) -u github.com/Meshbits/shurli
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" $(GOGET) -u github.com/gorilla/mux
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" $(GOGET) -u github.com/gorilla/websocket
+
+deps-osx:
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" $(GOGET) -u github.com/satindergrewal/kmdgo
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" $(GOGET) -u github.com/Meshbits/shurli
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" $(GOGET) -u github.com/gorilla/mux
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" $(GOGET) -u github.com/gorilla/websocket
+
+
+deps-win:
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" $(GOGET) -u github.com/satindergrewal/kmdgo
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" $(GOGET) -u github.com/Meshbits/shurli
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" $(GOGET) -u github.com/gorilla/mux
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" $(GOGET) -u github.com/gorilla/websocket
 
 # Cross compilation
-build-linux: deps
+build-linux: deps-linux
 	rm -rf $(DIST_UNIX_PATH)
-	$(GITCMD) checkout grewal
+	$(GITCMD) checkout dev
 	$(MKDIR_P) $(DIST_UNIX_PATH)
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(DIST_UNIX_PATH)/$(BINARY_NAME) -v
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(DIST_UNIX_PATH)/$(BINARY_NAME) -v
 	$(CP_AV) $(DIST_FILES) $(DIST_UNIX_PATH)
 	$(CURL_DL) $(KMD_UNIX_URL)
 	$(UNZIP) -o komodo_linux.zip -d $(DIST_UNIX_PATH)/assets
@@ -67,10 +91,10 @@ build-linux: deps
 	cd $(DIST_UNIX_PATH); zip -r ../shurli_linux.zip *; ls -lha ../; pwd
 	$(RM_RFV) $(DIST_UNIX_PATH)
 	cd $(ROOT_DIR)
-build-osx: deps
-	$(GITCMD) checkout grewal
+build-osx: deps-osx
+	$(GITCMD) checkout dev
 	$(MKDIR_P) $(DIST_OSX_PATH)
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(DIST_OSX_PATH)/$(BINARY_NAME) -v
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(DIST_OSX_PATH)/$(BINARY_NAME) -v
 	$(CP_AV) $(DIST_FILES) $(DIST_OSX_PATH)
 	$(CURL_DL) $(KMD_OSX_URL)
 	$(UNZIP) -o komodo_macos.zip -d $(DIST_OSX_PATH)/assets
@@ -80,10 +104,10 @@ build-osx: deps
 	cd $(DIST_OSX_PATH); zip -r ../shurli_macos.zip *
 	$(RM_RFV) $(DIST_OSX_PATH)
 	cd $(ROOT_DIR)
-build-win: deps
-	$(GITCMD) checkout grewal
+build-win:
+	$(GITCMD) checkout dev
 	$(MKDIR_P) $(DIST_WIN_PATH)
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
+	CGO_CFLAGS="-I$(HOME)/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$(HOME)/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST_WIN_PATH)/$(BINARY_WIN) -v
 	@echo ".\shurli.exe start" > $(DIST_WIN_PATH)/start_shurli.cmd
 	@echo ".\shurli.exe stop" > $(DIST_WIN_PATH)/stop_shurli.cmd
 	$(CP_AV) $(DIST_FILES) $(DIST_WIN_PATH)
