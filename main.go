@@ -47,7 +47,7 @@ var rootDir string = sagoutil.ShurliRootDir()
 
 // ShurliApp stores the information about applications
 var ShurliApp = ShurliInfo{
-	AppVersion: "0.0.1",
+	AppVersion: "0.0.2",
 	AppPhase:   "alpha",
 }
 
