@@ -10,8 +10,8 @@ on:
 
 jobs:
 
-  all-builds:
-    name: all-builds
+  linux-mac-builds:
+    name: linux-mac-builds
     runs-on: ubuntu-latest
 
     steps:
@@ -23,23 +23,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: 'grewal'
+          ref: 'master'
 
       - name: Build Shurli (Linux)
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           mkdir -p $HOME/go/{bin,src,pkg} && \
+          CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" \
+          CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" \
+          go get -u github.com/satindergrewal/kmdgo &&
+          CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" \
+          CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" \
           go get -u github.com/Meshbits/shurli && \
           cd $HOME/go/src/github.com/Meshbits/shurli && \
           make build-linux
       
-      - name: Build Shurli (MacOS)
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          cd $HOME/go/src/github.com/Meshbits/shurli && \
-          make build-osx
+      # - name: Build Shurli (MacOS)
+      #   env:
+      #     DEBIAN_FRONTEND: noninteractive
+      #   run: |
+      #     cd $HOME/go/src/github.com/Meshbits/shurli && \
+      #     make build-osx
 
       - name: Build Shurli (Winblows)
         env:
@@ -54,11 +59,11 @@ jobs:
           name: shurli_linux.zip
           path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.zip
       
-      - name: Upload shurli_macos.zip as artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: shurli_macos.zip
-          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
+      # - name: Upload shurli_macos.zip as artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: shurli_macos.zip
+      #     path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
         
       - name: Upload shurli_win.zip as artifact
         uses: actions/upload-artifact@v1
@@ -66,62 +71,98 @@ jobs:
           name: shurli_win.zip
           path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.zip
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+      # - name: Extract branch name
+      #   shell: bash
+      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      #   id: extract_branch
 
-      - name: Shortify commit sha
-        shell: bash
-        run: echo "##[set-output name=sha_short;]$(echo ${GITHUB_SHA::7})"
-        id: shortify_commit
+      # - name: Shortify commit sha
+      #   shell: bash
+      #   run: echo "##[set-output name=sha_short;]$(echo ${GITHUB_SHA::7})"
+      #   id: shortify_commit
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: release_v0.${{ github.run_number }}
+      #     release_name: release_v0.${{ github.run_number }}
+      #     body: |
+      #       CD Release
+      #       Github SHA: ${{ github.sha }}
+      #       Branch: ${{ steps.extract_branch.outputs.branch }}
+      #       Build number: ${{ github.run_number }}
+      #       version: v0.${{ github.run_number }}
+      #     draft: false
+      #     prerelease: true
+
+      # - name: Upload Linux Release Asset
+      #   id: upload-linux-release-asset
+      #   uses: actions/upload-release-asset@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+      #     asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.zip
+      #     asset_name: shurli_linux_v0.${{ github.run_number }}.zip
+      #     asset_content_type: application/zip
+
+      # - name: Upload macOS Release Asset
+      #   id: upload-macOS-release-asset
+      #   uses: actions/upload-release-asset@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+      #     asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
+      #     asset_name: shurli_macos_v0.${{ github.run_number }}.zip
+      #     asset_content_type: application/zip
+
+      # - name: Upload Windows Release Asset
+      #   id: upload-windows-release-asset
+      #   uses: actions/upload-release-asset@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+      #     asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.zip
+      #     asset_name: shurli_win_v0.${{ github.run_number }}.zip
+      #     asset_content_type: application/zip
+  
+  macOS-build:
+    name: macOS-build
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          tag_name: release_v0.${{ github.run_number }}
-          release_name: release_v0.${{ github.run_number }}
-          body: |
-            CD Release
-            Github SHA: ${{ github.sha }}
-            Branch: ${{ steps.extract_branch.outputs.branch }}
-            Build number: ${{ github.run_number }}
-            version: v0.${{ github.run_number }}
-          draft: false
-          prerelease: true
+          ref: 'master'
 
-      - name: Upload Linux Release Asset
-        id: upload-linux-release-asset
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_linux.zip
-          asset_name: shurli_linux_v0.${{ github.run_number }}.zip
-          asset_content_type: application/zip
+      - name: Install deps (macOS)
+        run: |
+          brew update
+          brew upgrade
+          brew tap discoteq/discoteq; brew install flock
+          brew install golang autoconf autogen automake binutils \
+            gcc@8 protobuf coreutils wget python3
 
-      - name: Upload macOS Release Asset
-        id: upload-macOS-release-asset
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
-          asset_name: shurli_macos_v0.${{ github.run_number }}.zip
-          asset_content_type: application/zip
+      - name: Build Shurli (macOS)
+        run: |
+          mkdir -p $HOME/go/{bin,src,pkg} && \
+          CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" \
+          CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" \
+          go get -u github.com/satindergrewal/kmdgo &&
+          CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" \
+          CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" \
+          go get -u github.com/Meshbits/shurli && \
+          cd $HOME/go/src/github.com/Meshbits/shurli && \
+          make build-osx
 
-      - name: Upload Windows Release Asset
-        id: upload-windows-release-asset
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload shurli_macos.zip as artifact
+        uses: actions/upload-artifact@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_win.zip
-          asset_name: shurli_win_v0.${{ github.run_number }}.zip
-          asset_content_type: application/zip
+          name: shurli_macos.zip
+          path: /home/runner/go/src/github.com/Meshbits/shurli/dist/shurli_macos.zip
